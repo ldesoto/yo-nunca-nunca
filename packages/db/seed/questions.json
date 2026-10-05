@@ -1,0 +1,1922 @@
+[
+  {
+    "id": "CAS_0001",
+    "text": "Yo nunca nunca he mentido para no salir",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0002",
+    "text": "Yo nunca nunca he stalkeado a mi ex más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0003",
+    "text": "Yo nunca nunca he hecho algo vergonzoso estando borracho este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0004",
+    "text": "Yo nunca nunca he mentido para salir de una cita y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0005",
+    "text": "Yo nunca nunca he fingido estar ocupado frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0006",
+    "text": "Yo nunca nunca he caído en público y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0007",
+    "text": "Yo nunca nunca he perdido un teléfono en una fiesta en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0008",
+    "text": "Yo nunca nunca he stalkeado el perfil de alguien que me gusta un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0009",
+    "text": "Yo nunca nunca he enviado un mensaje a la persona equivocada",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0010",
+    "text": "Yo nunca nunca he saludado a alguien que no me conocía más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0011",
+    "text": "Yo nunca nunca he bailado encima de una mesa este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0012",
+    "text": "Yo nunca nunca he fingido no estar celoso y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0013",
+    "text": "Yo nunca nunca he olvidado el cumpleaños de alguien cercano frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0014",
+    "text": "Yo nunca nunca he tenido comida en los dientes todo el día y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0015",
+    "text": "Yo nunca nunca he cantado karaoke borracho en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0016",
+    "text": "Yo nunca nunca he dicho no pasa nada cuando sí pasaba un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0017",
+    "text": "Yo nunca nunca he dicho que me gusta una comida que odio",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0018",
+    "text": "Yo nunca nunca he enviado un audio vergonzoso más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0019",
+    "text": "Yo nunca nunca he dicho un secreto en una fiesta este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0020",
+    "text": "Yo nunca nunca he vuelto a hablar con un ex y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0021",
+    "text": "Yo nunca nunca he reído en un momento serio frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0022",
+    "text": "Yo nunca nunca he llamado a alguien por el nombre equivocado y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0023",
+    "text": "Yo nunca nunca he llegado a casa sin recordar cómo en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0024",
+    "text": "Yo nunca nunca he cancelado una cita a último minuto un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0025",
+    "text": "Yo nunca nunca he fingido entender una broma",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0026",
+    "text": "Yo nunca nunca he sonado el teléfono en un momento silencioso más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0027",
+    "text": "Yo nunca nunca he bebido algo que no sabía qué era este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0028",
+    "text": "Yo nunca nunca he fingido estar ocupado para no responder y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0029",
+    "text": "Yo nunca nunca he usado la misma ropa dos días seguidos frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0030",
+    "text": "Yo nunca nunca he dicho algo raro y fingido que no pasó y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0031",
+    "text": "Yo nunca nunca he dormido en casa de un amigo de amigo en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0032",
+    "text": "Yo nunca nunca he leído mensajes viejos por nostalgia un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0033",
+    "text": "Yo nunca nunca he dormido en el sofá por comodidad",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0034",
+    "text": "Yo nunca nunca he bailado mal en una fiesta más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0035",
+    "text": "Yo nunca nunca he organizado una fiesta que se salió de control este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0036",
+    "text": "Yo nunca nunca he mentido sobre cuántas personas he besado y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0037",
+    "text": "Yo nunca nunca he fingido que mi teléfono no tenía batería frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0038",
+    "text": "Yo nunca nunca he cantado la letra equivocada a todo volumen y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0039",
+    "text": "Yo nunca nunca he fingido estar más sobrio de lo que estaba en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0040",
+    "text": "Yo nunca nunca he dicho que no quería algo serio cuando sí un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0041",
+    "text": "Yo nunca nunca he dicho que ya casi llego estando lejos",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0042",
+    "text": "Yo nunca nunca he quedado dormido en clase o en el trabajo más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0043",
+    "text": "Yo nunca nunca he perdido zapatos en una noche de fiesta este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0044",
+    "text": "Yo nunca nunca he comparado a alguien con un ex y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0045",
+    "text": "Yo nunca nunca he mirado el teléfono en medio de una conversación frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0046",
+    "text": "Yo nunca nunca he llorado por una película animada y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0047",
+    "text": "Yo nunca nunca he enviado mensajes arrepentidos a las 3am en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0048",
+    "text": "Yo nunca nunca he guardado fotos de una relación vieja un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0049",
+    "text": "Yo nunca nunca he inventado una excusa absurda",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0050",
+    "text": "Yo nunca nunca he hablado mal de alguien estando cerca más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0051",
+    "text": "Yo nunca nunca he bailado con un desconocido este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0052",
+    "text": "Yo nunca nunca he fingido gustarme el hobby de mi pareja y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0053",
+    "text": "Yo nunca nunca he cantado en la ducha a todo volumen frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0054",
+    "text": "Yo nunca nunca he usado ropa al revés sin darme cuenta y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0055",
+    "text": "Yo nunca nunca he hecho un brindis absurdo en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0056",
+    "text": "Yo nunca nunca he mentido sobre dónde estuve un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0057",
+    "text": "Yo nunca nunca he bailado solo en mi casa",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0058",
+    "text": "Yo nunca nunca he reído solo y me miraron raro más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0059",
+    "text": "Yo nunca nunca he llegado a una fiesta demasiado temprano este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0060",
+    "text": "Yo nunca nunca he hecho ghosting a alguien y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0061",
+    "text": "Yo nunca nunca he hablado solo en voz alta frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0062",
+    "text": "Yo nunca nunca he mandado un meme al chat equivocado y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0063",
+    "text": "Yo nunca nunca he llegado a una fiesta demasiado tarde en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0064",
+    "text": "Yo nunca nunca he sido víctima de ghosting y fingí que no dolió un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0065",
+    "text": "Yo nunca nunca he olvidado el nombre de alguien al presentarme",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0066",
+    "text": "Yo nunca nunca he olvidado el mute en una videollamada más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0067",
+    "text": "Yo nunca nunca he quedado dormido en un sofá ajeno este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0068",
+    "text": "Yo nunca nunca he dicho solo somos amigos mintiendo y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0069",
+    "text": "Yo nunca nunca he dicho que estaba enfermo sin estarlo frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0070",
+    "text": "Yo nunca nunca he dicho te quiero por accidente y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0071",
+    "text": "Yo nunca nunca he comido toda la comida de la fiesta en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0072",
+    "text": "Yo nunca nunca he sentido celos por una historia de Instagram un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0073",
+    "text": "Yo nunca nunca he fingido estar dormido para no hablar",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0074",
+    "text": "Yo nunca nunca he fingido un acento y me descubrieron más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0075",
+    "text": "Yo nunca nunca he iniciado una ronda de shots este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0076",
+    "text": "Yo nunca nunca he escrito un mensaje largo y no lo envié y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0077",
+    "text": "Yo nunca nunca he usado filtros exagerados en una foto frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0078",
+    "text": "Yo nunca nunca he corrido detrás de un bus y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0079",
+    "text": "Yo nunca nunca he inventado un juego de beber en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0080",
+    "text": "Yo nunca nunca he enviado un mensaje largo y me arrepentí un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0081",
+    "text": "Yo nunca nunca he mentido sobre mi edad en una app",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0082",
+    "text": "Yo nunca nunca he quedado sin batería en el peor momento más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0083",
+    "text": "Yo nunca nunca he escapado de una fiesta aburrida este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0084",
+    "text": "Yo nunca nunca he fingido no ver un mensaje y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0085",
+    "text": "Yo nunca nunca he dicho que leí un libro que solo vi en resumen frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0086",
+    "text": "Yo nunca nunca he pedido algo en un restaurante y me arrepentí y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0087",
+    "text": "Yo nunca nunca he mentido sobre por qué me fui temprano en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0088",
+    "text": "Yo nunca nunca he usado a un amigo de excusa un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0089",
+    "text": "Yo nunca nunca he fingido saber cocinar un plato",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0090",
+    "text": "Yo nunca nunca he reído de un chiste que no entendí más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0091",
+    "text": "Yo nunca nunca he olvidado dónde estacioné después de salir este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0092",
+    "text": "Yo nunca nunca he mentido sobre mi estado sentimental y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0093",
+    "text": "Yo nunca nunca he dicho qué interesante sin escuchar frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0094",
+    "text": "Yo nunca nunca he saludado con demasiada euforia y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0095",
+    "text": "Yo nunca nunca he usado un disfraz ridículo en una fiesta temática en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0096",
+    "text": "Yo nunca nunca he dicho que estaba soltero cuando no un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0097",
+    "text": "Yo nunca nunca he perdido las llaves en mi propia casa",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0098",
+    "text": "Yo nunca nunca he chocado al esquivar a alguien más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0099",
+    "text": "Yo nunca nunca he hecho un discurso filosófico borracho este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0100",
+    "text": "Yo nunca nunca he hecho una escena por algo pequeño y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0101",
+    "text": "Yo nunca nunca he llegado tarde y culpado al tráfico frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0102",
+    "text": "Yo nunca nunca he cantado karaoke y me quedé en blanco y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0103",
+    "text": "Yo nunca nunca he bailado hasta que me dolieron los pies en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0104",
+    "text": "Yo nunca nunca he pedido perdón sin sentirlo del todo un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0105",
+    "text": "Yo nunca nunca he dicho que estaba en camino sin haberme movido",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0106",
+    "text": "Yo nunca nunca he manchado la ropa en una cita más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0107",
+    "text": "Yo nunca nunca he reído tanto que me caí este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0108",
+    "text": "Yo nunca nunca he dicho te perdono sin perdonar y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0109",
+    "text": "Yo nunca nunca he fingido que un regalo me encantó frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0110",
+    "text": "Yo nunca nunca he intentado ser gracioso y fallé y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0111",
+    "text": "Yo nunca nunca he conocido a alguien importante en una fiesta en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0112",
+    "text": "Yo nunca nunca he stalkeado a la nueva pareja de un ex un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0113",
+    "text": "Yo nunca nunca he olvidado una cita importante",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0114",
+    "text": "Yo nunca nunca he dicho igual cuando no entendí más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0115",
+    "text": "Yo nunca nunca he perdido la cuenta de las bebidas este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0116",
+    "text": "Yo nunca nunca he fingido estar bien después de una ruptura y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0117",
+    "text": "Yo nunca nunca he fingido estar de acuerdo para evitar pelea frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0118",
+    "text": "Yo nunca nunca he mentido sobre un logro y me preguntaron detalles y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0119",
+    "text": "Yo nunca nunca he dicho última ronda y mentí en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0120",
+    "text": "Yo nunca nunca he buscado a alguien en redes después de pelear un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0121",
+    "text": "Yo nunca nunca he borrado un mensaje apenas lo envié",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0122",
+    "text": "Yo nunca nunca he contado la misma historia dos veces más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0123",
+    "text": "Yo nunca nunca he hecho karaoke de una canción que no sabía este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0124",
+    "text": "Yo nunca nunca he mentido sobre por qué terminé una relación y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0125",
+    "text": "Yo nunca nunca he visto el final de una serie antes de tiempo frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0126",
+    "text": "Yo nunca nunca he reído demasiado alto en el cine y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0127",
+    "text": "Yo nunca nunca he ido a un after sin plan en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0128",
+    "text": "Yo nunca nunca he hecho planes dobles y cancelé uno un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0129",
+    "text": "Yo nunca nunca he fingido no ver a alguien en la calle",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0130",
+    "text": "Yo nunca nunca he usado una frase de moda mal más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0131",
+    "text": "Yo nunca nunca he llevado snacks escondidos a una fiesta este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0132",
+    "text": "Yo nunca nunca he dicho hablamos luego y desaparecí y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0133",
+    "text": "Yo nunca nunca he mentido sobre cuánto dormí frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0134",
+    "text": "Yo nunca nunca he olvidado pagar y tuve que volver y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0135",
+    "text": "Yo nunca nunca he fingido odiar una canción y la canté en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0136",
+    "text": "Yo nunca nunca he sentido atracción por el amigo de alguien un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0137",
+    "text": "Yo nunca nunca he dicho que estaba casi listo sin empezar",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0138",
+    "text": "Yo nunca nunca he mirado a alguien sin querer demasiado tiempo más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0139",
+    "text": "Yo nunca nunca he hecho una apuesta tonta en una noche este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0140",
+    "text": "Yo nunca nunca he usado el visto como estrategia y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0141",
+    "text": "Yo nunca nunca he usado el teléfono de otra persona sin permiso frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0142",
+    "text": "Yo nunca nunca he hecho un comentario y el silencio fue eterno y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0143",
+    "text": "Yo nunca nunca he quedado sin voz al día siguiente en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0144",
+    "text": "Yo nunca nunca he mentido sobre cuánto gasté en una cita un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0145",
+    "text": "Yo nunca nunca he dejado de contestar por días",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0146",
+    "text": "Yo nunca nunca he intentado impresionar y salió al revés más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0147",
+    "text": "Yo nunca nunca he tomado fotos de las que me arrepentí este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0148",
+    "text": "Yo nunca nunca he fingido gustarme una película en una cita y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0149",
+    "text": "Yo nunca nunca he dicho que no tengo efectivo cuando sí tenía frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0150",
+    "text": "Yo nunca nunca he tropezado con mis propias palabras y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0151",
+    "text": "Yo nunca nunca he intentado cocinar borracho en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0152",
+    "text": "Yo nunca nunca he llegado tarde a propósito a una cita un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0153",
+    "text": "Yo nunca nunca he guardado comida y se me olvidó",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0154",
+    "text": "Yo nunca nunca he enviado un mensaje y quise borrarlo al instante más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0155",
+    "text": "Yo nunca nunca he dormido con la ropa de la fiesta puesta este año",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0156",
+    "text": "Yo nunca nunca he dicho que no estaba nervioso cuando sí y me arrepentí",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0157",
+    "text": "Yo nunca nunca he fingido un hobby que no practico frente a otras personas",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0158",
+    "text": "Yo nunca nunca he saludado con la mano equivocada y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0159",
+    "text": "Yo nunca nunca he mezclado bebidas que no debí mezclar en una reunión",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0160",
+    "text": "Yo nunca nunca he guardado un contacto con nombre falso un viernes por la noche",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0161",
+    "text": "Yo nunca nunca he mentido para no salir (161)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0162",
+    "text": "Yo nunca nunca he olvidado el cierre del pantalón más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0163",
+    "text": "Yo nunca nunca he hecho algo vergonzoso estando borracho este año (163)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0164",
+    "text": "Yo nunca nunca he mentido para salir de una cita y me arrepentí (164)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0165",
+    "text": "Yo nunca nunca he fingido estar ocupado frente a otras personas (165)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0166",
+    "text": "Yo nunca nunca he stalkeado a mi ex y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0167",
+    "text": "Yo nunca nunca he perdido un teléfono en una fiesta en una reunión (167)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0168",
+    "text": "Yo nunca nunca he stalkeado el perfil de alguien que me gusta un viernes por la noche (168)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0169",
+    "text": "Yo nunca nunca he enviado un mensaje a la persona equivocada (169)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0170",
+    "text": "Yo nunca nunca he caído en público más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0171",
+    "text": "Yo nunca nunca he bailado encima de una mesa este año (171)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0172",
+    "text": "Yo nunca nunca he fingido no estar celoso y me arrepentí (172)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0173",
+    "text": "Yo nunca nunca he olvidado el cumpleaños de alguien cercano frente a otras personas (173)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0174",
+    "text": "Yo nunca nunca he saludado a alguien que no me conocía y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0175",
+    "text": "Yo nunca nunca he cantado karaoke borracho en una reunión (175)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0176",
+    "text": "Yo nunca nunca he dicho no pasa nada cuando sí pasaba un viernes por la noche (176)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0177",
+    "text": "Yo nunca nunca he dicho que me gusta una comida que odio (177)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0178",
+    "text": "Yo nunca nunca he tenido comida en los dientes todo el día más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0179",
+    "text": "Yo nunca nunca he dicho un secreto en una fiesta este año (179)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0180",
+    "text": "Yo nunca nunca he vuelto a hablar con un ex y me arrepentí (180)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0181",
+    "text": "Yo nunca nunca he reído en un momento serio frente a otras personas (181)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0182",
+    "text": "Yo nunca nunca he enviado un audio vergonzoso y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0183",
+    "text": "Yo nunca nunca he llegado a casa sin recordar cómo en una reunión (183)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0184",
+    "text": "Yo nunca nunca he cancelado una cita a último minuto un viernes por la noche (184)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0185",
+    "text": "Yo nunca nunca he fingido entender una broma (185)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0186",
+    "text": "Yo nunca nunca he llamado a alguien por el nombre equivocado más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0187",
+    "text": "Yo nunca nunca he bebido algo que no sabía qué era este año (187)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0188",
+    "text": "Yo nunca nunca he fingido estar ocupado para no responder y me arrepentí (188)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0189",
+    "text": "Yo nunca nunca he usado la misma ropa dos días seguidos frente a otras personas (189)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0190",
+    "text": "Yo nunca nunca he sonado el teléfono en un momento silencioso y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0191",
+    "text": "Yo nunca nunca he dormido en casa de un amigo de amigo en una reunión (191)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0192",
+    "text": "Yo nunca nunca he leído mensajes viejos por nostalgia un viernes por la noche (192)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0193",
+    "text": "Yo nunca nunca he dormido en el sofá por comodidad (193)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0194",
+    "text": "Yo nunca nunca he dicho algo raro y fingido que no pasó más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0195",
+    "text": "Yo nunca nunca he organizado una fiesta que se salió de control este año (195)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0196",
+    "text": "Yo nunca nunca he mentido sobre cuántas personas he besado y me arrepentí (196)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0197",
+    "text": "Yo nunca nunca he fingido que mi teléfono no tenía batería frente a otras personas (197)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0198",
+    "text": "Yo nunca nunca he bailado mal en una fiesta y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0199",
+    "text": "Yo nunca nunca he fingido estar más sobrio de lo que estaba en una reunión (199)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0200",
+    "text": "Yo nunca nunca he dicho que no quería algo serio cuando sí un viernes por la noche (200)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0201",
+    "text": "Yo nunca nunca he dicho que ya casi llego estando lejos (201)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0202",
+    "text": "Yo nunca nunca he cantado la letra equivocada a todo volumen más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0203",
+    "text": "Yo nunca nunca he perdido zapatos en una noche de fiesta este año (203)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0204",
+    "text": "Yo nunca nunca he comparado a alguien con un ex y me arrepentí (204)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0205",
+    "text": "Yo nunca nunca he mirado el teléfono en medio de una conversación frente a otras personas (205)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0206",
+    "text": "Yo nunca nunca he quedado dormido en clase o en el trabajo y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0207",
+    "text": "Yo nunca nunca he enviado mensajes arrepentidos a las 3am en una reunión (207)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0208",
+    "text": "Yo nunca nunca he guardado fotos de una relación vieja un viernes por la noche (208)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0209",
+    "text": "Yo nunca nunca he inventado una excusa absurda (209)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0210",
+    "text": "Yo nunca nunca he llorado por una película animada más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0211",
+    "text": "Yo nunca nunca he bailado con un desconocido este año (211)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0212",
+    "text": "Yo nunca nunca he fingido gustarme el hobby de mi pareja y me arrepentí (212)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0213",
+    "text": "Yo nunca nunca he cantado en la ducha a todo volumen frente a otras personas (213)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0214",
+    "text": "Yo nunca nunca he hablado mal de alguien estando cerca y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0215",
+    "text": "Yo nunca nunca he hecho un brindis absurdo en una reunión (215)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0216",
+    "text": "Yo nunca nunca he mentido sobre dónde estuve un viernes por la noche (216)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0217",
+    "text": "Yo nunca nunca he bailado solo en mi casa (217)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0218",
+    "text": "Yo nunca nunca he usado ropa al revés sin darme cuenta más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0219",
+    "text": "Yo nunca nunca he llegado a una fiesta demasiado temprano este año (219)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0220",
+    "text": "Yo nunca nunca he hecho ghosting a alguien y me arrepentí (220)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0221",
+    "text": "Yo nunca nunca he hablado solo en voz alta frente a otras personas (221)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0222",
+    "text": "Yo nunca nunca he reído solo y me miraron raro y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0223",
+    "text": "Yo nunca nunca he llegado a una fiesta demasiado tarde en una reunión (223)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0224",
+    "text": "Yo nunca nunca he sido víctima de ghosting y fingí que no dolió un viernes por la noche (224)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0225",
+    "text": "Yo nunca nunca he olvidado el nombre de alguien al presentarme (225)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0226",
+    "text": "Yo nunca nunca he mandado un meme al chat equivocado más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0227",
+    "text": "Yo nunca nunca he quedado dormido en un sofá ajeno este año (227)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0228",
+    "text": "Yo nunca nunca he dicho solo somos amigos mintiendo y me arrepentí (228)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0229",
+    "text": "Yo nunca nunca he dicho que estaba enfermo sin estarlo frente a otras personas (229)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0230",
+    "text": "Yo nunca nunca he olvidado el mute en una videollamada y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0231",
+    "text": "Yo nunca nunca he comido toda la comida de la fiesta en una reunión (231)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0232",
+    "text": "Yo nunca nunca he sentido celos por una historia de Instagram un viernes por la noche (232)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0233",
+    "text": "Yo nunca nunca he fingido estar dormido para no hablar (233)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0234",
+    "text": "Yo nunca nunca he dicho te quiero por accidente más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0235",
+    "text": "Yo nunca nunca he iniciado una ronda de shots este año (235)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0236",
+    "text": "Yo nunca nunca he escrito un mensaje largo y no lo envié y me arrepentí (236)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0237",
+    "text": "Yo nunca nunca he usado filtros exagerados en una foto frente a otras personas (237)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0238",
+    "text": "Yo nunca nunca he fingido un acento y me descubrieron y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0239",
+    "text": "Yo nunca nunca he inventado un juego de beber en una reunión (239)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0240",
+    "text": "Yo nunca nunca he enviado un mensaje largo y me arrepentí un viernes por la noche (240)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0241",
+    "text": "Yo nunca nunca he mentido sobre mi edad en una app (241)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0242",
+    "text": "Yo nunca nunca he corrido detrás de un bus más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0243",
+    "text": "Yo nunca nunca he escapado de una fiesta aburrida este año (243)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0244",
+    "text": "Yo nunca nunca he fingido no ver un mensaje y me arrepentí (244)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0245",
+    "text": "Yo nunca nunca he dicho que leí un libro que solo vi en resumen frente a otras personas (245)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0246",
+    "text": "Yo nunca nunca he quedado sin batería en el peor momento y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0247",
+    "text": "Yo nunca nunca he mentido sobre por qué me fui temprano en una reunión (247)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0248",
+    "text": "Yo nunca nunca he usado a un amigo de excusa un viernes por la noche (248)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0249",
+    "text": "Yo nunca nunca he fingido saber cocinar un plato (249)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0250",
+    "text": "Yo nunca nunca he pedido algo en un restaurante y me arrepentí más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0251",
+    "text": "Yo nunca nunca he olvidado dónde estacioné después de salir este año (251)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0252",
+    "text": "Yo nunca nunca he mentido sobre mi estado sentimental y me arrepentí (252)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0253",
+    "text": "Yo nunca nunca he dicho qué interesante sin escuchar frente a otras personas (253)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0254",
+    "text": "Yo nunca nunca he reído de un chiste que no entendí y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0255",
+    "text": "Yo nunca nunca he usado un disfraz ridículo en una fiesta temática en una reunión (255)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0256",
+    "text": "Yo nunca nunca he dicho que estaba soltero cuando no un viernes por la noche (256)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0257",
+    "text": "Yo nunca nunca he perdido las llaves en mi propia casa (257)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0258",
+    "text": "Yo nunca nunca he saludado con demasiada euforia más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0259",
+    "text": "Yo nunca nunca he hecho un discurso filosófico borracho este año (259)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0260",
+    "text": "Yo nunca nunca he hecho una escena por algo pequeño y me arrepentí (260)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0261",
+    "text": "Yo nunca nunca he llegado tarde y culpado al tráfico frente a otras personas (261)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0262",
+    "text": "Yo nunca nunca he chocado al esquivar a alguien y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0263",
+    "text": "Yo nunca nunca he bailado hasta que me dolieron los pies en una reunión (263)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0264",
+    "text": "Yo nunca nunca he pedido perdón sin sentirlo del todo un viernes por la noche (264)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0265",
+    "text": "Yo nunca nunca he dicho que estaba en camino sin haberme movido (265)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0266",
+    "text": "Yo nunca nunca he cantado karaoke y me quedé en blanco más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0267",
+    "text": "Yo nunca nunca he reído tanto que me caí este año (267)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0268",
+    "text": "Yo nunca nunca he dicho te perdono sin perdonar y me arrepentí (268)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0269",
+    "text": "Yo nunca nunca he fingido que un regalo me encantó frente a otras personas (269)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0270",
+    "text": "Yo nunca nunca he manchado la ropa en una cita y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0271",
+    "text": "Yo nunca nunca he conocido a alguien importante en una fiesta en una reunión (271)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0272",
+    "text": "Yo nunca nunca he stalkeado a la nueva pareja de un ex un viernes por la noche (272)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0273",
+    "text": "Yo nunca nunca he olvidado una cita importante (273)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0274",
+    "text": "Yo nunca nunca he intentado ser gracioso y fallé más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0275",
+    "text": "Yo nunca nunca he perdido la cuenta de las bebidas este año (275)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0276",
+    "text": "Yo nunca nunca he fingido estar bien después de una ruptura y me arrepentí (276)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0277",
+    "text": "Yo nunca nunca he fingido estar de acuerdo para evitar pelea frente a otras personas (277)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0278",
+    "text": "Yo nunca nunca he dicho igual cuando no entendí y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0279",
+    "text": "Yo nunca nunca he dicho última ronda y mentí en una reunión (279)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0280",
+    "text": "Yo nunca nunca he buscado a alguien en redes después de pelear un viernes por la noche (280)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0281",
+    "text": "Yo nunca nunca he borrado un mensaje apenas lo envié (281)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0282",
+    "text": "Yo nunca nunca he mentido sobre un logro y me preguntaron detalles más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0283",
+    "text": "Yo nunca nunca he hecho karaoke de una canción que no sabía este año (283)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0284",
+    "text": "Yo nunca nunca he mentido sobre por qué terminé una relación y me arrepentí (284)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0285",
+    "text": "Yo nunca nunca he visto el final de una serie antes de tiempo frente a otras personas (285)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0286",
+    "text": "Yo nunca nunca he contado la misma historia dos veces y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0287",
+    "text": "Yo nunca nunca he ido a un after sin plan en una reunión (287)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0288",
+    "text": "Yo nunca nunca he hecho planes dobles y cancelé uno un viernes por la noche (288)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0289",
+    "text": "Yo nunca nunca he fingido no ver a alguien en la calle (289)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0290",
+    "text": "Yo nunca nunca he reído demasiado alto en el cine más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0291",
+    "text": "Yo nunca nunca he llevado snacks escondidos a una fiesta este año (291)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0292",
+    "text": "Yo nunca nunca he dicho hablamos luego y desaparecí y me arrepentí (292)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0293",
+    "text": "Yo nunca nunca he mentido sobre cuánto dormí frente a otras personas (293)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0294",
+    "text": "Yo nunca nunca he usado una frase de moda mal y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0295",
+    "text": "Yo nunca nunca he fingido odiar una canción y la canté en una reunión (295)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0296",
+    "text": "Yo nunca nunca he sentido atracción por el amigo de alguien un viernes por la noche (296)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0297",
+    "text": "Yo nunca nunca he dicho que estaba casi listo sin empezar (297)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0298",
+    "text": "Yo nunca nunca he olvidado pagar y tuve que volver más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0299",
+    "text": "Yo nunca nunca he hecho una apuesta tonta en una noche este año (299)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0300",
+    "text": "Yo nunca nunca he usado el visto como estrategia y me arrepentí (300)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0301",
+    "text": "Yo nunca nunca he usado el teléfono de otra persona sin permiso frente a otras personas (301)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0302",
+    "text": "Yo nunca nunca he mirado a alguien sin querer demasiado tiempo y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0303",
+    "text": "Yo nunca nunca he quedado sin voz al día siguiente en una reunión (303)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0304",
+    "text": "Yo nunca nunca he mentido sobre cuánto gasté en una cita un viernes por la noche (304)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0305",
+    "text": "Yo nunca nunca he dejado de contestar por días (305)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0306",
+    "text": "Yo nunca nunca he hecho un comentario y el silencio fue eterno más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0307",
+    "text": "Yo nunca nunca he tomado fotos de las que me arrepentí este año (307)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0308",
+    "text": "Yo nunca nunca he fingido gustarme una película en una cita y me arrepentí (308)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0309",
+    "text": "Yo nunca nunca he dicho que no tengo efectivo cuando sí tenía frente a otras personas (309)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0310",
+    "text": "Yo nunca nunca he intentado impresionar y salió al revés y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0311",
+    "text": "Yo nunca nunca he intentado cocinar borracho en una reunión (311)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0312",
+    "text": "Yo nunca nunca he llegado tarde a propósito a una cita un viernes por la noche (312)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0313",
+    "text": "Yo nunca nunca he guardado comida y se me olvidó (313)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0314",
+    "text": "Yo nunca nunca he tropezado con mis propias palabras más de una vez",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0315",
+    "text": "Yo nunca nunca he dormido con la ropa de la fiesta puesta este año (315)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0316",
+    "text": "Yo nunca nunca he dicho que no estaba nervioso cuando sí y me arrepentí (316)",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "CAS_0317",
+    "text": "Yo nunca nunca he fingido un hobby que no practico frente a otras personas (317)",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "VER_0318",
+    "text": "Yo nunca nunca he enviado un mensaje y quise borrarlo al instante y lo negué después",
+    "category": "vergonzoso",
+    "adultOnly": false
+  },
+  {
+    "id": "FIE_0319",
+    "text": "Yo nunca nunca he mezclado bebidas que no debí mezclar en una reunión (319)",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "REL_0320",
+    "text": "Yo nunca nunca he guardado un contacto con nombre falso un viernes por la noche (320)",
+    "category": "relaciones",
+    "adultOnly": false
+  }
+]

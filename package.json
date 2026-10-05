@@ -1,0 +1,17 @@
+{
+  "name": "yo-nunca-nunca",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "dev:server": "pnpm --filter @ynn/server dev",
+    "dev:mobile": "pnpm --filter @ynn/mobile start",
+    "test": "pnpm -r --if-present test",
+    "db:migrate": "pnpm --filter @ynn/db migrate",
+    "db:seed": "pnpm --filter @ynn/db seed",
+    "build": "pnpm -r --if-present build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

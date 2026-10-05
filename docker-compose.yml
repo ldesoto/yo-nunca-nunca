@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ynn
+      POSTGRES_PASSWORD: ynn
+      POSTGRES_DB: yo_nunca_nunca
+    ports:
+      - '5433:5432'
+    volumes:
+      - ynn_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ynn -d yo_nunca_nunca']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    environment:
+      DATABASE_URL: postgres://ynn:ynn@postgres:5432/yo_nunca_nunca
+      PORT: '2567'
+      NODE_ENV: production
+    ports:
+      - '2567:2567'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  ynn_pg:
