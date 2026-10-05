@@ -10,3 +10,7 @@ coverage/
 .DS_Store
 *.tsbuildinfo
 web-build/
+packages/db/data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

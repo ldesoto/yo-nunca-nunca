@@ -1,17 +1,12 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
+import { Field, GlassCard, SectionLabel } from '../components/GlassCard';
 import { joinParty } from '../api';
 import { useGame } from '../GameContext';
-import { colors } from '../theme';
+import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
@@ -21,13 +16,19 @@ export function JoinScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('');
   const [error, setError] = useState('');
 
   const onJoin = async () => {
     setLoading(true);
     setError('');
+    setStatus('');
     try {
-      const { room, roomCode } = await joinParty(code, name || 'Jugador');
+      const { room, roomCode } = await joinParty(
+        code,
+        name || 'Jugador',
+        (msg) => setStatus(msg),
+      );
       setPlayerName(name || 'Jugador');
       setRoomCode(roomCode);
       setRoom(room);
@@ -40,38 +41,34 @@ export function JoinScreen({ navigation }: Props) {
   };
 
   return (
-    <Screen>
-      <Text style={styles.title}>Unirse</Text>
-      <Text style={styles.label}>Tu nombre</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder="Ej. Ana"
-        placeholderTextColor={colors.muted}
-        style={styles.input}
-        maxLength={20}
-      />
-      <Text style={styles.label}>Código de sala</Text>
-      <TextInput
-        value={code}
-        onChangeText={(t) => setCode(t.toUpperCase())}
-        placeholder="K7X9P"
-        placeholderTextColor={colors.muted}
-        autoCapitalize="characters"
-        style={styles.input}
-        maxLength={5}
-      />
+    <Screen scroll>
+      <Text style={typography.title}>Unirse</Text>
+      <Text style={[typography.body, { marginBottom: 10 }]}>
+        Pide el código al anfitrión. 5 caracteres, sin confusiones.
+      </Text>
+      <GlassCard glow="cyan">
+        <SectionLabel>Tu nombre</SectionLabel>
+        <Field value={name} onChangeText={setName} placeholder="Ej. Ana" maxLength={20} />
+        <SectionLabel>Código de sala</SectionLabel>
+        <Field
+          value={code}
+          onChangeText={(t) => setCode(t.toUpperCase())}
+          placeholder="K7X9P"
+          autoCapitalize="characters"
+          maxLength={5}
+          style={{ letterSpacing: 4, fontWeight: '800', fontSize: 22 }}
+        />
+      </GlassCard>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {loading ? (
-        <ActivityIndicator color={colors.neonCyan} style={{ marginTop: 20 }} />
+        <View style={{ marginTop: 22, alignItems: 'center' }}>
+          <ActivityIndicator color={colors.neonCyan} />
+          {status ? <Text style={styles.status}>{status}</Text> : null}
+        </View>
       ) : (
-        <View style={{ marginTop: 16 }}>
+        <View style={{ marginTop: 18 }}>
           <PartyButton label="ENTRAR" variant="cyan" onPress={onJoin} />
-          <PartyButton
-            label="Volver"
-            variant="ghost"
-            onPress={() => navigation.goBack()}
-          />
+          <PartyButton label="Volver" variant="ghost" onPress={() => navigation.goBack()} />
         </View>
       )}
     </Screen>
@@ -79,21 +76,6 @@ export function JoinScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: colors.text,
-    fontSize: 32,
-    fontWeight: '900',
-    marginBottom: 24,
-  },
-  label: { color: colors.muted, marginBottom: 6, marginTop: 8 },
-  input: {
-    backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 14,
-    color: colors.text,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-  },
-  error: { color: colors.danger, marginTop: 12 },
+  error: { color: colors.danger, marginTop: 12, fontWeight: '700' },
+  status: { color: colors.muted, marginTop: 10, fontWeight: '600', textAlign: 'center' },
 });

@@ -24,6 +24,9 @@ export type Snapshot = {
   yesCount: number;
   totalAnswered: number;
   specialEvent: string;
+  activeEvent: string;
+  mode: string;
+  customCount: number;
   winnerName: string;
   revealedYesNames: string[];
   players: PublicPlayer[];
@@ -63,7 +66,10 @@ function readState(room: GameRoom): Snapshot {
     questionText: s.questionText,
     yesCount: s.yesCount,
     totalAnswered: s.totalAnswered,
-    specialEvent: s.specialEvent,
+    specialEvent: s.specialEvent || 'none',
+    activeEvent: s.activeEvent || 'none',
+    mode: s.mode || 'fiesta',
+    customCount: s.customCount || 0,
     winnerName: s.winnerName,
     revealedYesNames: revealed,
     players,

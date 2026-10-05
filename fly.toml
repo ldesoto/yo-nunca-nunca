@@ -1,0 +1,40 @@
+# Fly.io — optional always-on host (~$2/mo with min_machines_running=1).
+# Default free production target is Render (render.yaml); Fly has no permanent free tier (trial ~2 VM-hours).
+# Colyseus game server; SQLite on volume /data when using Fly.
+# App name must be globally unique; override with FLY_APP_NAME or fly.toml app rename.
+app = 'yo-nunca-nunca'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'apps/server/Dockerfile'
+
+[env]
+  PORT = '2567'
+  NODE_ENV = 'production'
+  YNN_SQLITE_PATH = '/data/ynn.sqlite'
+  # Comma-separated extra CORS origins (optional custom domain):
+  # ALLOWED_ORIGINS = 'https://api.yonuncannunca.app'
+
+[http_service]
+  internal_port = 2567
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    grace_period = '15s'
+    interval = '30s'
+    method = 'GET'
+    path = '/health'
+    timeout = '5s'
+
+[mounts]
+  source = 'ynn_data'
+  destination = '/data'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

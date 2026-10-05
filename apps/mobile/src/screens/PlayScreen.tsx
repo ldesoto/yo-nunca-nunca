@@ -1,20 +1,24 @@
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  ZoomIn,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
+import { GlassCard } from '../components/GlassCard';
 import { useGame } from '../GameContext';
 import { useRoomState } from '../useRoomState';
-import { colors } from '../theme';
+import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Play'>;
+
+const EVENT_COPY: Record<string, string> = {
+  double_score: '🔥 Doble puntuación',
+  mortal: '💀 Pregunta mortal',
+  nobody: '😇 Nadie lo ha hecho',
+  everyone: '😂 ¡Todos lo han hecho!',
+};
 
 export function PlayScreen({ navigation }: Props) {
   const { room } = useGame();
@@ -35,32 +39,33 @@ export function PlayScreen({ navigation }: Props) {
   if (!room || !snap) {
     return (
       <Screen>
-        <Text style={styles.muted}>Cargando partida…</Text>
+        <Text style={typography.body}>Cargando partida…</Text>
       </Screen>
     );
   }
 
   const me = snap.players.find((p) => p.sessionId === snap.mySessionId);
   const answered = Boolean(me?.hasAnswered);
+  const eventKey = snap.activeEvent || snap.specialEvent;
 
   if (snap.phase === 'SCORE') {
     return (
       <Screen>
-        <Animated.Text entering={ZoomIn} style={styles.round}>
-          RANKING
-        </Animated.Text>
-        {snap.players.map((p, i) => (
-          <Animated.View
-            key={p.sessionId}
-            entering={FadeInDown.delay(i * 80)}
-            style={styles.rankRow}
-          >
-            <Text style={styles.rankName}>
-              {i + 1}. {p.name}
-            </Text>
-            <Text style={styles.rankScore}>{p.score}</Text>
-          </Animated.View>
-        ))}
+        <Text style={typography.kicker}>RANKING EN VIVO</Text>
+        <GlassCard glow="cyan" style={{ marginTop: 12 }}>
+          {snap.players.map((p, i) => (
+            <Animated.View
+              key={p.sessionId}
+              entering={FadeInDown.delay(i * 70)}
+              style={styles.rankRow}
+            >
+              <Text style={styles.rankName}>
+                {i + 1}. {p.name}
+              </Text>
+              <Text style={styles.rankScore}>{p.score}</Text>
+            </Animated.View>
+          ))}
+        </GlassCard>
       </Screen>
     );
   }
@@ -68,27 +73,22 @@ export function PlayScreen({ navigation }: Props) {
   if (snap.phase === 'REVEAL') {
     return (
       <Screen>
-        <Text style={styles.round}>
+        <Text style={typography.kicker}>
           RONDA {snap.currentRound}/{snap.totalRounds}
         </Text>
         <Animated.Text entering={FadeInUp} style={styles.revealTitle}>
           {snap.yesCount} de {snap.totalAnswered} lo han hecho
         </Animated.Text>
-        {snap.specialEvent === 'nobody' ? (
-          <Text style={styles.special}>Nadie lo ha hecho</Text>
+        {EVENT_COPY[snap.specialEvent] ? (
+          <Text style={styles.special}>{EVENT_COPY[snap.specialEvent]}</Text>
         ) : null}
-        {snap.specialEvent === 'everyone' ? (
-          <Text style={styles.special}>¡Todos lo han hecho!</Text>
-        ) : null}
-        <View style={{ marginTop: 24, gap: 10 }}>
+        <View style={{ marginTop: 22, gap: 10 }}>
           {snap.revealedYesNames.map((name, i) => (
-            <Animated.Text
-              key={`${name}-${i}`}
-              entering={ZoomIn.delay(i * 50)}
-              style={styles.revealed}
-            >
-              {name}
-            </Animated.Text>
+            <Animated.View key={`${name}-${i}`} entering={ZoomIn.delay(i * 40)}>
+              <GlassCard glow="pink" style={styles.revealCard}>
+                <Text style={styles.revealed}>{name}</Text>
+              </GlassCard>
+            </Animated.View>
           ))}
         </View>
       </Screen>
@@ -97,47 +97,51 @@ export function PlayScreen({ navigation }: Props) {
 
   return (
     <Screen>
-      <Text style={styles.round}>
-        RONDA {snap.currentRound} / {snap.totalRounds}
-      </Text>
-      <View style={styles.progressTrack}>
-        <View
-          style={[
-            styles.progressFill,
-            {
-              width: `${Math.min(
-                100,
-                (snap.currentRound / Math.max(1, snap.totalRounds)) * 100,
-              )}%`,
-            },
-          ]}
-        />
+      <View style={styles.top}>
+        <Text style={typography.kicker}>
+          RONDA {snap.currentRound} / {snap.totalRounds}
+        </Text>
+        <View style={styles.progressTrack}>
+          <View
+            style={[
+              styles.progressFill,
+              {
+                width: `${Math.min(
+                  100,
+                  (snap.currentRound / Math.max(1, snap.totalRounds)) * 100,
+                )}%`,
+              },
+            ]}
+          />
+        </View>
       </View>
-      <Animated.Text entering={FadeInUp} style={styles.question}>
-        {snap.questionText || '…'}
-      </Animated.Text>
-      <Text style={styles.eyes}>👀</Text>
+
+      {EVENT_COPY[eventKey] ? (
+        <GlassCard glow="pink" style={styles.eventBanner}>
+          <Text style={styles.eventText}>{EVENT_COPY[eventKey]}</Text>
+        </GlassCard>
+      ) : null}
+
+      <GlassCard glow="cyan" style={styles.qCard}>
+        <Animated.Text entering={FadeInUp} style={styles.question}>
+          {snap.questionText || '…'}
+        </Animated.Text>
+        <Text style={styles.eyes}>👀</Text>
+      </GlassCard>
+
       {answered ? (
         <Text style={styles.waiting}>Esperando al resto…</Text>
       ) : (
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 18 }}>
           <PartyButton
             label="NUNCA"
             variant="never"
-            onPress={() => {
-              void Haptics.selectionAsync();
-              room.send('submitAnswer', { choice: 'never' });
-            }}
+            onPress={() => room.send('submitAnswer', { choice: 'never' })}
           />
           <PartyButton
             label="SÍ, LO HE HECHO"
             variant="yes"
-            onPress={() => {
-              void Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success,
-              );
-              room.send('submitAnswer', { choice: 'did' });
-            }}
+            onPress={() => room.send('submitAnswer', { choice: 'did' })}
           />
         </View>
       )}
@@ -146,36 +150,31 @@ export function PlayScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  muted: { color: colors.muted },
-  round: {
-    color: colors.neonCyan,
-    fontWeight: '800',
-    letterSpacing: 2,
-    marginBottom: 10,
-  },
+  top: { marginBottom: 8 },
   progressTrack: {
-    height: 6,
+    height: 8,
     borderRadius: 99,
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
     overflow: 'hidden',
-    marginBottom: 22,
+    marginTop: 10,
   },
-  progressFill: {
-    height: '100%',
-    backgroundColor: colors.neonPink,
-  },
+  progressFill: { height: '100%', backgroundColor: colors.neonPink },
+  eventBanner: { marginBottom: 12, paddingVertical: 12 },
+  eventText: { color: colors.text, fontWeight: '800', textAlign: 'center' },
+  qCard: { marginTop: 6, minHeight: 220, justifyContent: 'center' },
   question: {
     color: colors.text,
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
   },
-  eyes: { fontSize: 36, marginTop: 18, textAlign: 'center' },
+  eyes: { fontSize: 34, marginTop: 18, textAlign: 'center' },
   waiting: {
     color: colors.muted,
     textAlign: 'center',
     marginTop: 28,
     fontSize: 16,
+    fontWeight: '600',
   },
   revealTitle: {
     color: colors.text,
@@ -189,17 +188,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
   },
-  revealed: {
-    color: colors.neonPink,
-    fontSize: 24,
-    fontWeight: '800',
-  },
+  revealCard: { paddingVertical: 14 },
+  revealed: { color: colors.neonPink, fontSize: 22, fontWeight: '800', textAlign: 'center' },
   rankRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(255,255,255,0.15)',
+    borderBottomColor: 'rgba(255,255,255,0.12)',
   },
   rankName: { color: colors.text, fontSize: 18, fontWeight: '700' },
   rankScore: { color: colors.neonLime, fontSize: 18, fontWeight: '900' },

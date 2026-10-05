@@ -1,5 +1,5 @@
 import { Room, Client } from '@colyseus/core';
-import type { DbQuestion } from '@ynn/db';
+import type { DbQuestion, YnnDb } from '@ynn/db';
 import { fetchActiveQuestions } from '@ynn/db';
 import {
   DEFAULT_ROOM_SETTINGS,
@@ -14,7 +14,6 @@ import {
   type AnswerChoice,
   type RoundAnswer,
 } from '@ynn/shared';
-import type pg from 'pg';
 import { GameState, PlayerState } from '../schema/GameState.js';
 import { pickFallback } from '../questions.js';
 
@@ -23,16 +22,19 @@ export type PartyRoomOptions = {
   playerName?: string;
   rounds?: number;
   categories?: string[];
-  pool?: pg.Pool | null;
+  db?: YnnDb | null;
   solo?: boolean;
+  mode?: 'fiesta' | 'parejas';
 };
 
 type PrivateAnswer = { choice: AnswerChoice };
 
 export class PartyRoom extends Room<GameState> {
   maxClients = DEFAULT_ROOM_SETTINGS.maxPlayers;
-  private pool: pg.Pool | null = null;
+  private db: YnnDb | null = null;
   private solo = false;
+  private mode: 'fiesta' | 'parejas' = 'fiesta';
+  private customQuestions: DbQuestion[] = [];
   private answers = new Map<string, PrivateAnswer>();
   private deck: DbQuestion[] = [];
   private usedQuestionIds = new Set<string>();
@@ -42,9 +44,14 @@ export class PartyRoom extends Room<GameState> {
   private createHits: number[] = [];
 
   onCreate(options: PartyRoomOptions = {}) {
-    this.pool = options.pool ?? null;
+    this.db = options.db ?? null;
     this.solo = Boolean(options.solo);
+    this.mode = options.mode === 'parejas' ? 'parejas' : 'fiesta';
+    if (this.mode === 'parejas') {
+      this.maxClients = 2;
+    }
     this.setState(new GameState());
+    this.state.mode = this.mode;
     this.state.roomCode = normalizeRoomCode(
       options.roomCode || generateRoomCode(),
     );
@@ -82,6 +89,12 @@ export class PartyRoom extends Room<GameState> {
     this.onMessage('setRounds', (client, message: { rounds?: number }) => {
       this.handleSetRounds(client, message?.rounds);
     });
+    this.onMessage(
+      'addCustomQuestion',
+      (client, message: { text?: string }) => {
+        this.handleAddCustom(client, message?.text ?? '');
+      },
+    );
   }
 
   onJoin(client: Client, options: PartyRoomOptions = {}) {
@@ -184,10 +197,39 @@ export class PartyRoom extends Room<GameState> {
     this.state.totalRounds = Math.min(30, Math.max(3, Math.floor(rounds)));
   }
 
+  private handleAddCustom(client: Client, text: string) {
+    if (this.state.phase !== 'LOBBY') return;
+    const cleaned = text
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 140);
+    if (cleaned.length < 8) return;
+    if (this.customQuestions.length >= 20) return;
+    const lower = cleaned.toLowerCase();
+    if (/(menor|niñ|child|kill|suic)/i.test(lower)) return;
+    const prefixed = cleaned.toLowerCase().startsWith('yo nunca')
+      ? cleaned
+      : `Yo nunca nunca ${cleaned}`;
+    const id = `CUSTOM_${Date.now()}_${this.customQuestions.length}`;
+    this.customQuestions.push({
+      id,
+      text: prefixed,
+      category: 'casual',
+      adult_only: false,
+      active: true,
+    });
+    this.state.customCount = this.customQuestions.length;
+  }
+
   private async handleStartGame(client: Client) {
     if (client.sessionId !== this.state.hostSessionId) return;
     if (this.state.phase !== 'LOBBY') return;
-    if (!this.solo && !canStartGame(this.state.players.size)) return;
+    if (this.mode === 'parejas' && !this.solo && this.state.players.size !== 2) {
+      return;
+    }
+    if (!this.solo && this.mode !== 'parejas' && !canStartGame(this.state.players.size)) {
+      return;
+    }
     if (this.solo && this.state.players.size < 1) return;
     if (!canTransition('LOBBY', 'QUESTION')) return;
 
@@ -201,8 +243,8 @@ export class PartyRoom extends Room<GameState> {
     const need = this.state.totalRounds + 5;
     this.usedQuestionIds.clear();
     try {
-      if (this.pool) {
-        this.deck = await fetchActiveQuestions(this.pool, cats, need);
+      if (this.db) {
+        this.deck = fetchActiveQuestions(this.db, cats, need);
       } else {
         this.deck = [];
       }
@@ -213,6 +255,8 @@ export class PartyRoom extends Room<GameState> {
       const extra = pickFallback(cats, need, this.usedQuestionIds);
       this.deck = [...this.deck, ...extra];
     }
+    // Custom questions first so they actually get played
+    this.deck = [...this.customQuestions, ...this.deck];
   }
 
   private beginQuestion() {
@@ -223,6 +267,12 @@ export class PartyRoom extends Room<GameState> {
     this.state.totalAnswered = 0;
     this.state.specialEvent = 'none';
     this.state.currentRound += 1;
+
+    // ~25% chance of a special event for variety
+    const roll = Math.random();
+    if (roll < 0.12) this.state.activeEvent = 'double_score';
+    else if (roll < 0.2) this.state.activeEvent = 'mortal';
+    else this.state.activeEvent = 'none';
 
     for (const p of this.state.players.values()) {
       p.hasAnswered = false;
@@ -245,7 +295,6 @@ export class PartyRoom extends Room<GameState> {
     this.state.answerDeadlineAt =
       Date.now() + DEFAULT_ROOM_SETTINGS.answerTimeoutMs;
 
-    // Move immediately to waiting — clients show the question either way
     this.state.phase = 'WAITING_FOR_ANSWERS';
     this.answerTimer = setTimeout(() => {
       this.closeAnswers();
@@ -296,7 +345,10 @@ export class PartyRoom extends Room<GameState> {
     for (const [sid, pts] of Object.entries(result.pointsAwarded)) {
       const player = this.state.players.get(sid);
       if (!player) continue;
-      player.score += pts;
+      let awarded = pts;
+      if (this.state.activeEvent === 'double_score') awarded *= 2;
+      if (this.state.activeEvent === 'mortal') awarded = Math.round(awarded * 2.5);
+      player.score += awarded;
       const choice = roundAnswers.find((a) => a.sessionId === sid)?.choice;
       if (choice === 'did') {
         player.yesCount += 1;

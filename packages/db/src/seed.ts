@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createPool } from './index.js';
+import { defaultDbPath, migrate, openDb } from './index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -12,39 +12,38 @@ type SeedQ = {
   adultOnly: boolean;
 };
 
-async function main() {
+const db = openDb();
+try {
+  migrate(db);
   const file = join(__dirname, '../seed/questions.json');
   const questions = JSON.parse(readFileSync(file, 'utf8')) as SeedQ[];
   if (questions.length < 300) {
     throw new Error(`Need >=300 questions, got ${questions.length}`);
   }
 
-  const pool = createPool();
-  try {
-    await pool.query('BEGIN');
-    for (const q of questions) {
-      await pool.query(
-        `INSERT INTO questions (id, text, category, adult_only, active)
-         VALUES ($1, $2, $3, $4, true)
-         ON CONFLICT (id) DO UPDATE SET
-           text = EXCLUDED.text,
-           category = EXCLUDED.category,
-           adult_only = EXCLUDED.adult_only,
-           active = true`,
-        [q.id, q.text, q.category, q.adultOnly],
-      );
-    }
-    await pool.query('COMMIT');
-    console.log(`Seeded ${questions.length} questions.`);
-  } catch (err) {
-    await pool.query('ROLLBACK');
-    throw err;
-  } finally {
-    await pool.end();
-  }
-}
+  const insert = db.prepare(
+    `INSERT INTO questions (id, text, category, adult_only, active)
+     VALUES (?, ?, ?, ?, 1)
+     ON CONFLICT(id) DO UPDATE SET
+       text = excluded.text,
+       category = excluded.category,
+       adult_only = excluded.adult_only,
+       active = 1`,
+  );
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+  db.exec('BEGIN');
+  for (const q of questions) {
+    insert.run(q.id, q.text, q.category, q.adultOnly ? 1 : 0);
+  }
+  db.exec('COMMIT');
+  console.log(`Seeded ${questions.length} questions into ${defaultDbPath()}`);
+} catch (err) {
+  try {
+    db.exec('ROLLBACK');
+  } catch {
+    // ignore
+  }
+  throw err;
+} finally {
+  db.close();
+}

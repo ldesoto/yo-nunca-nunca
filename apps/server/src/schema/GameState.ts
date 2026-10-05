@@ -25,8 +25,11 @@ export class GameState extends Schema {
   @type('number') yesCount: number = 0;
   @type('number') totalAnswered: number = 0;
   @type('string') specialEvent: string = 'none';
+  @type('string') activeEvent: string = 'none';
+  @type('string') mode: string = 'fiesta';
   @type('string') winnerName: string = '';
   @type({ map: PlayerState }) players = new MapSchema<PlayerState>();
   @type(['string']) revealedYesNames = new ArraySchema<string>();
   @type(['string']) categories = new ArraySchema<string>();
+  @type('number') customCount: number = 0;
 }

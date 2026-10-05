@@ -1,0 +1,19 @@
+# Render Blueprint — fallback if Fly.io auth is unavailable.
+# Free Web Service: HTTPS + WebSocket on same port; SQLite is EPHEMERAL (re-seeded on cold start).
+# After first sync, set apps/mobile/eas.json to:
+#   https://yo-nunca-nunca.onrender.com  /  wss://yo-nunca-nunca.onrender.com
+services:
+  - type: web
+    name: yo-nunca-nunca
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./apps/server/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: YNN_SQLITE_PATH
+        value: /data/ynn.sqlite
+      # Render injects PORT; the server reads process.env.PORT (see apps/server/src/index.ts).

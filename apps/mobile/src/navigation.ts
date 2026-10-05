@@ -6,4 +6,5 @@ export type RootStackParamList = {
   Play: undefined;
   GameOver: undefined;
   Settings: undefined;
+  Profile: undefined;
 };

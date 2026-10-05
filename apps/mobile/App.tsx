@@ -12,7 +12,13 @@ import { LobbyScreen } from './src/screens/LobbyScreen';
 import { PlayScreen } from './src/screens/PlayScreen';
 import { GameOverScreen } from './src/screens/GameOverScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
-import { colors } from './src/theme';
+import { ProfileScreen } from './src/screens/ProfileScreen';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { colors, assertStoreSafeEndpoints } from './src/theme';
+import { loadRuntimeServerOverride } from './src/serverEndpoints';
+
+assertStoreSafeEndpoints();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,6 +35,20 @@ const navTheme = {
 };
 
 export default function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    void loadRuntimeServerOverride().finally(() => setReady(true));
+  }, []);
+
+  if (!ready) {
+    return (
+      <View style={[styles.fill, { backgroundColor: colors.bg0, justifyContent: 'center' }]}>
+        <ActivityIndicator color={colors.neonPink} />
+      </View>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={styles.fill}>
       <GameProvider>
@@ -41,6 +61,7 @@ export default function App() {
             <Stack.Screen name="Play" component={PlayScreen} />
             <Stack.Screen name="GameOver" component={GameOverScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </GameProvider>

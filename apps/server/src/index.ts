@@ -2,8 +2,10 @@ import { Server, matchMaker } from '@colyseus/core';
 import { WebSocketTransport } from '@colyseus/ws-transport';
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
-import { createPool } from '@ynn/db';
+import { buildCorsOptions } from './corsPolicy.js';
+import { defaultDbPath, migrate, openDb, type YnnDb } from '@ynn/db';
 import { PartyRoom } from './rooms/PartyRoom.js';
 import { generateRoomCode, normalizeRoomCode } from '@ynn/shared';
 
@@ -11,26 +13,56 @@ const PORT = Number(process.env.PORT || 2567);
 
 async function main() {
   const app = express();
-  app.use(cors());
-  app.use(express.json());
+  app.set('trust proxy', 1);
+  app.use(cors(buildCorsOptions()));
+  app.use(express.json({ limit: '32kb' }));
 
-  let pool = null as ReturnType<typeof createPool> | null;
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  const roomLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 60,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Demasiadas solicitudes; intenta más tarde' },
+  });
+  app.use(apiLimiter);
+
+  // Explicitly ignore DATABASE_URL / LEADS — this game uses local SQLite only.
+  if (process.env.DATABASE_URL) {
+    console.warn(
+      'Ignoring DATABASE_URL (CardNexus/LEADS). Yo Nunca Nunca uses YNN_SQLITE_PATH / local SQLite.',
+    );
+  }
+
+  let db: YnnDb | null = null;
   try {
-    pool = createPool();
-    await pool.query('SELECT 1');
-    console.log('Postgres connected');
+    db = openDb();
+    migrate(db);
+    const count = db
+      .prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1')
+      .get() as { c: number };
+    console.log(`SQLite ready (${count.c} questions) at ${defaultDbPath()}`);
   } catch (err) {
-    console.warn('Postgres unavailable — using fallback questions', err);
-    pool = null;
+    console.warn('SQLite unavailable — using fallback questions', err);
+    db = null;
   }
 
   app.get('/health', (_req, res) => {
-    res.json({
+    const payload: Record<string, unknown> = {
       status: 'ok',
       service: 'yo-nunca-nunca',
-      postgres: Boolean(pool),
+      sqlite: Boolean(db),
       timestamp: new Date().toISOString(),
-    });
+    };
+    if (process.env.NODE_ENV !== 'production') {
+      payload.sqlitePath = db ? defaultDbPath() : null;
+    }
+    res.json(payload);
   });
 
   const httpServer = createServer(app);
@@ -42,28 +74,35 @@ async function main() {
 
   const originalCreate = PartyRoom.prototype.onCreate;
   PartyRoom.prototype.onCreate = function patchedOnCreate(options = {}) {
-    if (!options.pool && pool) {
-      options = { ...options, pool };
+    if (!options.db && db) {
+      options = { ...options, db };
     }
     return originalCreate.call(this, options);
   };
 
-  app.post('/rooms', async (req, res) => {
+  app.post('/rooms', roomLimiter, async (req, res) => {
     try {
-      const playerName = String(req.body?.playerName || 'Host');
-      const rounds = Number(req.body?.rounds || 12);
+      const playerName = String(req.body?.playerName || 'Host')
+        .trim()
+        .slice(0, 24) || 'Host';
+      const roundsRaw = Number(req.body?.rounds || 12);
+      const rounds = Number.isFinite(roundsRaw)
+        ? Math.min(30, Math.max(3, Math.floor(roundsRaw)))
+        : 12;
       const categories = Array.isArray(req.body?.categories)
-        ? req.body.categories.map(String)
+        ? req.body.categories.map(String).slice(0, 12)
         : ['todas'];
       const solo = Boolean(req.body?.solo);
+      const mode = req.body?.mode === 'parejas' ? 'parejas' : 'fiesta';
       const roomCode = generateRoomCode();
       const room = await matchMaker.createRoom('party', {
         roomCode,
         playerName,
         rounds,
         categories,
-        pool,
+        db,
         solo,
+        mode,
       });
       res.json({
         roomId: room.roomId,
@@ -75,7 +114,7 @@ async function main() {
     }
   });
 
-  app.get('/rooms/:code', async (req, res) => {
+  app.get('/rooms/:code', roomLimiter, async (req, res) => {
     const roomCode = normalizeRoomCode(req.params.code || '');
     try {
       const rooms = await matchMaker.query({ name: 'party', roomCode });
@@ -96,7 +135,7 @@ async function main() {
   });
 
   gameServer.onBeforeShutdown(async () => {
-    if (pool) await pool.end();
+    db?.close();
   });
 
   httpServer.listen(PORT, () => {
