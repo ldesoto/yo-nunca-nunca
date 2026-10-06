@@ -26,7 +26,8 @@
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "resourceClass": "medium"
       },
       "ios": {
         "resourceClass": "m-medium"
@@ -34,7 +35,8 @@
       "env": {
         "APP_ENV": "production",
         "EXPO_PUBLIC_SERVER_URL": "https://yo-nunca-nunca.onrender.com",
-        "EXPO_PUBLIC_WS_URL": "wss://yo-nunca-nunca.onrender.com"
+        "EXPO_PUBLIC_WS_URL": "wss://yo-nunca-nunca.onrender.com",
+        "GRADLE_OPTS": "-Dorg.gradle.jvmargs=\"-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError\""
       }
     }
   },

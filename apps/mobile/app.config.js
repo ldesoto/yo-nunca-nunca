@@ -77,6 +77,15 @@ export default {
           enableBackgroundRecording: false,
         },
       ],
+      [
+        'expo-build-properties',
+        {
+          android: {
+            // Store phones only — cuts Gradle RAM vs 4 ABIs (common EAS OOM cause).
+            buildArchs: ['armeabi-v7a', 'arm64-v8a'],
+          },
+        },
+      ],
       'expo-status-bar',
     ],
     extra: {
