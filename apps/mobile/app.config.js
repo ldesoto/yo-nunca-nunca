@@ -69,7 +69,8 @@ export default {
       serverHttp,
       serverWs,
       eas: {
-        projectId: process.env.EAS_PROJECT_ID || undefined,
+        projectId:
+          process.env.EAS_PROJECT_ID || 'bac8f6f5-5728-484c-bbc4-435fc603066b',
       },
     },
   },
