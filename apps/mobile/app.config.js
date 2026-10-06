@@ -39,6 +39,7 @@ export default {
       supportsTablet: true,
       bundleIdentifier: 'com.yonnunca.party',
       infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
         NSAppTransportSecurity: {
           NSAllowsArbitraryLoads: false,
         },
