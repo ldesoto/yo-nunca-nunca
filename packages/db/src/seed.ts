@@ -31,9 +31,18 @@ try {
        active = 1`,
   );
 
+  const seedIds = questions.map((q) => q.id);
   db.exec('BEGIN');
+  db.prepare('UPDATE questions SET active = 0').run();
   for (const q of questions) {
     insert.run(q.id, q.text, q.category, q.adultOnly ? 1 : 0);
+  }
+  // Keep only the current bank active (drop stale IDs from older seeds).
+  if (seedIds.length > 0) {
+    const placeholders = seedIds.map(() => '?').join(', ');
+    db.prepare(
+      `DELETE FROM questions WHERE id NOT IN (${placeholders})`,
+    ).run(...seedIds);
   }
   db.exec('COMMIT');
   console.log(`Seeded ${questions.length} questions into ${defaultDbPath()}`);

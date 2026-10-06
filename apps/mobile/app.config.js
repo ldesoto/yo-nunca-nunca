@@ -63,6 +63,7 @@ export default {
     web: {
       favicon: './assets/favicon.png',
     },
+    plugins: ['expo-asset', 'expo-status-bar'],
     extra: {
       appEnv: process.env.APP_ENV || 'development',
       serverHttp,

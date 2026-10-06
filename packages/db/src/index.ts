@@ -31,13 +31,27 @@ export type DbQuestion = {
   active: boolean;
 };
 
-const MINIMAL_SEED: Array<[string, string, string]> = [
-  ['FB_001', 'Yo nunca nunca he mentido para no salir', 'casual'],
-  ['FB_002', 'Yo nunca nunca he stalkeado a mi ex', 'vergonzoso'],
-  ['FB_003', 'Yo nunca nunca he enviado un mensaje a la persona equivocada', 'casual'],
-  ['FB_004', 'Yo nunca nunca he fingido estar ocupado', 'casual'],
-  ['FB_005', 'Yo nunca nunca he hecho algo vergonzoso estando borracho', 'fiesta'],
-  ['FB_006', 'Yo nunca nunca he mentido para salir de una cita', 'relaciones'],
+const ADULT_CATEGORIES = new Set(['picante', 'sin_filtro']);
+
+/** True when the selected categories intentionally include adult content. */
+export function categoriesAllowAdult(categories: string[]): boolean {
+  if (categories.includes('todas') || categories.length === 0) return false;
+  return categories.some((c) => ADULT_CATEGORIES.has(c));
+}
+
+const MINIMAL_SEED: Array<[string, string, string, number]> = [
+  ['FB_001', 'Yo nunca nunca he inventado una emergencia para cancelar un plan confirmado', 'casual', 0],
+  ['FB_002', 'Yo nunca nunca he tropezado en público y fingido que fue un baile', 'vergonzoso', 0],
+  ['FB_003', 'Yo nunca nunca he despertado en un sofá desconocido sin recordar cómo llegué', 'fiesta', 0],
+  ['FB_004', 'Yo nunca nunca he stalkiado la nueva pareja de mi ex como detective', 'relaciones', 0],
+  ['FB_005', 'Yo nunca nunca he enviado nudes y luego entré en pánico de arrepentimiento', 'picante', 1],
+  ['FB_006', 'Yo nunca nunca he mentido en algo tan grave que cambiaría cómo me miran aquí', 'sin_filtro', 1],
+  ['FB_007', 'Yo nunca nunca he dicho "ya casi llego" estando todavía en pijama', 'casual', 0],
+  ['FB_008', 'Yo nunca nunca he mandado un mensaje al jefe pensando que era el grupo', 'vergonzoso', 0],
+  ['FB_009', 'Yo nunca nunca he hecho un shot de algo desconocido por no quedar mal', 'fiesta', 0],
+  ['FB_010', 'Yo nunca nunca he leído mensajes ajenos en el teléfono de mi pareja', 'relaciones', 0],
+  ['FB_011', 'Yo nunca nunca he tenido sexo donde podíamos ser descubiertos', 'picante', 1],
+  ['FB_012', 'Yo nunca nunca he traicionado la confianza de un amigo por beneficio propio', 'sin_filtro', 1],
 ];
 
 /** Idempotent fallback when Docker seed did not run (ephemeral disk, count 0). */
@@ -49,13 +63,13 @@ export function seedMinimalQuestions(db: YnnDb): number {
 
   const insert = db.prepare(
     `INSERT INTO questions (id, text, category, adult_only, active)
-     VALUES (?, ?, ?, 0, 1)
+     VALUES (?, ?, ?, ?, 1)
      ON CONFLICT(id) DO UPDATE SET active = 1`,
   );
   db.exec('BEGIN');
   try {
-    for (const [id, text, category] of MINIMAL_SEED) {
-      insert.run(id, text, category);
+    for (const [id, text, category, adult] of MINIMAL_SEED) {
+      insert.run(id, text, category, adult);
     }
     db.exec('COMMIT');
   } catch (err) {
@@ -89,6 +103,7 @@ export function fetchActiveQuestions(
   limit: number,
 ): DbQuestion[] {
   const useAll = categories.includes('todas') || categories.length === 0;
+  const allowAdult = categoriesAllowAdult(categories);
   const mapRow = (row: Record<string, unknown>): DbQuestion => ({
     id: String(row.id),
     text: String(row.text),
@@ -97,12 +112,14 @@ export function fetchActiveQuestions(
     active: Boolean(row.active),
   });
 
+  const adultClause = allowAdult ? '' : 'AND adult_only = 0';
+
   if (useAll) {
     const rows = db
       .prepare(
         `SELECT id, text, category, adult_only, active
          FROM questions
-         WHERE active = 1 AND adult_only = 0
+         WHERE active = 1 ${adultClause}
          ORDER BY RANDOM()
          LIMIT ?`,
       )
@@ -115,7 +132,7 @@ export function fetchActiveQuestions(
     .prepare(
       `SELECT id, text, category, adult_only, active
        FROM questions
-       WHERE active = 1 AND adult_only = 0 AND category IN (${placeholders})
+       WHERE active = 1 ${adultClause} AND category IN (${placeholders})
        ORDER BY RANDOM()
        LIMIT ?`,
     )
@@ -127,7 +144,7 @@ export function fetchActiveQuestions(
     .prepare(
       `SELECT id, text, category, adult_only, active
        FROM questions
-       WHERE active = 1 AND adult_only = 0
+       WHERE active = 1 ${adultClause}
        ORDER BY RANDOM()
        LIMIT ?`,
     )
