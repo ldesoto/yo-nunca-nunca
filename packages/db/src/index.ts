@@ -31,6 +31,43 @@ export type DbQuestion = {
   active: boolean;
 };
 
+const MINIMAL_SEED: Array<[string, string, string]> = [
+  ['FB_001', 'Yo nunca nunca he mentido para no salir', 'casual'],
+  ['FB_002', 'Yo nunca nunca he stalkeado a mi ex', 'vergonzoso'],
+  ['FB_003', 'Yo nunca nunca he enviado un mensaje a la persona equivocada', 'casual'],
+  ['FB_004', 'Yo nunca nunca he fingido estar ocupado', 'casual'],
+  ['FB_005', 'Yo nunca nunca he hecho algo vergonzoso estando borracho', 'fiesta'],
+  ['FB_006', 'Yo nunca nunca he mentido para salir de una cita', 'relaciones'],
+];
+
+/** Idempotent fallback when Docker seed did not run (ephemeral disk, count 0). */
+export function seedMinimalQuestions(db: YnnDb): number {
+  const row = db
+    .prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1')
+    .get() as { c: number };
+  if (row.c > 0) return row.c;
+
+  const insert = db.prepare(
+    `INSERT INTO questions (id, text, category, adult_only, active)
+     VALUES (?, ?, ?, 0, 1)
+     ON CONFLICT(id) DO UPDATE SET active = 1`,
+  );
+  db.exec('BEGIN');
+  try {
+    for (const [id, text, category] of MINIMAL_SEED) {
+      insert.run(id, text, category);
+    }
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw err;
+  }
+  const after = db
+    .prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1')
+    .get() as { c: number };
+  return after.c;
+}
+
 export function migrate(db: YnnDb): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS questions (
@@ -83,7 +120,19 @@ export function fetchActiveQuestions(
        LIMIT ?`,
     )
     .all(...categories, limit) as Record<string, unknown>[];
-  return rows.map(mapRow);
+  if (rows.length > 0) {
+    return rows.map(mapRow);
+  }
+  const fallbackRows = db
+    .prepare(
+      `SELECT id, text, category, adult_only, active
+       FROM questions
+       WHERE active = 1 AND adult_only = 0
+       ORDER BY RANDOM()
+       LIMIT ?`,
+    )
+    .all(limit) as Record<string, unknown>[];
+  return fallbackRows.map(mapRow);
 }
 
 /** @deprecated Use openDb — kept so old imports fail loudly if misused. */

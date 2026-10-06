@@ -99,6 +99,14 @@ export function pickFallback(
     if (useAll) return true;
     return categories.includes(q.category);
   });
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  let shuffled = [...pool].sort(() => Math.random() - 0.5);
+  let picked = shuffled.slice(0, count);
+  if (picked.length < count && !useAll) {
+    const widen = FALLBACK_QUESTIONS.filter(
+      (q) => !used.has(q.id) && !picked.some((p) => p.id === q.id),
+    );
+    shuffled = [...widen].sort(() => Math.random() - 0.5);
+    picked = [...picked, ...shuffled.slice(0, count - picked.length)];
+  }
+  return picked;
 }

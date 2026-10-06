@@ -1,6 +1,5 @@
 import { Room, Client } from '@colyseus/core';
 import type { DbQuestion, YnnDb } from '@ynn/db';
-import { fetchActiveQuestions } from '@ynn/db';
 import {
   DEFAULT_ROOM_SETTINGS,
   canStartGame,
@@ -15,6 +14,7 @@ import {
   type RoundAnswer,
 } from '@ynn/shared';
 import { GameState, PlayerState } from '../schema/GameState.js';
+import { buildPartyDeck } from '../deck.js';
 import { pickFallback } from '../questions.js';
 
 export type PartyRoomOptions = {
@@ -239,24 +239,14 @@ export class PartyRoom extends Room<GameState> {
   }
 
   private async loadDeck() {
-    const cats = [...this.state.categories];
-    const need = this.state.totalRounds + 5;
     this.usedQuestionIds.clear();
-    try {
-      if (this.db) {
-        this.deck = fetchActiveQuestions(this.db, cats, need);
-      } else {
-        this.deck = [];
-      }
-    } catch {
-      this.deck = [];
-    }
-    if (this.deck.length < this.state.totalRounds) {
-      const extra = pickFallback(cats, need, this.usedQuestionIds);
-      this.deck = [...this.deck, ...extra];
-    }
-    // Custom questions first so they actually get played
-    this.deck = [...this.customQuestions, ...this.deck];
+    const cats = [...this.state.categories];
+    this.deck = buildPartyDeck({
+      db: this.db,
+      categories: cats.length ? cats : ['todas'],
+      totalRounds: this.state.totalRounds,
+      customQuestions: this.customQuestions,
+    });
   }
 
   private beginQuestion() {
@@ -283,6 +273,11 @@ export class PartyRoom extends Room<GameState> {
       pickFallback([...this.state.categories], 1, this.usedQuestionIds)[0];
 
     if (!q) {
+      if (this.state.currentRound <= 1) {
+        this.state.currentRound = 0;
+        this.state.phase = 'LOBBY';
+        return;
+      }
       this.state.phase = 'GAME_OVER';
       this.computeWinner();
       return;

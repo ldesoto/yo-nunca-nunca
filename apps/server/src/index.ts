@@ -5,7 +5,13 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
 import { buildCorsOptions } from './corsPolicy.js';
-import { defaultDbPath, migrate, openDb, type YnnDb } from '@ynn/db';
+import {
+  defaultDbPath,
+  migrate,
+  openDb,
+  seedMinimalQuestions,
+  type YnnDb,
+} from '@ynn/db';
 import { PartyRoom } from './rooms/PartyRoom.js';
 import { generateRoomCode, normalizeRoomCode } from '@ynn/shared';
 
@@ -43,10 +49,8 @@ async function main() {
   try {
     db = openDb();
     migrate(db);
-    const count = db
-      .prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1')
-      .get() as { c: number };
-    console.log(`SQLite ready (${count.c} questions) at ${defaultDbPath()}`);
+    const activeCount = seedMinimalQuestions(db);
+    console.log(`SQLite ready (${activeCount} questions) at ${defaultDbPath()}`);
   } catch (err) {
     console.warn('SQLite unavailable — using fallback questions', err);
     db = null;

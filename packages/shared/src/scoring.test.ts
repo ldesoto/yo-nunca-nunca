@@ -71,6 +71,6 @@ describe('validation', () => {
   it('sanitizes names', () => {
     assert.equal(sanitizePlayerName('  Luis!! '), 'Luis');
     assert.equal(canStartGame(1), false);
-    assert.equal(canStartGame(4), true);
+    assert.equal(canStartGame(2), true);
   });
 });
