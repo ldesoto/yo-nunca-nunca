@@ -57,10 +57,22 @@ async function main() {
   }
 
   app.get('/health', (_req, res) => {
+    let questions = 0;
+    if (db) {
+      try {
+        const row = db
+          .prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1')
+          .get() as { c: number };
+        questions = Number(row?.c) || 0;
+      } catch {
+        questions = 0;
+      }
+    }
     const payload: Record<string, unknown> = {
       status: 'ok',
       service: 'yo-nunca-nunca',
       sqlite: Boolean(db),
+      questions,
       timestamp: new Date().toISOString(),
     };
     if (process.env.NODE_ENV !== 'production') {

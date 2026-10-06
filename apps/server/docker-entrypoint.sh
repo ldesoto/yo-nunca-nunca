@@ -9,21 +9,9 @@ export NODE_OPTIONS="${NODE_OPTIONS:---experimental-sqlite}"
 
 cd /app
 node /app/packages/db/dist/migrate.js
-
-if [ ! -f "$YNN_SQLITE_PATH" ]; then
-  node /app/packages/db/dist/seed.js
-else
-  count="$(node -e "
-    import { openDb } from '/app/packages/db/dist/index.js';
-    const db = openDb();
-    const row = db.prepare('SELECT COUNT(*) AS c FROM questions WHERE active = 1').get();
-    db.close();
-    process.stdout.write(String(row.c));
-  ")"
-  if [ "$count" = "0" ]; then
-    node /app/packages/db/dist/seed.js
-  fi
-fi
+# Always upsert the current bank (idempotent). Free Render disks can keep a
+# stale SQLite across deploys; skipping seed would leave old questions forever.
+node /app/packages/db/dist/seed.js
 
 cd /app/apps/server
 exec "$@"
