@@ -1,4 +1,4 @@
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.1.1';
 
 /** Bake URLs at build time. Default = public Render (multiplayer across devices). */
 const DEFAULT_PUBLIC_HTTP = 'https://yo-nunca-nunca.onrender.com';
@@ -38,6 +38,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.yonnunca.party',
+      buildNumber: '2',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         NSAppTransportSecurity: {
@@ -53,6 +54,7 @@ export default {
         monochromeImage: './assets/android-icon-monochrome.png',
       },
       package: 'com.yonnunca.party',
+      versionCode: 2,
       intentFilters: [
         {
           action: 'VIEW',
