@@ -26,8 +26,7 @@
     },
     "production": {
       "android": {
-        "buildType": "app-bundle",
-        "resourceClass": "medium"
+        "buildType": "app-bundle"
       },
       "ios": {
         "resourceClass": "m-medium"
