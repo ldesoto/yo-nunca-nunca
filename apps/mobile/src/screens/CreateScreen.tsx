@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
 import { CategoryPicker } from '../components/CategoryPicker';
+import { ConnectionBanner } from '../components/ConnectionBanner';
 import { Field, GlassCard, SectionLabel } from '../components/GlassCard';
 import { createParty } from '../api';
 import { useGame } from '../GameContext';
+import { track } from '../analytics';
+import { gateCategories, isPremiumUnlocked } from '../premium';
+import { useAmbientMusic } from '../useAmbientMusic';
 import { colors, typography, type CategoryId } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
@@ -15,6 +19,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Create'>;
 const ROUND_OPTIONS = [6, 12, 18, 24];
 
 export function CreateScreen({ navigation, route }: Props) {
+  useAmbientMusic();
   const { setRoom, setPlayerName, setRoomCode } = useGame();
   const solo = Boolean(route.params?.solo);
   const [name, setName] = useState(solo ? 'Solo' : '');
@@ -37,11 +42,12 @@ export function CreateScreen({ navigation, route }: Props) {
     setError('');
     setStatus('');
     try {
+      const gated = gateCategories(categories) as CategoryId[];
       const { room, roomCode } = await createParty(
         {
           playerName: name || 'Host',
           rounds,
-          categories,
+          categories: gated,
           solo,
           mode,
         },
@@ -50,6 +56,13 @@ export function CreateScreen({ navigation, route }: Props) {
       setPlayerName(name || 'Host');
       setRoomCode(roomCode);
       setRoom(room);
+      track('game_created', {
+        rounds,
+        solo: solo ? 1 : 0,
+        mode,
+        categories: gated.length,
+        premium: isPremiumUnlocked() ? 1 : 0,
+      });
       navigation.replace('Lobby');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error');
@@ -60,9 +73,13 @@ export function CreateScreen({ navigation, route }: Props) {
 
   return (
     <Screen scroll>
+      {loading ? (
+        <ConnectionBanner status="connecting" detail={status || undefined} />
+      ) : null}
+      <Text style={styles.kicker}>{solo ? 'MODO DEMO' : 'YO NUNCA NUNCA'}</Text>
       <Text style={typography.title}>{solo ? 'Jugar solo' : 'Crear partida'}</Text>
-      <Text style={[typography.body, { marginBottom: 8 }]}>
-        Elige el vibe. Las preguntas salen del servidor (SQLite), no de CardNexus.
+      <Text style={[typography.body, { marginBottom: 12, marginTop: 4 }]}>
+        Elige el vibe. Los amigos se unen con el código de 5 letras.
       </Text>
 
       <GlassCard glow="cyan">
@@ -101,7 +118,23 @@ export function CreateScreen({ navigation, route }: Props) {
         </View>
 
         <SectionLabel>Categorías</SectionLabel>
-        <CategoryPicker selected={categories} onChange={setCategories} />
+        <CategoryPicker
+          selected={categories}
+          onChange={setCategories}
+          onPremiumRequired={() =>
+            Alert.alert(
+              'Premium',
+              'Picante y Sin filtro son Premium. Actívalo en Configuración (demo) o espera la tienda.',
+              [
+                { text: 'Ir a Config', onPress: () => navigation.navigate('Settings') },
+                { text: 'OK', style: 'cancel' },
+              ],
+            )
+          }
+        />
+        <Text style={styles.premiumHint}>
+          ✦ = Premium · gratis: casual, fiesta, vergonzoso, relaciones
+        </Text>
       </GlassCard>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -121,6 +154,13 @@ export function CreateScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
+  kicker: {
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 2.4,
+    color: colors.neonPink,
+    marginBottom: 8,
+  },
   modeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   mode: {
     flex: 1,
@@ -148,6 +188,12 @@ const styles = StyleSheet.create({
   },
   roundOn: { backgroundColor: colors.neonCyan, borderColor: colors.neonCyan },
   roundText: { color: colors.text, fontWeight: '800' },
+  premiumHint: {
+    marginTop: 10,
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: '600',
+  },
   error: { color: colors.danger, marginTop: 12, fontWeight: '700' },
   status: { color: colors.muted, marginTop: 10, fontWeight: '600', textAlign: 'center' },
 });

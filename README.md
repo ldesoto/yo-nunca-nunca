@@ -34,14 +34,34 @@ packages/db          SQLite schema, migrate, seed → data/ynn.sqlite
 
 **Target cableado:** `https://yo-nunca-nunca.onrender.com` / `wss://yo-nunca-nunca.onrender.com` (`render.yaml`, `apps/mobile/eas.json` preview+production).
 
-**Estado actual:** el servicio **no existe en internet** hasta que Luis cree cuenta Render y el primer deploy. `yo-nunca-nunca.fly.dev` nunca se desplegó (sin DNS).
+**Estado producción (real):**
+- **Listo para jugar online** salvo: `eas submit`, IAP real (RevenueCat / Play Billing / App Store) y cuentas de desarrollador de tiendas.
+- Servicio Render **ya existe y está live**: `GET /health` → 200 (`status=ok`, `questions`≈1081). No hace falta crear otro Blueprint.
+- Deploy config lista: `render.yaml` (`healthCheckPath: /health`, `PORT` inyectado por Render, `YNN_SQLITE_PATH=/data/ynn.sqlite`, `dockerContext: .`), `apps/server/Dockerfile`, `docker-compose.yml`, perfiles EAS `preview`/`production` → Render.
+- **Gate seguridad (servidor):** categorías Premium (`picante` / `sin_filtro`) se filtran en `POST /rooms` + `PartyRoom` (fail-closed). Stub local de Premium en la app **no** abre el mazo online; solo `YNN_PREMIUM_OPEN=1` en el servidor (ops/testing) o IAP futuro. CORS con allowlist + Expo; analytics sin respuestas/nombres; custom questions con `sanitizeCustomQuestion` + `reportQuestion`.
+- **Push pendiente (deploy servidor):** working tree local con `premiumGate` + PartyRoom/CORS/WHO_WAS **sin commit**; tras commit + `git push` a `main`, Render auto-redeploya. Sin ese push, producción pública **aún no** aplica el gate Premium del servidor. Cambios solo en `apps/mobile` no tocan Render; bastan commit + `eas build --profile preview|production`.
+- Fly (`yo-nunca-nunca.fly.dev`) nunca se desplegó (sin DNS); opcional.
 
-### Primer deploy Render (Blueprint)
+### Checklist readiness
 
-1. [Crear cuenta Render](https://dashboard.render.com/register) (gratis).
-2. Subir este repo a GitHub/GitLab si aún no hay remote (`git remote add origin … && git push`).
-3. Dashboard → **New → Blueprint** → selecciona el repo → Render lee `render.yaml`.
-4. Espera el build Docker (~3–5 min). Primer request tras sleep puede tardar ~60 s.
+| Ítem | Estado |
+|------|--------|
+| Render `/health` + mazo SQLite | ✅ |
+| Shared / server tests | ✅ |
+| Mobile `tsc` + endpoints https/wss en preview/production | ✅ |
+| CORS, moderación custom, report, WHO_WAS, reconexión 60s | ✅ |
+| Premium fail-closed en servidor | ✅ (código local; **pendiente push/redeploy**) |
+| `eas build` preview/production | ⬜ cuando quieras |
+| Cuentas Play / Apple Developer | ⬜ |
+| IAP real | ⬜ |
+| `eas submit` a tiendas | ⬜ |
+
+### Redeploy / Blueprint (servicio ya creado)
+
+El Web Service en Render **ya está** ligado al repo. Solo recrea Blueprint si borras el servicio:
+
+1. Dashboard Render → servicio `yo-nunca-nunca` (o New → Blueprint si partieras de cero).
+2. `git push` a `origin/main` → rebuild Docker (~3–5 min). Cold start tras sleep ~60 s.
 
 ```bash
 cd /Users/luisdesoto/yo-nunca-nunca
@@ -166,6 +186,12 @@ pnpm --filter @ynn/server test
 - `POST /rooms` `{ playerName, rounds?, categories?, solo? }` → `{ roomId, roomCode }`
 - `GET /rooms/:code` → `{ roomId, roomCode, clients }`
 
-## Fuera de Fase 1
+## Fuera de Fase 1 (hecho parcialmente)
 
-Modo parejas, preguntas custom, “¿Quién fue?”, eventos, premium, analytics, publicación stores.
+- ✅ Modo parejas (crear partida)
+- ✅ Preguntas custom (lobby)
+- ✅ Eventos `nobody` / `everyone` / doble / mortal
+- ✅ **¿Quién fue?** (voto tras responder, +60 si aciertas)
+- ✅ **Fase 3 (base)**: analytics locales (§22), Premium stub (Picante / Sin filtro), moderación + report
+- ✅ Audio SFX + bed de lobby (respeta Config), stats Premium avanzadas, banner de reconexión
+- ⬜ **Al final**: publicación Play Store / App Store (`eas build` + submit) + IAP real

@@ -9,6 +9,8 @@ export type PublicPlayer = {
   connected: boolean;
   isHost: boolean;
   hasAnswered: boolean;
+  canVoteWhoWas: boolean;
+  hasVotedWhoWas: boolean;
   yesCount: number;
   majorityCount: number;
   minorityCount: number;
@@ -20,6 +22,7 @@ export type Snapshot = {
   hostSessionId: string;
   currentRound: number;
   totalRounds: number;
+  questionId: string;
   questionText: string;
   yesCount: number;
   totalAnswered: number;
@@ -28,6 +31,9 @@ export type Snapshot = {
   mode: string;
   customCount: number;
   winnerName: string;
+  answerDeadlineAt: number;
+  whoWasDeadlineAt: number;
+  whoWasVotesCast: number;
   revealedYesNames: string[];
   players: PublicPlayer[];
   mySessionId: string;
@@ -46,6 +52,8 @@ function readState(room: GameRoom): Snapshot {
         connected: p.connected,
         isHost: p.isHost,
         hasAnswered: p.hasAnswered,
+        canVoteWhoWas: Boolean(p.canVoteWhoWas),
+        hasVotedWhoWas: Boolean(p.hasVotedWhoWas),
         yesCount: p.yesCount,
         majorityCount: p.majorityCount,
         minorityCount: p.minorityCount,
@@ -63,6 +71,7 @@ function readState(room: GameRoom): Snapshot {
     hostSessionId: s.hostSessionId,
     currentRound: s.currentRound,
     totalRounds: s.totalRounds,
+    questionId: s.questionId || '',
     questionText: s.questionText,
     yesCount: s.yesCount,
     totalAnswered: s.totalAnswered,
@@ -71,6 +80,9 @@ function readState(room: GameRoom): Snapshot {
     mode: s.mode || 'fiesta',
     customCount: s.customCount || 0,
     winnerName: s.winnerName,
+    answerDeadlineAt: Number(s.answerDeadlineAt) || 0,
+    whoWasDeadlineAt: Number(s.whoWasDeadlineAt) || 0,
+    whoWasVotesCast: Number(s.whoWasVotesCast) || 0,
     revealedYesNames: revealed,
     players,
     mySessionId: room.sessionId,

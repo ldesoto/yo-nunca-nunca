@@ -57,10 +57,12 @@ config.resolver.unstable_conditionNames = [
 const defaultResolveRequest = config.resolver.resolveRequest;
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  // Force browser/fetch httpie — Node build pulls `https` and crashes on Android/iOS.
   if (
     moduleName === '@colyseus/httpie' ||
     moduleName === '@colyseus/httpie/node' ||
-    moduleName === '@colyseus/httpie/node/index.mjs'
+    moduleName === '@colyseus/httpie/node/index.mjs' ||
+    moduleName.startsWith('@colyseus/httpie/')
   ) {
     return { type: 'sourceFile', filePath: httpieFetch };
   }
@@ -77,7 +79,10 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       moduleName === 'http' ||
       moduleName === 'net' ||
       moduleName === 'tls' ||
-      moduleName === 'stream')
+      moduleName === 'stream' ||
+      moduleName === 'url' ||
+      moduleName === 'zlib' ||
+      moduleName === 'crypto')
   ) {
     return { type: 'sourceFile', filePath: emptyStub };
   }

@@ -8,13 +8,18 @@ import {
   isValidPlayerName,
   nextAfterScore,
   normalizeRoomCode,
+  sanitizeCustomQuestion,
   sanitizePlayerName,
   scoreRound,
+  WHO_WAS_BONUS,
+  WHO_WAS_TIMEOUT_MS,
+  grantsWhoWasVote,
   type AnswerChoice,
   type RoundAnswer,
 } from '@ynn/shared';
 import { GameState, PlayerState } from '../schema/GameState.js';
 import { buildPartyDeck } from '../deck.js';
+import { resolveRoomCategories } from '../premiumGate.js';
 import { pickFallback } from '../questions.js';
 
 export type PartyRoomOptions = {
@@ -35,13 +40,20 @@ export class PartyRoom extends Room<GameState> {
   private solo = false;
   private mode: 'fiesta' | 'parejas' = 'fiesta';
   private customQuestions: DbQuestion[] = [];
+  /** questionId → set of sessionIds that reported it (in-memory, partida). */
+  private reports = new Map<string, Set<string>>();
   private answers = new Map<string, PrivateAnswer>();
   private deck: DbQuestion[] = [];
   private usedQuestionIds = new Set<string>();
   private answerTimer: ReturnType<typeof setTimeout> | null = null;
   private revealTimer: ReturnType<typeof setTimeout> | null = null;
   private scoreTimer: ReturnType<typeof setTimeout> | null = null;
+  private whoWasTimer: ReturnType<typeof setTimeout> | null = null;
   private createHits: number[] = [];
+  /** sessionIds that said "did" this round */
+  private yesSessionIds: string[] = [];
+  /** voterSessionId -> guessedSessionId */
+  private whoWasVotes = new Map<string, string>();
 
   onCreate(options: PartyRoomOptions = {}) {
     this.db = options.db ?? null;
@@ -59,9 +71,9 @@ export class PartyRoom extends Room<GameState> {
       30,
       Math.max(3, options.rounds ?? DEFAULT_ROOM_SETTINGS.rounds),
     );
-    const cats = options.categories?.length
-      ? options.categories
-      : ['todas'];
+    const cats = resolveRoomCategories(
+      options.categories?.length ? options.categories : ['todas'],
+    );
     for (const c of cats) this.state.categories.push(c);
 
     this.setMetadata({ roomCode: this.state.roomCode });
@@ -93,6 +105,18 @@ export class PartyRoom extends Room<GameState> {
       'addCustomQuestion',
       (client, message: { text?: string }) => {
         this.handleAddCustom(client, message?.text ?? '');
+      },
+    );
+    this.onMessage(
+      'reportQuestion',
+      (client, message: { questionId?: string; reason?: string }) => {
+        this.handleReportQuestion(client, message?.questionId ?? '', message?.reason);
+      },
+    );
+    this.onMessage(
+      'voteWhoWas',
+      (client, message: { targetSessionId?: string }) => {
+        this.handleVoteWhoWas(client, message?.targetSessionId ?? '');
       },
     );
   }
@@ -159,6 +183,8 @@ export class PartyRoom extends Room<GameState> {
       this.state.phase === 'QUESTION'
     ) {
       this.maybeCloseAnswers();
+    } else if (this.state.phase === 'WHO_WAS') {
+      this.maybeFinishWhoWasVotes();
     }
   }
 
@@ -186,8 +212,10 @@ export class PartyRoom extends Room<GameState> {
     if (this.state.phase !== 'LOBBY') return;
     if (client.sessionId !== this.state.hostSessionId) return;
     this.state.categories.clear();
-    const cleaned = categories.length ? categories : ['todas'];
-    for (const c of cleaned.slice(0, 8)) this.state.categories.push(String(c));
+    const cleaned = resolveRoomCategories(
+      categories.length ? categories.slice(0, 8) : ['todas'],
+    );
+    for (const c of cleaned) this.state.categories.push(c);
   }
 
   private handleSetRounds(client: Client, rounds?: number) {
@@ -199,26 +227,42 @@ export class PartyRoom extends Room<GameState> {
 
   private handleAddCustom(client: Client, text: string) {
     if (this.state.phase !== 'LOBBY') return;
-    const cleaned = text
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 140);
-    if (cleaned.length < 8) return;
     if (this.customQuestions.length >= 20) return;
-    const lower = cleaned.toLowerCase();
-    if (/(menor|niñ|child|kill|suic)/i.test(lower)) return;
-    const prefixed = cleaned.toLowerCase().startsWith('yo nunca')
-      ? cleaned
-      : `Yo nunca nunca ${cleaned}`;
+    const result = sanitizeCustomQuestion(text);
+    if (!result.ok) return;
     const id = `CUSTOM_${Date.now()}_${this.customQuestions.length}`;
     this.customQuestions.push({
       id,
-      text: prefixed,
+      text: result.text,
       category: 'casual',
       adult_only: false,
       active: true,
     });
     this.state.customCount = this.customQuestions.length;
+  }
+
+  private handleReportQuestion(client: Client, questionId: string, reason?: string) {
+    const id = String(questionId || this.state.questionId || '').slice(0, 80);
+    if (!id) return;
+    let set = this.reports.get(id);
+    if (!set) {
+      set = new Set();
+      this.reports.set(id, set);
+    }
+    if (set.has(client.sessionId)) return;
+    set.add(client.sessionId);
+    // Solo log de moderación: id opaco + conteo. Sin texto ni identidad estable.
+    console.info('[moderation] question_reported', {
+      questionId: id.startsWith('CUSTOM_') ? id : 'seed',
+      reports: set.size,
+      reason: String(reason || 'unspecified').slice(0, 40),
+    });
+    // Si una custom acumula ≥2 reportes, la sacamos del mazo restante.
+    if (id.startsWith('CUSTOM_') && set.size >= 2) {
+      this.customQuestions = this.customQuestions.filter((q) => q.id !== id);
+      this.deck = this.deck.filter((q) => q.id !== id);
+      this.state.customCount = this.customQuestions.length;
+    }
   }
 
   private async handleStartGame(client: Client) {
@@ -252,10 +296,15 @@ export class PartyRoom extends Room<GameState> {
   private beginQuestion() {
     this.clearTimers();
     this.answers.clear();
+    this.whoWasVotes.clear();
+    this.yesSessionIds = [];
     this.state.revealedYesNames.clear();
     this.state.yesCount = 0;
     this.state.totalAnswered = 0;
     this.state.specialEvent = 'none';
+    this.state.whoWasDeadlineAt = 0;
+    this.state.whoWasVotesCast = 0;
+    this.state.whoWasEligible = false;
     this.state.currentRound += 1;
 
     // ~25% chance of a special event for variety
@@ -266,6 +315,8 @@ export class PartyRoom extends Room<GameState> {
 
     for (const p of this.state.players.values()) {
       p.hasAnswered = false;
+      p.canVoteWhoWas = false;
+      p.hasVotedWhoWas = false;
     }
 
     const q =
@@ -323,9 +374,11 @@ export class PartyRoom extends Room<GameState> {
       ([sessionId, a]) => ({ sessionId, choice: a.choice }),
     );
 
-    // Auto-never for connected players who timed out
+    // Auto-never for anyone still missing an answer (timeout or briefly disconnected).
+    // Persist into answers so WHO_WAS eligibility stays consistent.
     for (const p of this.state.players.values()) {
-      if (p.connected && !this.answers.has(p.sessionId)) {
+      if (!this.answers.has(p.sessionId)) {
+        this.answers.set(p.sessionId, { choice: 'never' });
         roundAnswers.push({ sessionId: p.sessionId, choice: 'never' });
         p.hasAnswered = true;
       }
@@ -357,9 +410,92 @@ export class PartyRoom extends Room<GameState> {
     this.state.yesCount = result.yesCount;
     this.state.totalAnswered = result.totalAnswered;
     this.state.specialEvent = result.specialEvent;
-    this.state.phase = 'REVEAL';
+    this.yesSessionIds = [...result.yesPlayers];
 
-    const yesNames = result.yesPlayers
+    const connectedCount = [...this.state.players.values()].filter(
+      (p) => p.connected,
+    ).length;
+    const canWhoWas =
+      !this.solo &&
+      connectedCount >= 3 &&
+      result.yesCount > 0 &&
+      result.yesCount < result.totalAnswered;
+
+    if (canWhoWas) {
+      this.beginWhoWas();
+    } else {
+      this.beginReveal();
+    }
+  }
+
+  private beginWhoWas() {
+    this.clearTimers();
+    this.whoWasVotes.clear();
+    this.state.whoWasVotesCast = 0;
+    this.state.whoWasEligible = true;
+    this.state.whoWasDeadlineAt = Date.now() + WHO_WAS_TIMEOUT_MS;
+    this.state.players.forEach((p, sid) => {
+      const choice = this.answers.get(String(sid))?.choice;
+      // Grant by answer, not current connected flag — reconnect within the window can still vote.
+      p.canVoteWhoWas = grantsWhoWasVote(choice);
+      p.hasVotedWhoWas = false;
+    });
+    this.state.phase = 'WHO_WAS';
+    this.whoWasTimer = setTimeout(() => this.finishWhoWas(), WHO_WAS_TIMEOUT_MS);
+  }
+
+  private handleVoteWhoWas(client: Client, targetSessionId: string) {
+    if (this.state.phase !== 'WHO_WAS') return;
+    const voter = this.state.players.get(client.sessionId);
+    if (!voter || !voter.connected || !voter.canVoteWhoWas) return;
+    if (!targetSessionId || targetSessionId === client.sessionId) return;
+    if (!this.state.players.has(targetSessionId)) return;
+    if (this.whoWasVotes.has(client.sessionId)) return;
+
+    this.whoWasVotes.set(client.sessionId, targetSessionId);
+    voter.hasVotedWhoWas = true;
+    this.state.whoWasVotesCast = this.whoWasVotes.size;
+    this.maybeFinishWhoWasVotes();
+  }
+
+  /** Early-complete WHO_WAS when every remaining eligible voter has cast a ballot. */
+  private maybeFinishWhoWasVotes() {
+    if (this.state.phase !== 'WHO_WAS') return;
+    const eligible = [...this.state.players.values()].filter((p) => p.canVoteWhoWas);
+    if (eligible.length === 0) {
+      this.finishWhoWas();
+      return;
+    }
+    if (eligible.every((p) => p.hasVotedWhoWas)) {
+      this.finishWhoWas();
+    }
+  }
+
+  private finishWhoWas() {
+    if (this.state.phase !== 'WHO_WAS') return;
+    if (this.whoWasTimer) {
+      clearTimeout(this.whoWasTimer);
+      this.whoWasTimer = null;
+    }
+
+    const yesSet = new Set(this.yesSessionIds);
+    for (const [voterId, guessId] of this.whoWasVotes.entries()) {
+      if (yesSet.has(guessId)) {
+        const voter = this.state.players.get(voterId);
+        if (voter) voter.score += WHO_WAS_BONUS;
+      }
+    }
+
+    this.state.whoWasEligible = false;
+    this.beginReveal();
+  }
+
+  private beginReveal() {
+    this.clearTimers();
+    this.state.phase = 'REVEAL';
+    this.state.revealedYesNames.clear();
+
+    const yesNames = this.yesSessionIds
       .map((sid) => this.state.players.get(sid)?.name)
       .filter((n): n is string => Boolean(n));
 
@@ -378,7 +514,7 @@ export class PartyRoom extends Room<GameState> {
   }
 
   private handleAckReveal(_client: Client) {
-    // Optional early skip when all acked — Phase 1 uses timer only
+    // Optional early skip — timers drive the flow
   }
 
   private goToScore() {
@@ -407,8 +543,10 @@ export class PartyRoom extends Room<GameState> {
     if (this.answerTimer) clearTimeout(this.answerTimer);
     if (this.revealTimer) clearTimeout(this.revealTimer);
     if (this.scoreTimer) clearTimeout(this.scoreTimer);
+    if (this.whoWasTimer) clearTimeout(this.whoWasTimer);
     this.answerTimer = null;
     this.revealTimer = null;
     this.scoreTimer = null;
+    this.whoWasTimer = null;
   }
 }

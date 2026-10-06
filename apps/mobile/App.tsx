@@ -2,7 +2,9 @@ import 'react-native-gesture-handler';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ActivityIndicator, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
 import { GameProvider } from './src/GameContext';
 import type { RootStackParamList } from './src/navigation';
 import { HomeScreen } from './src/screens/HomeScreen';
@@ -13,10 +15,15 @@ import { PlayScreen } from './src/screens/PlayScreen';
 import { GameOverScreen } from './src/screens/GameOverScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { MostLikelyScreen } from './src/screens/MostLikelyScreen';
+import { TwoTruthsScreen } from './src/screens/TwoTruthsScreen';
+import { TruthOrDrinkScreen } from './src/screens/TruthOrDrinkScreen';
+import { NeverHaveIEverScreen } from './src/screens/NeverHaveIEverScreen';
 import { colors, assertStoreSafeEndpoints } from './src/theme';
 import { loadRuntimeServerOverride } from './src/serverEndpoints';
+import { loadPremium } from './src/premium';
+import { loadSettings } from './src/settingsStore';
+import { initAudio } from './src/audio';
 
 assertStoreSafeEndpoints();
 
@@ -38,7 +45,21 @@ export default function App() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    void loadRuntimeServerOverride().finally(() => setReady(true));
+    let cancelled = false;
+    void Promise.all([
+      loadRuntimeServerOverride(),
+      loadPremium(),
+      loadSettings()
+        .then(() => initAudio())
+        .catch(() => {
+          // audio nativo ausente / Expo Go sin módulo → app sigue
+        }),
+    ]).finally(() => {
+      if (!cancelled) setReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!ready) {
@@ -50,22 +71,28 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.fill}>
-      <GameProvider>
-        <NavigationContainer theme={navTheme}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Create" component={CreateScreen} />
-            <Stack.Screen name="Join" component={JoinScreen} />
-            <Stack.Screen name="Lobby" component={LobbyScreen} />
-            <Stack.Screen name="Play" component={PlayScreen} />
-            <Stack.Screen name="GameOver" component={GameOverScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </GameProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={styles.fill}>
+        <GameProvider>
+          <NavigationContainer theme={navTheme}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Create" component={CreateScreen} />
+              <Stack.Screen name="Join" component={JoinScreen} />
+              <Stack.Screen name="Lobby" component={LobbyScreen} />
+              <Stack.Screen name="Play" component={PlayScreen} />
+              <Stack.Screen name="GameOver" component={GameOverScreen} />
+              <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="MostLikely" component={MostLikelyScreen} />
+              <Stack.Screen name="TwoTruths" component={TwoTruthsScreen} />
+              <Stack.Screen name="TruthOrDrink" component={TruthOrDrinkScreen} />
+              <Stack.Screen name="NeverHaveIEver" component={NeverHaveIEverScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </GameProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
 

@@ -8,6 +8,8 @@ export class PlayerState extends Schema {
   @type('boolean') connected: boolean = true;
   @type('boolean') isHost: boolean = false;
   @type('boolean') hasAnswered: boolean = false;
+  @type('boolean') canVoteWhoWas: boolean = false;
+  @type('boolean') hasVotedWhoWas: boolean = false;
   @type('number') yesCount: number = 0;
   @type('number') majorityCount: number = 0;
   @type('number') minorityCount: number = 0;
@@ -28,6 +30,9 @@ export class GameState extends Schema {
   @type('string') activeEvent: string = 'none';
   @type('string') mode: string = 'fiesta';
   @type('string') winnerName: string = '';
+  @type('number') whoWasDeadlineAt: number = 0;
+  @type('number') whoWasVotesCast: number = 0;
+  @type('boolean') whoWasEligible: boolean = false;
   @type({ map: PlayerState }) players = new MapSchema<PlayerState>();
   @type(['string']) revealedYesNames = new ArraySchema<string>();
   @type(['string']) categories = new ArraySchema<string>();

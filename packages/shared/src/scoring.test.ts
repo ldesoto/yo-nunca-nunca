@@ -2,7 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { scoreRound } from './scoring.js';
 import { generateRoomCode, isValidRoomCode } from './roomCode.js';
-import { canTransition, nextAfterScore } from './phases.js';
+import { canTransition, nextAfterScore, grantsWhoWasVote, WHO_WAS_BONUS } from './phases.js';
 import { canStartGame, sanitizePlayerName } from './validation.js';
 
 describe('scoreRound', () => {
@@ -56,10 +56,18 @@ describe('roomCode', () => {
 });
 
 describe('phases', () => {
-  it('allows lobby to question', () => {
-    assert.equal(canTransition('LOBBY', 'QUESTION'), true);
-    assert.equal(canTransition('LOBBY', 'REVEAL'), false);
+  it('allows who-was after answers', () => {
+    assert.equal(canTransition('WAITING_FOR_ANSWERS', 'WHO_WAS'), true);
+    assert.equal(canTransition('WHO_WAS', 'REVEAL'), true);
+    assert.equal(canTransition('WAITING_FOR_ANSWERS', 'REVEAL'), true);
   });
+
+  it('grants WHO_WAS vote for never only', () => {
+    assert.equal(grantsWhoWasVote('never'), true);
+    assert.equal(grantsWhoWasVote('did'), false);
+    assert.equal(WHO_WAS_BONUS, 60);
+  });
+
 
   it('ends when rounds complete', () => {
     assert.equal(nextAfterScore(12, 12), 'GAME_OVER');

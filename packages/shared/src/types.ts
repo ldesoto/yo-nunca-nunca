@@ -11,6 +11,7 @@ export type GamePhase =
   | 'LOBBY'
   | 'QUESTION'
   | 'WAITING_FOR_ANSWERS'
+  | 'WHO_WAS'
   | 'REVEAL'
   | 'SCORE'
   | 'NEXT_ROUND'

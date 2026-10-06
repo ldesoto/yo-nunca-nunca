@@ -13,6 +13,7 @@ import {
   type YnnDb,
 } from '@ynn/db';
 import { PartyRoom } from './rooms/PartyRoom.js';
+import { resolveRoomCategories } from './premiumGate.js';
 import { generateRoomCode, normalizeRoomCode } from '@ynn/shared';
 
 const PORT = Number(process.env.PORT || 2567);
@@ -105,9 +106,11 @@ async function main() {
       const rounds = Number.isFinite(roundsRaw)
         ? Math.min(30, Math.max(3, Math.floor(roundsRaw)))
         : 12;
-      const categories = Array.isArray(req.body?.categories)
-        ? req.body.categories.map(String).slice(0, 12)
-        : ['todas'];
+      const categories = resolveRoomCategories(
+        Array.isArray(req.body?.categories)
+          ? req.body.categories.map(String).slice(0, 12)
+          : ['todas'],
+      );
       const solo = Boolean(req.body?.solo);
       const mode = req.body?.mode === 'parejas' ? 'parejas' : 'fiesta';
       const roomCode = generateRoomCode();

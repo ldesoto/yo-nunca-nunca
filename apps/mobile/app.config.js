@@ -1,22 +1,22 @@
 const APP_VERSION = '0.1.0';
 
-/** Bake URLs at build time. Store builds must NOT use localhost. */
-const serverHttp =
-  process.env.EXPO_PUBLIC_SERVER_URL ||
-  (process.env.APP_ENV === 'production'
-    ? ''
-    : 'http://127.0.0.1:2567');
+/** Bake URLs at build time. Default = public Render (multiplayer across devices). */
+const DEFAULT_PUBLIC_HTTP = 'https://yo-nunca-nunca.onrender.com';
+const DEFAULT_PUBLIC_WS = 'wss://yo-nunca-nunca.onrender.com';
 
-const serverWs =
-  process.env.EXPO_PUBLIC_WS_URL ||
-  (process.env.APP_ENV === 'production'
-    ? ''
-    : 'ws://127.0.0.1:2567');
+const serverHttp = process.env.EXPO_PUBLIC_SERVER_URL || DEFAULT_PUBLIC_HTTP;
+const serverWs = process.env.EXPO_PUBLIC_WS_URL || DEFAULT_PUBLIC_WS;
 
-if (process.env.APP_ENV === 'production') {
-  if (!serverHttp || !serverWs || /localhost|127\.0\.0\.1/i.test(serverHttp + serverWs)) {
+if (process.env.APP_ENV === 'production' || process.env.APP_ENV === 'preview') {
+  if (
+    !serverHttp ||
+    !serverWs ||
+    /localhost|127\.0\.0\.1/i.test(serverHttp + serverWs) ||
+    serverHttp.startsWith('http://') ||
+    serverWs.startsWith('ws://')
+  ) {
     throw new Error(
-      'Production build requires EXPO_PUBLIC_SERVER_URL and EXPO_PUBLIC_WS_URL pointing to a public host (not localhost).',
+      `${process.env.APP_ENV} build requires EXPO_PUBLIC_SERVER_URL / EXPO_PUBLIC_WS_URL as public https:// and wss:// (not localhost).`,
     );
   }
 }
@@ -63,7 +63,7 @@ export default {
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: ['expo-asset', 'expo-status-bar'],
+    plugins: ['expo-asset', 'expo-audio', 'expo-status-bar'],
     extra: {
       appEnv: process.env.APP_ENV || 'development',
       serverHttp,

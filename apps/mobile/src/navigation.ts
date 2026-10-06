@@ -7,4 +7,8 @@ export type RootStackParamList = {
   GameOver: undefined;
   Settings: undefined;
   Profile: undefined;
+  MostLikely: undefined;
+  TwoTruths: undefined;
+  TruthOrDrink: undefined;
+  NeverHaveIEver: undefined;
 };

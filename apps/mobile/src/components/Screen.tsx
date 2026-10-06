@@ -101,11 +101,10 @@ const styles = StyleSheet.create({
   orbB: { bottom: 80, left: -90 },
   orbC: { top: '42%', right: -100, width: 160, height: 160 },
   grain: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'transparent',
     borderWidth: 0,
     opacity: 0.05,
-    // subtle grid via repeated linear feel — RN web ignores multiple backgrounds often
     shadowColor: '#fff',
     shadowOpacity: 0.02,
   },

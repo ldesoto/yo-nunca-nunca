@@ -19,18 +19,13 @@ export const APP_ENV = extra.appEnv || process.env.APP_ENV || 'development';
 export const DEFAULT_PUBLIC_HTTP = 'https://yo-nunca-nunca.onrender.com';
 export const DEFAULT_PUBLIC_WS = 'wss://yo-nunca-nunca.onrender.com';
 
-const isStoreEnv = APP_ENV === 'production' || APP_ENV === 'preview';
-
-/** Baked at build time (EAS env). Runtime override lives in serverEndpoints.ts. */
+/** Baked at build time (EAS env). Runtime override lives in serverEndpoints.ts.
+ *  Default is the public Render host so Expo Go / two phones can share rooms.
+ *  Use `pnpm start:local` (or Settings override) for a machine-local Colyseus. */
 export const SERVER_HTTP =
-  fromExtraHttp ||
-  fromEnvHttp ||
-  (isStoreEnv ? DEFAULT_PUBLIC_HTTP : 'http://127.0.0.1:2567');
+  fromExtraHttp || fromEnvHttp || DEFAULT_PUBLIC_HTTP;
 
-export const SERVER_WS =
-  fromExtraWs ||
-  fromEnvWs ||
-  (isStoreEnv ? DEFAULT_PUBLIC_WS : 'ws://127.0.0.1:2567');
+export const SERVER_WS = fromExtraWs || fromEnvWs || DEFAULT_PUBLIC_WS;
 
 export function assertStoreSafeEndpoints() {
   if (APP_ENV !== 'production' && APP_ENV !== 'preview') return;

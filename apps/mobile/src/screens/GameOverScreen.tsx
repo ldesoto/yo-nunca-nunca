@@ -1,13 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
 import { GlassCard } from '../components/GlassCard';
+import { ConnectionBanner } from '../components/ConnectionBanner';
 import { useGame } from '../GameContext';
 import { useRoomState } from '../useRoomState';
+import { useRoomConnection, markIntentionalLeave } from '../useRoomConnection';
+import { track } from '../analytics';
+import { feedback } from '../feedback';
+import { recordGameResult } from '../profileStats';
+import { isPremiumUnlocked } from '../premium';
 import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
@@ -16,25 +21,33 @@ type Props = NativeStackScreenProps<RootStackParamList, 'GameOver'>;
 export function GameOverScreen({ navigation }: Props) {
   const { room, setRoom } = useGame();
   const snap = useRoomState(room);
+  const conn = useRoomConnection(room, setRoom);
   const me = snap?.players.find((p) => p.sessionId === snap.mySessionId);
+  const logged = useRef(false);
+  const premium = isPremiumUnlocked();
 
   useEffect(() => {
-    if (!snap || !me) return;
+    if (!snap || !me || logged.current) return;
+    logged.current = true;
     const won = snap.winnerName === me.name;
-    void (async () => {
-      const raw = await AsyncStorage.getItem('ynn.profile.v1');
-      const profile = raw
-        ? JSON.parse(raw)
-        : { name: me.name, avatar: '🦊', gamesPlayed: 0, gamesWon: 0, yesAnswers: 0 };
-      profile.gamesPlayed = (profile.gamesPlayed || 0) + 1;
-      if (won) profile.gamesWon = (profile.gamesWon || 0) + 1;
-      profile.yesAnswers = (profile.yesAnswers || 0) + (me.yesCount || 0);
-      profile.name = me.name;
-      await AsyncStorage.setItem('ynn.profile.v1', JSON.stringify(profile));
-    })();
+    track('game_completed', {
+      rounds: snap.totalRounds,
+      players: snap.players.length,
+      won: won ? 1 : 0,
+    });
+    void feedback({ sfx: 'win', haptic: 'success' });
+    void recordGameResult({
+      name: me.name,
+      won,
+      yesCount: me.yesCount || 0,
+      majorityCount: me.majorityCount || 0,
+      minorityCount: me.minorityCount || 0,
+      score: me.score || 0,
+    });
   }, [snap?.winnerName, me?.sessionId]);
 
   const leave = () => {
+    markIntentionalLeave();
     try {
       room?.leave();
     } catch {
@@ -46,6 +59,7 @@ export function GameOverScreen({ navigation }: Props) {
 
   return (
     <Screen scroll>
+      <ConnectionBanner status={conn} onGoHome={leave} />
       <Animated.Text entering={ZoomIn} style={typography.kicker}>
         GANADOR
       </Animated.Text>
@@ -61,6 +75,13 @@ export function GameOverScreen({ navigation }: Props) {
         <Text style={styles.stat}>Veces “Sí”: {me?.yesCount ?? 0}</Text>
         <Text style={styles.stat}>Veces mayoría: {me?.majorityCount ?? 0}</Text>
         <Text style={styles.stat}>Veces minoría: {me?.minorityCount ?? 0}</Text>
+        {premium ? (
+          <Text style={styles.premiumNote}>✦ Stats de esta partida guardadas en Premium</Text>
+        ) : (
+          <Text style={styles.locked}>
+            Activa Premium (Config) para acumular racha, mejor score y % de Sí.
+          </Text>
+        )}
       </GlassCard>
 
       <View style={{ marginTop: 12 }}>
@@ -92,6 +113,13 @@ const styles = StyleSheet.create({
   },
   meta: { color: colors.muted, marginTop: 6, fontWeight: '600' },
   stat: { color: colors.text, fontSize: 16, marginBottom: 8, fontWeight: '700' },
+  premiumNote: {
+    marginTop: 6,
+    color: colors.neonOrange,
+    fontWeight: '800',
+    fontSize: 13,
+  },
+  locked: { marginTop: 6, color: colors.muted, fontSize: 13, lineHeight: 18 },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',

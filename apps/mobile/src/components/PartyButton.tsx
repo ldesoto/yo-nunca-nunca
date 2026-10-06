@@ -1,7 +1,8 @@
 import { Platform, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as Haptics from 'expo-haptics';
 import { colors, fonts } from '../theme';
+import { feedback } from '../feedback';
+import type { SfxName } from '../audio';
 
 type Variant = 'pink' | 'cyan' | 'ghost' | 'yes' | 'never' | 'orange';
 
@@ -13,6 +14,11 @@ const FILLS: Record<Exclude<Variant, 'ghost'>, { solid: string; gradient: [strin
   orange: { solid: '#FF8A3D', gradient: ['#FFB347', '#FF7A1A'] },
 };
 
+const VARIANT_SFX: Partial<Record<Variant, SfxName>> = {
+  yes: 'yes',
+  never: 'never',
+};
+
 export function PartyButton({
   label,
   onPress,
@@ -20,6 +26,7 @@ export function PartyButton({
   style,
   disabled,
   subtitle,
+  sound = true,
 }: {
   label: string;
   onPress: () => void;
@@ -27,13 +34,16 @@ export function PartyButton({
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
   subtitle?: string;
+  /** false = solo haptic; true = sfx por variante o tap */
+  sound?: boolean | SfxName;
 }) {
   const handle = () => {
-    try {
-      void Haptics.selectionAsync();
-    } catch {
-      // web / unsupported
-    }
+    const sfx =
+      sound === false ? undefined : typeof sound === 'string' ? sound : VARIANT_SFX[variant] ?? 'tap';
+    void feedback({
+      sfx,
+      haptic: variant === 'yes' || variant === 'never' ? 'light' : 'selection',
+    });
     onPress();
   };
 

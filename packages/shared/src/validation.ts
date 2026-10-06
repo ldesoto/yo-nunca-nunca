@@ -1,6 +1,5 @@
 import { MAX_PLAYERS, MIN_PLAYERS } from './types.js';
-
-const OFFENSIVE = /\b(puto|puta|mierda|idiota|estupido|estúpido)\b/i;
+import { containsOffensiveLanguage } from './moderation.js';
 
 export function sanitizePlayerName(raw: string): string {
   const cleaned = raw
@@ -14,7 +13,7 @@ export function sanitizePlayerName(raw: string): string {
 
 export function isValidPlayerName(name: string): boolean {
   const n = sanitizePlayerName(name);
-  return n.length >= 2 && n.length <= 20 && !OFFENSIVE.test(n);
+  return n.length >= 2 && n.length <= 20 && !containsOffensiveLanguage(n);
 }
 
 export function clampPlayerCount(n: number): number {

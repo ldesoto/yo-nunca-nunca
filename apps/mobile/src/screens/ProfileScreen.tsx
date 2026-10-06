@@ -1,51 +1,41 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
 import { Field, GlassCard, SectionLabel } from '../components/GlassCard';
 import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import {
+  isPremiumUnlocked,
+  loadPremium,
+  subscribePremium,
+} from '../premium';
+import {
+  DEFAULT_PROFILE,
+  loadProfile,
+  saveProfile,
+  yesRate,
+  type PlayerProfile,
+} from '../profileStats';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
-type Profile = {
-  name: string;
-  avatar: string;
-  gamesPlayed: number;
-  gamesWon: number;
-  yesAnswers: number;
-};
-
 const AVATARS = ['🦊', '🐯', '🐸', '🦄', '👽', '👻', '🐼', '🐙'];
-const KEY = 'ynn.profile.v1';
-
-const DEFAULT: Profile = {
-  name: 'Jugador',
-  avatar: '🦊',
-  gamesPlayed: 0,
-  gamesWon: 0,
-  yesAnswers: 0,
-};
 
 export function ProfileScreen({ navigation }: Props) {
-  const [profile, setProfile] = useState<Profile>(DEFAULT);
+  const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
+  const [premium, setPremium] = useState(isPremiumUnlocked());
 
   useEffect(() => {
-    void AsyncStorage.getItem(KEY).then((raw) => {
-      if (!raw) return;
-      try {
-        setProfile({ ...DEFAULT, ...JSON.parse(raw) });
-      } catch {
-        // ignore
-      }
-    });
+    void loadProfile().then(setProfile);
+    void loadPremium().then(setPremium);
+    return subscribePremium(setPremium);
   }, []);
 
-  const save = async (next: Profile) => {
+  const save = async (next: PlayerProfile) => {
     setProfile(next);
-    await AsyncStorage.setItem(KEY, JSON.stringify(next));
+    await saveProfile(next);
   };
 
   return (
@@ -54,6 +44,7 @@ export function ProfileScreen({ navigation }: Props) {
       <GlassCard glow="pink" style={{ alignItems: 'center', marginTop: 8 }}>
         <Text style={styles.avatarHuge}>{profile.avatar}</Text>
         <Text style={styles.name}>{profile.name}</Text>
+        {premium ? <Text style={styles.premiumBadge}>✦ PREMIUM</Text> : null}
         <Text style={styles.meta}>
           {profile.gamesPlayed} partidas · {profile.gamesWon} ganadas
         </Text>
@@ -81,9 +72,24 @@ export function ProfileScreen({ navigation }: Props) {
 
       <GlassCard style={{ marginTop: 12 }}>
         <Text style={styles.stat}>Respuestas “Sí”: {profile.yesAnswers}</Text>
-        <Text style={styles.statMuted}>
-          Las stats se guardan en este dispositivo (sin cuenta obligatoria).
-        </Text>
+        {premium ? (
+          <>
+            <Text style={styles.stat}>% Sí (aprox.): {yesRate(profile)}%</Text>
+            <Text style={styles.stat}>Mayoría: {profile.majorityCount}</Text>
+            <Text style={styles.stat}>Minoría: {profile.minorityCount}</Text>
+            <Text style={styles.stat}>Mejor score: {profile.bestScore}</Text>
+            <Text style={styles.stat}>
+              Racha: {profile.winStreak} (máx {profile.bestStreak})
+            </Text>
+            <Text style={styles.statMuted}>
+              Stats avanzadas Premium — solo en este dispositivo.
+            </Text>
+          </>
+        ) : (
+          <Text style={styles.statMuted}>
+            Activa Premium en Configuración para ver racha, mejor score y % de Sí.
+          </Text>
+        )}
       </GlassCard>
 
       <PartyButton label="Volver" variant="ghost" onPress={() => navigation.goBack()} />
@@ -94,8 +100,15 @@ export function ProfileScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   avatarHuge: { fontSize: 64, marginBottom: 8 },
   name: { color: colors.text, fontSize: 28, fontWeight: '900' },
+  premiumBadge: {
+    marginTop: 6,
+    color: colors.neonOrange,
+    fontWeight: '900',
+    letterSpacing: 1.2,
+    fontSize: 12,
+  },
   meta: { color: colors.muted, marginTop: 4, fontWeight: '600' },
   avatars: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
-  stat: { color: colors.text, fontWeight: '800', fontSize: 16 },
+  stat: { color: colors.text, fontWeight: '800', fontSize: 16, marginBottom: 6 },
   statMuted: { color: colors.muted, marginTop: 8, lineHeight: 20 },
 });
