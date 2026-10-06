@@ -66,7 +66,19 @@ export default {
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: ['expo-asset', 'expo-audio', 'expo-status-bar'],
+    plugins: [
+      'expo-asset',
+      [
+        'expo-audio',
+        {
+          microphonePermission: false,
+          recordAudioAndroid: false,
+          enableBackgroundPlayback: false,
+          enableBackgroundRecording: false,
+        },
+      ],
+      'expo-status-bar',
+    ],
     extra: {
       appEnv: process.env.APP_ENV || 'development',
       serverHttp,
