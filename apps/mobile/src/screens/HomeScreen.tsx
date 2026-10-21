@@ -1,17 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
+  Easing,
   FadeInDown,
   FadeInUp,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
-import { GrowthBar } from '../components/GrowthBar';
+import { GameLogo } from '../components/GameLogo';
+import { MoreSheet } from '../components/MoreSheet';
 import { wakeServer } from '../api';
 import { fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
@@ -23,6 +28,7 @@ type FilterId = 'todos' | 'jugadores' | 'beber' | 'rapido' | 'picante';
 
 type GameMode = {
   id: string;
+  testId: string;
   title: string;
   description: string;
   icon: string;
@@ -32,8 +38,6 @@ type GameMode = {
   gradient: [string, string, ...string[]];
   ctaGradient: [string, string];
   onPlay: () => void;
-  onJoin?: () => void;
-  playLabel?: string;
 };
 
 const FILTERS: { id: FilterId; icon: string }[] = [
@@ -57,18 +61,32 @@ function ModeCard({ mode, index }: { mode: GameMode; index: number }) {
   const anim = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
-  const hasExtras = Boolean(mode.onJoin);
 
   return (
     <Animated.View
       entering={FadeInDown.delay(60 + index * 70).duration(420)}
       style={anim}
     >
+      <Pressable
+        testID={mode.testId}
+        accessibilityRole="button"
+        accessibilityLabel={mode.title}
+        onPressIn={() => {
+          scale.value = withSpring(0.985, { damping: 18, stiffness: 280 });
+        }}
+        onPressOut={() => {
+          scale.value = withSpring(1, { damping: 16, stiffness: 220 });
+        }}
+        onPress={() => {
+          haptic();
+          mode.onPlay();
+        }}
+      >
         <LinearGradient
           colors={mode.gradient}
           start={{ x: 0, y: 0.2 }}
           end={{ x: 1, y: 1 }}
-          style={[styles.card, hasExtras && styles.cardTall]}
+          style={styles.card}
         >
           {mode.badge ? (
             <View style={styles.badge}>
@@ -92,101 +110,80 @@ function ModeCard({ mode, index }: { mode: GameMode; index: number }) {
               <Text style={styles.players}>{mode.players}</Text>
             </View>
 
-            {!hasExtras ? (
-              <Pressable
-                onPressIn={() => {
-                  scale.value = withSpring(0.985, { damping: 18, stiffness: 280 });
-                }}
-                onPressOut={() => {
-                  scale.value = withSpring(1, { damping: 16, stiffness: 220 });
-                }}
-                onPress={() => {
-                  haptic();
-                  mode.onPlay();
-                }}
-              >
-                <LinearGradient
-                  colors={mode.ctaGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.playPill}
-                >
-                  <Text style={styles.playLabel}>{mode.playLabel ?? t('home.cta.play')}</Text>
-                </LinearGradient>
-              </Pressable>
-            ) : null}
+            <LinearGradient
+              colors={mode.ctaGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.playPill}
+            >
+              <Text style={styles.playLabel}>{t('home.cta.play')}</Text>
+            </LinearGradient>
           </View>
-
-          {hasExtras ? (
-            <View style={styles.actionRow}>
-              <Pressable
-                onPress={() => {
-                  haptic();
-                  mode.onJoin!();
-                }}
-                style={({ pressed }) => [
-                  styles.secondaryBtn,
-                  pressed && styles.pressed,
-                ]}
-              >
-                <Text style={styles.secondaryLabel}>{t('home.cta.join')}</Text>
-              </Pressable>
-              <Pressable
-                onPressIn={() => {
-                  scale.value = withSpring(0.985, { damping: 18, stiffness: 280 });
-                }}
-                onPressOut={() => {
-                  scale.value = withSpring(1, { damping: 16, stiffness: 220 });
-                }}
-                onPress={() => {
-                  haptic();
-                  mode.onPlay();
-                }}
-                style={{ flex: 1.2 }}
-              >
-                <LinearGradient
-                  colors={mode.ctaGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.primaryPill}
-                >
-                  <Text style={styles.playLabel}>{mode.playLabel ?? t('home.cta.create')}</Text>
-                </LinearGradient>
-              </Pressable>
-            </View>
-          ) : null}
         </LinearGradient>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+function PrimaryPlayButton({ onPress }: { onPress: () => void }) {
+  const pulse = useSharedValue(1);
+  const press = useSharedValue(1);
+
+  useEffect(() => {
+    pulse.value = withRepeat(
+      withSequence(
+        withTiming(1.035, { duration: 1100, easing: Easing.inOut(Easing.sin) }),
+        withTiming(1, { duration: 1100, easing: Easing.inOut(Easing.sin) }),
+      ),
+      -1,
+      false,
+    );
+  }, [pulse]);
+
+  const anim = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value * press.value }],
+  }));
+
+  return (
+    <Animated.View style={anim}>
+      <Pressable
+        testID="home-primary-play"
+        accessibilityRole="button"
+        accessibilityLabel={t('home.playPrimary')}
+        onPressIn={() => {
+          press.value = withSpring(0.97, { damping: 16, stiffness: 260 });
+        }}
+        onPressOut={() => {
+          press.value = withSpring(1, { damping: 14, stiffness: 220 });
+        }}
+        onPress={() => {
+          haptic();
+          onPress();
+        }}
+      >
+        <LinearGradient
+          colors={['#FDE047', '#FBBF24', '#F59E0B']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.primaryCta}
+        >
+          <Text style={styles.primaryCtaLabel}>{t('home.playPrimary')}</Text>
+          <Text style={styles.primaryCtaSub}>{t('home.playSub')}</Text>
+        </LinearGradient>
+      </Pressable>
     </Animated.View>
   );
 }
 
 export function HomeScreen({ navigation }: Props) {
   const [filter, setFilter] = useState<FilterId>('todos');
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const modes: GameMode[] = useMemo(
     () => [
       {
-        id: 'ynn',
-        title: t('home.mode.ynn.title'),
-        description: t('home.mode.ynn.desc'),
-        icon: '🤞',
-        players: t('home.mode.ynn.players'),
-        badge: t('home.mode.ynn.badge'),
-        filters: ['todos', 'jugadores', 'beber', 'picante'],
-        gradient: ['#7C3AED', '#DB2777', '#F472B6'],
-        ctaGradient: ['#FDE047', '#FBBF24'],
-        playLabel: t('home.cta.create'),
-        onPlay: () => {
-          wakeServer();
-          navigation.navigate('Create');
-        },
-        onJoin: () => {
-          wakeServer();
-          navigation.navigate('Join');
-        },
-      },
-      {
         id: 'tod',
+        testId: 'menu-item-TruthOrDrink',
         title: t('home.mode.tod.title'),
         description: t('home.mode.tod.desc'),
         icon: '🥃',
@@ -198,6 +195,7 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'charades',
+        testId: 'menu-item-Charades',
         title: t('home.mode.charades.title'),
         description: t('home.mode.charades.desc'),
         icon: '😎',
@@ -209,6 +207,7 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'bomb',
+        testId: 'menu-item-Bomb',
         title: t('home.mode.bomb.title'),
         description: t('home.mode.bomb.desc'),
         icon: '💣',
@@ -220,6 +219,7 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'most',
+        testId: 'menu-item-MostLikely',
         title: t('home.mode.most.title'),
         description: t('home.mode.most.desc'),
         icon: '🫵',
@@ -231,6 +231,7 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'truths',
+        testId: 'menu-item-TwoTruths',
         title: t('home.mode.truths.title'),
         description: t('home.mode.truths.desc'),
         icon: '🎭',
@@ -248,36 +249,60 @@ export function HomeScreen({ navigation }: Props) {
     (m) => filter === 'todos' || m.filters.includes(filter),
   );
 
+  const playClassic = () => {
+    wakeServer();
+    navigation.navigate('Create');
+  };
+
+  const joinClassic = () => {
+    wakeServer();
+    navigation.navigate('Join');
+  };
+
   return (
     <View style={styles.root}>
       <Screen scroll style={styles.screenPad}>
         <Animated.View entering={FadeInUp.duration(480)} style={styles.header}>
           <View style={styles.headerTop}>
-            <View style={styles.brandRow}>
-              <Text style={styles.brand}>EL CORO</Text>
-              <Text style={styles.brandCrown}>♛</Text>
-            </View>
+            <View style={styles.headerSpacer} />
+            <Pressable
+              testID="home-more-button"
+              accessibilityRole="button"
+              accessibilityLabel={t('home.more')}
+              onPress={() => setMoreOpen(true)}
+              style={({ pressed }) => [styles.moreBtn, pressed && styles.pressed]}
+            >
+              <Text style={styles.moreGlyph}>☰</Text>
+            </Pressable>
           </View>
 
-          <View style={styles.heroRow}>
-            <View style={styles.heroCopy}>
-              <Text style={styles.hero}>
-                <Text style={styles.heroWhite}>¡A </Text>
-                <Text style={styles.heroPink}>jugar</Text>
-                <Text style={styles.heroYellow}>!</Text>
-              </Text>
-              <Text style={styles.sub}>Elige un modo y empieza la noche</Text>
-            </View>
-            <View style={styles.heroCrownWrap}>
-              <LinearGradient
-                colors={['#FDE047', '#F59E0B', '#EA580C']}
-                style={styles.heroCrown}
-              >
-                <Text style={styles.heroCrownGlyph}>♛</Text>
-              </LinearGradient>
-            </View>
-          </View>
+          <GameLogo />
+
+          <Text style={styles.hero}>
+            <Text style={styles.heroWhite}>{t('home.heroA')}</Text>
+            <Text style={styles.heroPink}>{t('home.heroPlay')}</Text>
+            <Text style={styles.heroYellow}>{t('home.heroBang')}</Text>
+          </Text>
+          <Text style={styles.sub}>{t('home.sub')}</Text>
         </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(120).duration(420)} style={styles.primaryBlock}>
+          <PrimaryPlayButton onPress={playClassic} />
+          <Pressable
+            testID="home-join-button"
+            accessibilityRole="button"
+            accessibilityLabel={t('home.cta.join')}
+            onPress={() => {
+              haptic();
+              joinClassic();
+            }}
+            style={({ pressed }) => [styles.joinBtn, pressed && styles.pressed]}
+          >
+            <Text style={styles.joinLabel}>{t('home.cta.join')}</Text>
+          </Pressable>
+        </Animated.View>
+
+        <Text style={styles.sectionLabel}>{t('home.modesTitle')}</Text>
 
         <ScrollView
           horizontal
@@ -297,7 +322,7 @@ export function HomeScreen({ navigation }: Props) {
                   {f.icon}
                 </Text>
                 <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
-                  {t(`home.filter.${f.id}` as any)}
+                  {t(`home.filter.${f.id}` as 'home.filter.todos')}
                 </Text>
               </Pressable>
             );
@@ -309,30 +334,15 @@ export function HomeScreen({ navigation }: Props) {
             <ModeCard key={mode.id} mode={mode} index={index} />
           ))}
         </View>
-
-        <GrowthBar onMoreGames={() => navigation.navigate('MoreGames')} />
       </Screen>
 
-      <View style={styles.tabBar}>
-        <View style={styles.tabItemActive}>
-          <Text style={styles.tabIconActive}>⌂</Text>
-          <Text style={styles.tabLabelActive}>Inicio</Text>
-        </View>
-        <Pressable
-          style={styles.tabItem}
-          onPress={() => navigation.navigate('Profile')}
-        >
-          <Text style={styles.tabIcon}>🏆</Text>
-          <Text style={styles.tabLabel}>Perfil</Text>
-        </Pressable>
-        <Pressable
-          style={styles.tabItem}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <Text style={styles.tabIcon}>⚙</Text>
-          <Text style={styles.tabLabel}>Ajustes</Text>
-        </Pressable>
-      </View>
+      <MoreSheet
+        visible={moreOpen}
+        onClose={() => setMoreOpen(false)}
+        onProfile={() => navigation.navigate('Profile')}
+        onSettings={() => navigation.navigate('Settings')}
+        onMoreGames={() => navigation.navigate('MoreGames')}
+      />
     </View>
   );
 }
@@ -343,54 +353,49 @@ const styles = StyleSheet.create({
     backgroundColor: '#0B0614',
   },
   screenPad: {
-    paddingBottom: 108,
+    paddingBottom: 36,
   },
   header: {
     paddingTop: 2,
+    alignItems: 'center',
   },
   headerTop: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: 8,
   },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 4,
+  headerSpacer: {
+    flex: 1,
   },
-  brand: {
-    fontFamily: fonts.display,
+  moreBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.14)',
+  },
+  moreGlyph: {
     color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '900',
-    letterSpacing: 0.5,
-  },
-  brandCrown: {
+    fontSize: 20,
+    fontWeight: '700',
     marginTop: -2,
-    color: '#FACC15',
-    fontSize: 14,
   },
   pressed: {
     opacity: 0.7,
   },
-  heroRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 12,
-    marginBottom: 18,
-  },
-  heroCopy: {
-    flex: 1,
-    minWidth: 0,
-  },
   hero: {
+    marginTop: 18,
     fontFamily: fonts.display,
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: '900',
-    letterSpacing: -1.2,
-    lineHeight: 44,
+    letterSpacing: -1.1,
+    lineHeight: 40,
+    textAlign: 'center',
   },
   heroWhite: { color: '#FFFFFF' },
   heroPink: { color: '#FF4DA6' },
@@ -401,24 +406,57 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: 'rgba(251,247,255,0.72)',
+    textAlign: 'center',
   },
-  heroCrownWrap: {
-    width: 88,
-    height: 88,
+  primaryBlock: {
+    marginTop: 22,
+    gap: 10,
+  },
+  primaryCta: {
+    borderRadius: 28,
+    paddingVertical: 22,
+    paddingHorizontal: 20,
     alignItems: 'center',
+    minHeight: 88,
     justifyContent: 'center',
   },
-  heroCrown: {
-    width: 78,
-    height: 78,
-    borderRadius: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-    transform: [{ rotate: '12deg' }],
-  },
-  heroCrownGlyph: {
-    fontSize: 40,
+  primaryCtaLabel: {
+    fontFamily: fonts.display,
     color: '#1A0A00',
+    fontSize: 26,
+    fontWeight: '900',
+    letterSpacing: 1.4,
+  },
+  primaryCtaSub: {
+    marginTop: 4,
+    color: 'rgba(26,10,0,0.72)',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  joinBtn: {
+    borderRadius: 22,
+    paddingVertical: 14,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.16)',
+  },
+  joinLabel: {
+    fontFamily: fonts.display,
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.4,
+  },
+  sectionLabel: {
+    marginTop: 26,
+    marginBottom: 10,
+    fontFamily: fonts.display,
+    color: 'rgba(251,247,255,0.78)',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 1.6,
+    textTransform: 'uppercase',
   },
   chipsScroll: {
     marginHorizontal: -4,
@@ -469,36 +507,6 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     minHeight: 108,
     overflow: 'hidden',
-  },
-  cardTall: {
-    minHeight: 148,
-    paddingBottom: 14,
-  },
-  actionRow: {
-    marginTop: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  secondaryBtn: {
-    flex: 1,
-    paddingVertical: 11,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.28)',
-    alignItems: 'center',
-  },
-  secondaryLabel: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0.2,
-  },
-  primaryPill: {
-    paddingVertical: 11,
-    borderRadius: 999,
-    alignItems: 'center',
   },
   badge: {
     position: 'absolute',
@@ -576,49 +584,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '900',
     letterSpacing: 0.3,
-  },
-  tabBar: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    bottom: 18,
-    height: 68,
-    borderRadius: 28,
-    backgroundColor: 'rgba(18,10,32,0.96)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingHorizontal: 8,
-  },
-  tabItem: {
-    alignItems: 'center',
-    gap: 2,
-    minWidth: 88,
-    opacity: 0.55,
-  },
-  tabItemActive: {
-    alignItems: 'center',
-    gap: 2,
-    minWidth: 88,
-  },
-  tabIcon: {
-    fontSize: 16,
-    color: 'rgba(255,255,255,0.7)',
-  },
-  tabIconActive: {
-    fontSize: 18,
-    color: '#C084FC',
-  },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: 'rgba(255,255,255,0.55)',
-  },
-  tabLabelActive: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#C084FC',
   },
 });
