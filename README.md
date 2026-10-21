@@ -35,11 +35,10 @@ packages/db          SQLite schema, migrate, seed → data/ynn.sqlite
 **Target cableado:** `https://yo-nunca-nunca.onrender.com` / `wss://yo-nunca-nunca.onrender.com` (`render.yaml`, `apps/mobile/eas.json` preview+production).
 
 **Estado producción (real):**
-- **Listo para jugar online** salvo: `eas submit`, IAP real (RevenueCat / Play Billing / App Store) y cuentas de desarrollador de tiendas.
-- Servicio Render **ya existe y está live**: `GET /health` → 200 (`status=ok`, `questions`≈1081). No hace falta crear otro Blueprint.
-- Deploy config lista: `render.yaml` (`healthCheckPath: /health`, `PORT` inyectado por Render, `YNN_SQLITE_PATH=/data/ynn.sqlite`, `dockerContext: .`), `apps/server/Dockerfile`, `docker-compose.yml`, perfiles EAS `preview`/`production` → Render.
-- **Gate seguridad (servidor):** categorías Premium (`picante` / `sin_filtro`) se filtran en `POST /rooms` + `PartyRoom` (fail-closed). Stub local de Premium en la app **no** abre el mazo online; solo `YNN_PREMIUM_OPEN=1` en el servidor (ops/testing) o IAP futuro. CORS con allowlist + Expo; analytics sin respuestas/nombres; custom questions con `sanitizeCustomQuestion` + `reportQuestion`.
-- **Push pendiente (deploy servidor):** working tree local con `premiumGate` + PartyRoom/CORS/WHO_WAS **sin commit**; tras commit + `git push` a `main`, Render auto-redeploya. Sin ese push, producción pública **aún no** aplica el gate Premium del servidor. Cambios solo en `apps/mobile` no tocan Render; bastan commit + `eas build --profile preview|production`.
+- **Monetización (ads-only):** AdMob intersticial al salir de juegos locales. Sin IAP / RevenueCat / Pro. Todas las categorías libres. Ops: [`docs/MONETIZATION_OPS.md`](docs/MONETIZATION_OPS.md).
+- Servicio Render **ya existe y está live**: `GET /health` → 200. Deploy: `render.yaml`, Docker, EAS preview/production → Render.
+- CORS allowlist + Expo; analytics sin respuestas/nombres; custom questions con `sanitizeCustomQuestion` + `reportQuestion`.
+- **Deploy mobile:** `eas build` nativo (OTA no incluye AdMob SDK).
 - Fly (`yo-nunca-nunca.fly.dev`) nunca se desplegó (sin DNS); opcional.
 
 ### Checklist readiness
@@ -50,10 +49,10 @@ packages/db          SQLite schema, migrate, seed → data/ynn.sqlite
 | Shared / server tests | ✅ |
 | Mobile `tsc` + endpoints https/wss en preview/production | ✅ |
 | CORS, moderación custom, report, WHO_WAS, reconexión 60s | ✅ |
-| Premium fail-closed en servidor | ✅ (código local; **pendiente push/redeploy**) |
-| `eas build` preview/production | ⬜ cuando quieras |
-| Cuentas Play / Apple Developer | ⬜ |
-| IAP real | ⬜ |
+| Ads AdMob (cliente) | ✅ (test ids; build nativo para ver ads reales) |
+| Categorías libres (sin Pro) | ✅ |
+| `eas build` preview/production nativo | ⬜ |
+| Play AD_ID + Data safety | ⬜ |
 | `eas submit` a tiendas | ⬜ |
 
 ### Redeploy / Blueprint (servicio ya creado)
@@ -192,6 +191,7 @@ pnpm --filter @ynn/server test
 - ✅ Preguntas custom (lobby)
 - ✅ Eventos `nobody` / `everyone` / doble / mortal
 - ✅ **¿Quién fue?** (voto tras responder, +60 si aciertas)
-- ✅ **Fase 3 (base)**: analytics locales (§22), Premium stub (Picante / Sin filtro), moderación + report
-- ✅ Audio SFX + bed de lobby (respeta Config), stats Premium avanzadas, banner de reconexión
-- ⬜ **Al final**: publicación Play Store / App Store (`eas build` + submit) + IAP real
+- ✅ **Fase 3 (base)**: analytics locales, categorías completas, moderación + report
+- ✅ Audio SFX (respeta Config), banner de reconexión
+- ✅ **Monetización ads-only**: AdMob — [`docs/MONETIZATION_OPS.md`](docs/MONETIZATION_OPS.md)
+- ⬜ **Al final**: AdMob prod + `eas build` / submit
