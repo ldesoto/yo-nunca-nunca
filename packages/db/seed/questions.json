@@ -6484,5 +6484,485 @@
     "text": "Yo nunca nunca he contado un secreto de un muerto que pidió que no se contara",
     "category": "sin_filtro",
     "adultOnly": true
+  },
+  {
+    "id": "SPICY_ef060270e6",
+    "text": "Yo nunca nunca he enviado nudes a alguien de esta mesa (o casi).",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_366ca76898",
+    "text": "Yo nunca nunca he tenido un almost con alguien aquí.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_f67c6437dc",
+    "text": "Yo nunca nunca he sido infiel… o lo he pensado demasiado.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_9fad010def",
+    "text": "Yo nunca nunca he fingido un orgasmo.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_9059e9501f",
+    "text": "Yo nunca nunca he revisado el celular de mi pareja a escondidas.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_568b769c20",
+    "text": "Yo nunca nunca he ghosteado después de intimar.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_95d98188e9",
+    "text": "Yo nunca nunca he besado a dos personas la misma noche.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_fa7fb31c0d",
+    "text": "Yo nunca nunca he usado a alguien solo para olvidar a otra persona.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_9d3a6ed2e4",
+    "text": "Yo nunca nunca he mentido sobre mi número de parejas.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_371c38ddac",
+    "text": "Yo nunca nunca he tenido relaciones en un lugar público o arriesgado.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_6b095691a7",
+    "text": "Yo nunca nunca he guardado screenshots comprometedores ‘por si acaso’.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_c89fbdab5a",
+    "text": "Yo nunca nunca he dicho ‘te amo’ sin sentirlo.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_0e532f07c1",
+    "text": "Yo nunca nunca he tenido un crush con el/la ex de un amigo.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_e49ed1d420",
+    "text": "Yo nunca nunca he borrado mensajes antes de prestar el teléfono.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_a92d4d2c0a",
+    "text": "Yo nunca nunca he usado alcohol como excusa para cruzar una línea.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_286cbc540c",
+    "text": "Yo nunca nunca he sido ‘el/la otro/a’.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_c9f25c38c0",
+    "text": "Yo nunca nunca he enviado un mensaje picante a la persona equivocada.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_6754665272",
+    "text": "Yo nunca nunca he mentido sobre estar soltero/a para ligar.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_770c1a6b87",
+    "text": "Yo nunca nunca he espiado la ubicación de alguien.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_8eccfa2b58",
+    "text": "Yo nunca nunca he pedido nudes.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_44039f5fc4",
+    "text": "Yo nunca nunca he reenviado algo íntimo aunque fuera ‘de broma’.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_0c143b36b8",
+    "text": "Yo nunca nunca he roto una amistad por un lío.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_2691696627",
+    "text": "Yo nunca nunca he tenido un trío.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_019c0d99dc",
+    "text": "Yo nunca nunca he usado apps de citas estando en algo serio.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_f15d203390",
+    "text": "Yo nunca nunca he mentido en un juego de beber para no quedar mal.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_d855365972",
+    "text": "Yo nunca nunca he tenido celos de una story de Instagram.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_209dd3416c",
+    "text": "Yo nunca nunca he guardado el número del ex con otro nombre.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_fcc421a1ae",
+    "text": "Yo nunca nunca he provocado una pelea para terminar en makeup.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_dcec22f521",
+    "text": "Yo nunca nunca he tenido intimidad sin sentir nada después.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_2b63d402f1",
+    "text": "Yo nunca nunca he stalkearte a alguien más de una hora seguida.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_f3ec2fdd5d",
+    "text": "Yo nunca nunca he dicho ‘solo amigos’ con segunda intención.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_2278c140e8",
+    "text": "Yo nunca nunca he tenido un crush en el trabajo o la uni.",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_cb0b2dce4a",
+    "text": "Yo nunca nunca he borrado el historial por pánico.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_158cd04116",
+    "text": "Yo nunca nunca he usado ‘no me acuerdo’ como escudo después de una fiesta.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_34b5aaa51c",
+    "text": "Yo nunca nunca he tenido un secreto que hundiría a alguien de este grupo.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_7c3dddef2b",
+    "text": "Yo nunca nunca he enviado un audio hot.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_cfc2c70a32",
+    "text": "Yo nunca nunca he quedado ‘a dormir’ sin intención de dormir.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_5d9a1e29df",
+    "text": "Yo nunca nunca he mentido sobre cuidados / protección.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_0064af4056",
+    "text": "Yo nunca nunca he cambiado mi bio por alguien específico.",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_eebfa8b50c",
+    "text": "Yo nunca nunca he tenido una carpeta oculta en el celular.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_2ec2901c59",
+    "text": "Yo nunca nunca he usado a un amigo como excusa para ver a alguien.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_be5cfd7ca5",
+    "text": "Yo nunca nunca he vuelto con alguien que no lo merecía.",
+    "category": "relaciones",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_e075bce585",
+    "text": "Yo nunca nunca he tenido un fetiche que me da vergüenza admitir.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_89780b7da3",
+    "text": "Yo nunca nunca he bloqueado y desbloqueado a la misma persona por drama.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_88ed0cba26",
+    "text": "Yo nunca nunca he tenido relaciones el mismo día que conocí a alguien.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_394d525489",
+    "text": "Yo nunca nunca he mentido sobre cuánto bebí para justificar algo.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_4c46daa156",
+    "text": "Yo nunca nunca he tenido un crush ‘prohibido’.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_389977f231",
+    "text": "Yo nunca nunca he hecho una apuesta sexual o indecente.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_7883d62df5",
+    "text": "Yo nunca nunca he escondido un chupetón.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_93c00afdcb",
+    "text": "Yo nunca nunca he fingido estar borracho/a para decir verdades.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_15ac03f377",
+    "text": "Yo nunca nunca he tenido un chat que no debería existir.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_481c6898fb",
+    "text": "Yo nunca nunca he salido con el/la amigo/a de alguien que me gustaba.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_e8f8ed572b",
+    "text": "Yo nunca nunca he usado ‘estamos en pausa’ para ver a otras personas.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_2313ce1c61",
+    "text": "Yo nunca nunca he tenido un walk of shame memorable.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_888d6821a8",
+    "text": "Yo nunca nunca he pedido un shot solo para animarme a besar a alguien.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_4ef9f1c7af",
+    "text": "Yo nunca nunca he guardado una foto comprometida ‘por si acaso’.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_cd111f4ee0",
+    "text": "Yo nunca nunca he hecho drama solo para llamar la atención de alguien.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_e40cddebf0",
+    "text": "Yo nunca nunca he tenido un secreto de ‘amigos con derecho’.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_276d555197",
+    "text": "Yo nunca nunca he dicho ‘fue un error’ sabiendo que lo repetiría.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_e24f8d2fe2",
+    "text": "Yo nunca nunca he usado ubicación falsa o ‘estoy afuera’ para engañar.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_a0c437aafc",
+    "text": "Yo nunca nunca he enviado un ‘llámame’ a las 3 AM.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_9be93ea438",
+    "text": "Yo nunca nunca he tenido intimidad y lo he negado después.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_b130e10402",
+    "text": "Yo nunca nunca he hecho un pacto de silencio con alguien después de una noche.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_3d90b96cc8",
+    "text": "Yo nunca nunca he usado un juego como este para sacar información de alguien.",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_84e34b4908",
+    "text": "Yo nunca nunca he tenido un almost en la cocina de una fiesta.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_b1799a6d90",
+    "text": "Yo nunca nunca he mentido sobre un orgasmo… o sobre no haberlo tenido.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_0c51d48f99",
+    "text": "Yo nunca nunca he besado a alguien solo por celos.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_44b5b15a8a",
+    "text": "Yo nunca nunca he tenido dos citas la misma semana sin que se enteraran.",
+    "category": "relaciones",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_103db53ac6",
+    "text": "Yo nunca nunca he fingido interés solo para conseguir algo.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_7471526a75",
+    "text": "Yo nunca nunca he tenido un crush con alguien de esta mesa.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_fa4fc50161",
+    "text": "Yo nunca nunca he publicado una story solo para que alguien específico la viera.",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_97f1ff12bd",
+    "text": "Yo nunca nunca he llorado en un baño de discoteca por alguien.",
+    "category": "fiesta",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_6dd4130b67",
+    "text": "Yo nunca nunca he tenido una fantasía con alguien aquí.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_1b2cbf0b54",
+    "text": "Yo nunca nunca he borrado una app de citas… y la he vuelto a bajar al día siguiente.",
+    "category": "casual",
+    "adultOnly": false
+  },
+  {
+    "id": "SPICY_8787fba916",
+    "text": "Yo nunca nunca he tenido intimidad en un carro.",
+    "category": "picante",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_ccf719cafb",
+    "text": "Yo nunca nunca he usado el teléfono de otra persona sin permiso.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_0f4fe1de67",
+    "text": "Yo nunca nunca he mentido sobre con quién estaba anoche.",
+    "category": "sin_filtro",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_56953e1f8d",
+    "text": "Yo nunca nunca he tenido un secreto que no contaría frente a mis padres.",
+    "category": "vergonzoso",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_7f931a0517",
+    "text": "Yo nunca nunca he hecho un ‘casi beso’ a propósito para provocar.",
+    "category": "fiesta",
+    "adultOnly": true
+  },
+  {
+    "id": "SPICY_3d6268449b",
+    "text": "Yo nunca nunca he dejado en visto a alguien con quien acababa de intimar.",
+    "category": "picante",
+    "adultOnly": true
   }
 ]

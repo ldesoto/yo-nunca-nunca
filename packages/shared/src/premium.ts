@@ -1,28 +1,28 @@
 import type { QuestionCategory } from './types.js';
 
-/** Categorías incluidas en el plan gratis. */
+/** Todas las categorías están disponibles (monetización = ads, sin IAP). */
 export const FREE_CATEGORIES: QuestionCategory[] = [
   'todas',
   'casual',
   'vergonzoso',
   'fiesta',
   'relaciones',
+  'picante',
+  'sin_filtro',
 ];
 
-/** Categorías que requieren Premium. */
-export const PREMIUM_CATEGORIES: QuestionCategory[] = ['picante', 'sin_filtro'];
+/** @deprecated Sin gate Pro — siempre vacío. */
+export const PREMIUM_CATEGORIES: QuestionCategory[] = [];
 
-export function isPremiumCategory(id: string): boolean {
-  return (PREMIUM_CATEGORIES as string[]).includes(id);
+export function isPremiumCategory(_id: string): boolean {
+  return false;
 }
 
-/** Filtra categorías premium si el jugador no tiene entitlement. */
+/** Normaliza la lista; ya no filtra por entitlement. */
 export function filterCategoriesForEntitlement(
   categories: string[],
-  isPremium: boolean,
+  _isPremium = true,
 ): QuestionCategory[] {
   const cleaned = categories.filter(Boolean) as QuestionCategory[];
-  if (isPremium) return cleaned.length ? cleaned : ['todas'];
-  const free = cleaned.filter((c) => !isPremiumCategory(c));
-  return free.length ? free : ['todas'];
+  return cleaned.length ? cleaned : ['todas'];
 }

@@ -226,10 +226,19 @@ export class PartyRoom extends Room<GameState> {
   }
 
   private handleAddCustom(client: Client, text: string) {
-    if (this.state.phase !== 'LOBBY') return;
-    if (this.customQuestions.length >= 20) return;
+    if (this.state.phase !== 'LOBBY') {
+      client.send('customQuestionResult', { ok: false, reason: 'not_lobby' });
+      return;
+    }
+    if (this.customQuestions.length >= 20) {
+      client.send('customQuestionResult', { ok: false, reason: 'limit' });
+      return;
+    }
     const result = sanitizeCustomQuestion(text);
-    if (!result.ok) return;
+    if (!result.ok) {
+      client.send('customQuestionResult', { ok: false, reason: result.reason });
+      return;
+    }
     const id = `CUSTOM_${Date.now()}_${this.customQuestions.length}`;
     this.customQuestions.push({
       id,
@@ -239,6 +248,10 @@ export class PartyRoom extends Room<GameState> {
       active: true,
     });
     this.state.customCount = this.customQuestions.length;
+    client.send('customQuestionResult', {
+      ok: true,
+      count: this.state.customCount,
+    });
   }
 
   private handleReportQuestion(client: Client, questionId: string, reason?: string) {

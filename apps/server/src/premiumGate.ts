@@ -3,23 +3,11 @@ import {
   type QuestionCategory,
 } from '@ynn/shared';
 
-/**
- * Until IAP receipt verification exists, never trust the client for premium.
- * Ops can temporarily open categories with YNN_PREMIUM_OPEN=1 (never in public prod).
- */
-export function serverPremiumEntitled(
-  env: NodeJS.ProcessEnv = process.env,
-): boolean {
-  return env.YNN_PREMIUM_OPEN === '1';
-}
-
-/** Strip picante / sin_filtro unless the server explicitly allows premium. */
+/** Normaliza categorías de sala (todas libres; monetización solo ads). */
 export function resolveRoomCategories(
   categories: string[],
-  env: NodeJS.ProcessEnv = process.env,
+  _env?: NodeJS.ProcessEnv,
+  _hostEntitled = true,
 ): QuestionCategory[] {
-  return filterCategoriesForEntitlement(
-    categories,
-    serverPremiumEntitled(env),
-  );
+  return filterCategoriesForEntitlement(categories, true);
 }

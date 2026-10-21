@@ -36,22 +36,17 @@ describe('sanitizeCustomQuestion', () => {
   });
 });
 
-describe('premium categories', () => {
-  it('marks picante and sin_filtro as premium', () => {
-    assert.equal(isPremiumCategory('picante'), true);
+describe('categories (ads-only, no Pro gate)', () => {
+  it('does not mark any category as premium', () => {
+    assert.equal(isPremiumCategory('picante'), false);
     assert.equal(isPremiumCategory('casual'), false);
   });
 
-  it('strips premium cats when free', () => {
+  it('keeps all categories including picante', () => {
     const next = filterCategoriesForEntitlement(
       ['casual', 'picante', 'sin_filtro'],
       false,
     );
-    assert.deepEqual(next, ['casual']);
-  });
-
-  it('keeps premium cats when entitled', () => {
-    const next = filterCategoriesForEntitlement(['picante'], true);
-    assert.deepEqual(next, ['picante']);
+    assert.deepEqual(next, ['casual', 'picante', 'sin_filtro']);
   });
 });

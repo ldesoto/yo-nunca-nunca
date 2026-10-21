@@ -4,6 +4,9 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildCorsOptions } from './corsPolicy.js';
 import {
   defaultDbPath,
@@ -17,6 +20,8 @@ import { resolveRoomCategories } from './premiumGate.js';
 import { generateRoomCode, normalizeRoomCode } from '@ynn/shared';
 
 const PORT = Number(process.env.PORT || 2567);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const privacyHtml = readFileSync(join(__dirname, '..', 'public', 'privacy.html'), 'utf8');
 
 async function main() {
   const app = express();
@@ -56,6 +61,10 @@ async function main() {
     console.warn('SQLite unavailable — using fallback questions', err);
     db = null;
   }
+
+  app.get('/privacy', (_req, res) => {
+    res.type('html').send(privacyHtml);
+  });
 
   app.get('/health', (_req, res) => {
     let questions = 0;
