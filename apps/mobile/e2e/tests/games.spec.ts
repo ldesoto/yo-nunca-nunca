@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { MainMenuPage } from '../pages/MainMenuPage';
 import { MostLikelyPage } from '../pages/MostLikelyPage';
+import { CharadesPage } from '../pages/CharadesPage';
+import { BombPage } from '../pages/BombPage';
 
 test.describe('Party Games Expansion Tests', () => {
   test('Debe navegar a la pantalla de ¿Quién es más probable?', async ({ page }) => {

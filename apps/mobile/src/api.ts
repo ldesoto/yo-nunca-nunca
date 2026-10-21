@@ -25,6 +25,25 @@ export function getClient() {
   return client;
 }
 
+/** Ping ligero para “calentar” el backend mientras el usuario llena el formulario. */
+let wakeInFlight: Promise<void> | null = null;
+
+export function wakeServer(): void {
+  if (wakeInFlight) return;
+  wakeInFlight = (async () => {
+    try {
+      await fetch(`${getServerHttp()}/health`, { method: 'GET' });
+    } catch {
+      // reintentos reales ocurren en create/join
+    } finally {
+      // permitir otro wake tras un rato (cold start puede volver a dormir)
+      setTimeout(() => {
+        wakeInFlight = null;
+      }, 45_000);
+    }
+  })();
+}
+
 async function fetchJsonWithRetry<T>(
   path: string,
   init: RequestInit | undefined,

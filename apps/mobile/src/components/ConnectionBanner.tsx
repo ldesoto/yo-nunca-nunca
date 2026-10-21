@@ -8,18 +8,18 @@ const COPY: Record<
   { title: string; sub: string; tint: string }
 > = {
   connecting: {
-    title: 'Despertando servidor…',
-    sub: 'Render free puede tardar hasta ~60 s. La app sigue respondiendo.',
+    title: 'Preparando la partida…',
+    sub: 'Un momento, estamos conectando a tus amigos.',
     tint: 'rgba(45,226,230,0.92)',
   },
   reconnecting: {
     title: 'Reconectando…',
-    sub: 'Volviendo a la partida (hasta 60 s).',
+    sub: 'Volviendo a la partida. Un momento…',
     tint: 'rgba(255,138,61,0.92)',
   },
   lost: {
-    title: 'Conexión perdida',
-    sub: 'La ventana de reconexión expiró.',
+    title: 'Sin conexión',
+    sub: 'No pudimos volver a la partida. Intenta de nuevo.',
     tint: 'rgba(255,45,149,0.92)',
   },
 };

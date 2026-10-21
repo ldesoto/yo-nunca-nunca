@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocalGameChrome } from '../components/LocalGameChrome';
 import { PartyButton } from '../components/PartyButton';
 import { useGameLogic } from '../hooks/useGameLogic';
+import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
@@ -12,22 +13,19 @@ import type { RootStackParamList } from '../navigation';
 type Props = NativeStackScreenProps<RootStackParamList, 'MostLikely'>;
 
 export function MostLikelyScreen({ navigation }: Props) {
-  const { currentItem, isFinished, drawNext, resetGame } = useGameLogic(
-    gamesData.mostLikely,
-  );
+  const { currentItem, isFinished, drawNext, resetGame, ready } = useGameLogic('mostLikely', gamesData.mostLikely);
 
   useEffect(() => {
-    drawNext();
-  }, [drawNext]);
+    if (ready) drawNext();
+  }, [ready, drawNext]);
 
   const restart = () => {
-    resetGame();
-    setTimeout(() => drawNext(), 0);
+    void resetGame().then(() => drawNext());
   };
 
   return (
     <LocalGameChrome
-      onBack={() => navigation.goBack()}
+      onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#FB923C"
       kicker="Señala al culpable"
       title="¿Quién es más probable?"

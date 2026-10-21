@@ -1,28 +1,30 @@
-import { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
 import { ConnectionBanner } from '../components/ConnectionBanner';
 import { Field, GlassCard, SectionLabel } from '../components/GlassCard';
-import { joinParty } from '../api';
+import { joinParty, wakeServer } from '../api';
 import { useGame } from '../GameContext';
 import { track } from '../analytics';
-import { useAmbientMusic } from '../useAmbientMusic';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
 
 export function JoinScreen({ navigation }: Props) {
-  useAmbientMusic();
   const { setRoom, setPlayerName, setRoomCode } = useGame();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    wakeServer();
+  }, []);
 
   const onJoin = async () => {
     const trimmed = code.trim().toUpperCase();
@@ -36,7 +38,7 @@ export function JoinScreen({ navigation }: Props) {
     }
     setLoading(true);
     setError('');
-    setStatus('');
+    setStatus('Entrando a la sala…');
     try {
       const { room, roomCode } = await joinParty(
         trimmed,
@@ -57,6 +59,14 @@ export function JoinScreen({ navigation }: Props) {
 
   return (
     <Screen scroll>
+      <Pressable
+        onPress={() => navigation.goBack()}
+        style={({ pressed }) => [styles.backTop, pressed && { opacity: 0.7 }]}
+        hitSlop={10}
+      >
+        <Text style={styles.backTopLabel}>← Volver</Text>
+      </Pressable>
+
       {loading ? (
         <ConnectionBanner status="connecting" detail={status || undefined} />
       ) : null}
@@ -83,6 +93,7 @@ export function JoinScreen({ navigation }: Props) {
             value={code}
             onChangeText={(t) => setCode(t.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5))}
             placeholder="K7X9P"
+            placeholderTextColor="rgba(255,255,255,0.35)"
             autoCapitalize="characters"
             autoCorrect={false}
             maxLength={5}
@@ -115,6 +126,17 @@ export function JoinScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  backTop: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+    paddingVertical: 4,
+    paddingRight: 12,
+  },
+  backTopLabel: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
   kicker: {
     fontFamily: fonts.display,
     fontSize: 11,
@@ -130,6 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     textAlign: 'center',
     fontFamily: fonts.display,
+    color: '#FFFFFF',
   },
   codeHint: {
     marginTop: 8,

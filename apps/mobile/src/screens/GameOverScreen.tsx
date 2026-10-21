@@ -12,7 +12,6 @@ import { useRoomConnection, markIntentionalLeave } from '../useRoomConnection';
 import { track } from '../analytics';
 import { feedback } from '../feedback';
 import { recordGameResult } from '../profileStats';
-import { isPremiumUnlocked } from '../premium';
 import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
@@ -24,7 +23,6 @@ export function GameOverScreen({ navigation }: Props) {
   const conn = useRoomConnection(room, setRoom);
   const me = snap?.players.find((p) => p.sessionId === snap.mySessionId);
   const logged = useRef(false);
-  const premium = isPremiumUnlocked();
 
   useEffect(() => {
     if (!snap || !me || logged.current) return;
@@ -75,13 +73,7 @@ export function GameOverScreen({ navigation }: Props) {
         <Text style={styles.stat}>Veces “Sí”: {me?.yesCount ?? 0}</Text>
         <Text style={styles.stat}>Veces mayoría: {me?.majorityCount ?? 0}</Text>
         <Text style={styles.stat}>Veces minoría: {me?.minorityCount ?? 0}</Text>
-        {premium ? (
-          <Text style={styles.premiumNote}>✦ Stats de esta partida guardadas en Premium</Text>
-        ) : (
-          <Text style={styles.locked}>
-            Activa Premium (Config) para acumular racha, mejor score y % de Sí.
-          </Text>
-        )}
+        <Text style={styles.stat}>Tu score: {me?.score ?? 0}</Text>
       </GlassCard>
 
       <View style={{ marginTop: 12 }}>
@@ -113,13 +105,6 @@ const styles = StyleSheet.create({
   },
   meta: { color: colors.muted, marginTop: 6, fontWeight: '600' },
   stat: { color: colors.text, fontSize: 16, marginBottom: 8, fontWeight: '700' },
-  premiumNote: {
-    marginTop: 6,
-    color: colors.neonOrange,
-    fontWeight: '800',
-    fontSize: 13,
-  },
-  locked: { marginTop: 6, color: colors.muted, fontSize: 13, lineHeight: 18 },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',

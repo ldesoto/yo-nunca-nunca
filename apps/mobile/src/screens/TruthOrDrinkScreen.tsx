@@ -12,6 +12,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocalGameChrome } from '../components/LocalGameChrome';
 import { PartyButton } from '../components/PartyButton';
 import { useGameLogic } from '../hooks/useGameLogic';
+import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
@@ -19,15 +20,13 @@ import type { RootStackParamList } from '../navigation';
 type Props = NativeStackScreenProps<RootStackParamList, 'TruthOrDrink'>;
 
 export function TruthOrDrinkScreen({ navigation }: Props) {
-  const { currentItem, isFinished, drawNext, resetGame } = useGameLogic(
-    gamesData.truthOrDrink,
-  );
+  const { currentItem, isFinished, drawNext, resetGame, ready } = useGameLogic('truthOrDrink', gamesData.truthOrDrink);
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useSharedValue(0);
 
   useEffect(() => {
-    drawNext();
-  }, [drawNext]);
+    if (ready) drawNext();
+  }, [ready, drawNext]);
 
   const flipCard = () => {
     const next = !flipped;
@@ -42,10 +41,9 @@ export function TruthOrDrinkScreen({ navigation }: Props) {
   };
 
   const restart = () => {
-    resetGame();
     setFlipped(false);
     flipAnim.value = 0;
-    setTimeout(() => drawNext(), 0);
+    void resetGame().then(() => drawNext());
   };
 
   const frontStyle = useAnimatedStyle(() => {
@@ -67,7 +65,7 @@ export function TruthOrDrinkScreen({ navigation }: Props) {
 
   return (
     <LocalGameChrome
-      onBack={() => navigation.goBack()}
+      onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#F472B6"
       kicker="Responde o bebe"
       title="Verdad o Bebida"

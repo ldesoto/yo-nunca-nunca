@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Home: undefined;
-  Create: { solo?: boolean } | undefined;
+  Create: undefined;
   Join: undefined;
   Lobby: undefined;
   Play: undefined;
@@ -10,5 +10,6 @@ export type RootStackParamList = {
   MostLikely: undefined;
   TwoTruths: undefined;
   TruthOrDrink: undefined;
-  NeverHaveIEver: undefined;
+  Charades: undefined;
+  Bomb: undefined;
 };

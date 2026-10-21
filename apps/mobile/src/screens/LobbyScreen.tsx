@@ -15,8 +15,6 @@ import { useRoomState } from '../useRoomState';
 import { useRoomConnection, markIntentionalLeave } from '../useRoomConnection';
 import { track } from '../analytics';
 import { feedback } from '../feedback';
-import { stopBed } from '../audio';
-import { useAmbientMusic } from '../useAmbientMusic';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
@@ -28,8 +26,9 @@ export function LobbyScreen({ navigation }: Props) {
   const conn = useRoomConnection(room, setRoom);
   const [custom, setCustom] = useState('');
   const [customHint, setCustomHint] = useState('');
+  const [customError, setCustomError] = useState(false);
   const startedTracked = useRef(false);
-  useAmbientMusic();
+  const lastCustomCount = useRef(0);
 
   useEffect(() => {
     if (!snap) return;
@@ -49,18 +48,66 @@ export function LobbyScreen({ navigation }: Props) {
           custom: snap.customCount,
         });
       }
-      void stopBed();
       navigation.replace('Play');
     }
     if (snap.phase === 'GAME_OVER') navigation.replace('GameOver');
   }, [snap?.phase, navigation]);
+
+  useEffect(() => {
+    if (!snap) return;
+    if (snap.customCount > lastCustomCount.current) {
+      setCustomHint(
+        snap.customCount === 1
+          ? '1 pregunta personalizada lista para la partida'
+          : `${snap.customCount} preguntas personalizadas listas`,
+      );
+      setCustomError(false);
+      lastCustomCount.current = snap.customCount;
+    }
+  }, [snap?.customCount]);
+
+  useEffect(() => {
+    if (!room) return;
+    let alive = true;
+    room.onMessage(
+      'customQuestionResult',
+      (msg: { ok?: boolean; reason?: string; count?: number }) => {
+        if (!alive) return;
+        if (msg?.ok) {
+          const n =
+            typeof msg.count === 'number' ? msg.count : lastCustomCount.current + 1;
+          setCustomHint(
+            n === 1
+              ? '1 pregunta personalizada lista para la partida'
+              : `${n} preguntas personalizadas listas`,
+          );
+          setCustomError(false);
+          return;
+        }
+        const reason = msg?.reason;
+        const map: Record<string, string> = {
+          too_short: CUSTOM_QUESTION_REASON_LABEL.too_short,
+          too_long: CUSTOM_QUESTION_REASON_LABEL.too_long,
+          offensive: CUSTOM_QUESTION_REASON_LABEL.offensive,
+          blocked: CUSTOM_QUESTION_REASON_LABEL.blocked,
+          limit: 'Máximo 20 preguntas personalizadas por partida',
+          not_lobby: 'Solo se pueden añadir en el lobby',
+        };
+        setCustomHint(map[reason || ''] || 'No se pudo añadir. Intenta de nuevo.');
+        setCustomError(true);
+      },
+    );
+    return () => {
+      alive = false;
+    };
+  }, [room]);
 
   if (!room || !snap) {
     return (
       <Screen>
         <ConnectionBanner
           status={conn === 'online' ? 'connecting' : conn}
-          detail="Esperando estado de la sala…"
+          detail="Entrando a la sala…"
           onGoHome={() => {
             markIntentionalLeave();
             setRoom(null);
@@ -77,15 +124,29 @@ export function LobbyScreen({ navigation }: Props) {
   const code = snap.roomCode || roomCode;
 
   const addCustom = () => {
+    setCustomError(false);
     const result = sanitizeCustomQuestion(custom);
     if (!result.ok) {
       setCustomHint(CUSTOM_QUESTION_REASON_LABEL[result.reason]);
+      setCustomError(true);
       return;
     }
-    room.send('addCustomQuestion', { text: result.text });
-    setCustom('');
-    setCustomHint('Añadida solo para esta partida');
-    track('custom_question_created', { len: result.text.length });
+    if (snap.customCount >= 20) {
+      setCustomHint('Máximo 20 preguntas personalizadas por partida');
+      setCustomError(true);
+      return;
+    }
+    try {
+      room.send('addCustomQuestion', { text: result.text });
+      setCustom('');
+      setCustomHint('Enviando…');
+      setCustomError(false);
+      track('custom_question_created', { len: result.text.length });
+      void feedback({ sfx: 'tap', haptic: 'success' });
+    } catch {
+      setCustomHint('No se pudo añadir. Intenta de nuevo.');
+      setCustomError(true);
+    }
   };
 
   const pulseCode = () => {
@@ -104,13 +165,15 @@ export function LobbyScreen({ navigation }: Props) {
   };
 
   return (
-    <Screen>
+    <Screen scroll>
       <ConnectionBanner status={conn} onGoHome={goHome} />
       <Animated.View entering={FadeIn}>
         <Text style={styles.kicker}>COMPARTE ESTE CÓDIGO</Text>
         <Pressable onPress={pulseCode}>
           <GlassCard glow="pink" style={styles.codeCard}>
-            <Text style={styles.code}>{code}</Text>
+            <Text style={styles.code} selectable>
+              {code}
+            </Text>
             <Text style={styles.meta}>
               {snap.players.length} jugadores · {snap.totalRounds} rondas
               {snap.mode === 'parejas' ? ' · parejas' : ' · fiesta'}
@@ -119,12 +182,12 @@ export function LobbyScreen({ navigation }: Props) {
         </Pressable>
       </Animated.View>
 
-      <Animated.View entering={FadeInDown.delay(60)} style={{ flex: 1 }}>
+      <Animated.View entering={FadeInDown.delay(60)}>
         <Text style={styles.section}>Jugadores</Text>
         <FlatList
           data={snap.players}
           keyExtractor={(p) => p.sessionId}
-          style={{ maxHeight: 160 }}
+          scrollEnabled={false}
           renderItem={({ item }) => (
             <View style={styles.row}>
               <View style={[styles.avatar, item.isHost && styles.avatarHost]}>
@@ -144,18 +207,28 @@ export function LobbyScreen({ navigation }: Props) {
 
         <GlassCard style={{ marginTop: 12 }}>
           <SectionLabel>Pregunta personalizada</SectionLabel>
+          <Text style={styles.customHelp}>
+            Escribe algo de la noche. Se mezclará solo en esta partida.
+          </Text>
           <Field
             value={custom}
             onChangeText={setCustom}
-            placeholder="Yo nunca nunca he…"
+            placeholder="Ej. he fingido no ver un mensaje"
             maxLength={140}
           />
-          {customHint ? <Text style={styles.hint}>{customHint}</Text> : null}
+          {customHint ? (
+            <Text style={[styles.hint, customError && styles.hintError]}>{customHint}</Text>
+          ) : null}
+          {snap.customCount > 0 ? (
+            <Text style={styles.customCount}>
+              {snap.customCount} en el mazo de esta partida
+            </Text>
+          ) : null}
           <PartyButton label="AÑADIR A LA PARTIDA" variant="orange" onPress={addCustom} />
         </GlassCard>
       </Animated.View>
 
-      <View style={{ marginTop: 12 }}>
+      <View style={{ marginTop: 12, marginBottom: 24 }}>
         <PartyButton
           label={me?.ready ? 'NO ESTOY LISTO' : 'ESTOY LISTO'}
           variant="ghost"
@@ -166,6 +239,7 @@ export function LobbyScreen({ navigation }: Props) {
         ) : (
           <Text style={styles.wait}>Esperando al host…</Text>
         )}
+        <PartyButton label="Salir de la sala" variant="ghost" onPress={goHome} />
       </View>
     </Screen>
   );
@@ -182,13 +256,16 @@ const styles = StyleSheet.create({
   },
   codeCard: { marginTop: 10, alignItems: 'center', paddingVertical: 22 },
   code: {
-    color: colors.text,
+    color: '#FFFFFF',
     fontSize: 56,
     fontWeight: '900',
     letterSpacing: 10,
     fontFamily: fonts.display,
+    textShadowColor: 'rgba(255,45,149,0.55)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 12,
   },
-  meta: { color: colors.muted, marginTop: 8, fontWeight: '600' },
+  meta: { color: 'rgba(255,255,255,0.75)', marginTop: 8, fontWeight: '600' },
   section: {
     marginTop: 16,
     marginBottom: 6,
@@ -220,9 +297,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neonPinkSoft,
     borderColor: colors.strokeHot,
   },
-  avatarText: { color: colors.text, fontWeight: '900' },
-  name: { color: colors.text, fontSize: 16, fontWeight: '700', flex: 1 },
+  avatarText: { color: '#FFFFFF', fontWeight: '900' },
+  name: { color: '#FFFFFF', fontSize: 16, fontWeight: '700', flex: 1 },
   ready: { color: colors.neonLime, fontWeight: '800', fontSize: 12 },
   wait: { color: colors.muted, textAlign: 'center', marginTop: 10 },
+  customHelp: {
+    color: 'rgba(255,255,255,0.65)',
+    fontSize: 13,
+    marginBottom: 8,
+    fontWeight: '500',
+  },
   hint: { color: colors.neonCyan, marginTop: 8, marginBottom: 4, fontWeight: '600' },
+  hintError: { color: colors.danger },
+  customCount: {
+    color: 'rgba(255,255,255,0.8)',
+    fontWeight: '700',
+    marginBottom: 8,
+    fontSize: 13,
+  },
 });

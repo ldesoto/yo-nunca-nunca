@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocalGameChrome } from '../components/LocalGameChrome';
 import { PartyButton } from '../components/PartyButton';
 import { useGameLogic } from '../hooks/useGameLogic';
+import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
@@ -14,19 +15,23 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TwoTruths'>;
 export function TwoTruthsScreen({ navigation }: Props) {
   const [round, setRound] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
-  const { currentItem, drawNext, isFinished, resetGame } = useGameLogic(
-    gamesData.twoTruthsIdeas,
-  );
+  const { currentItem, drawNext, isFinished, resetGame, ready } = useGameLogic('twoTruthsIdeas', gamesData.twoTruthsIdeas);
 
   const handleIdea = () => {
-    if (isFinished) resetGame();
-    drawNext();
-    setModalVisible(true);
+    const show = () => {
+      drawNext();
+      setModalVisible(true);
+    };
+    if (isFinished) {
+      void resetGame().then(show);
+      return;
+    }
+    show();
   };
 
   return (
     <LocalGameChrome
-      onBack={() => navigation.goBack()}
+      onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#818CF8"
       kicker="Adivina la mentira"
       title="2 verdades, 1 mentira"

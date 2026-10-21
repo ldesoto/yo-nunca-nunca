@@ -37,10 +37,9 @@ export function assertStoreSafeEndpoints() {
     SERVER_HTTP.startsWith('http://') ||
     SERVER_WS.startsWith('ws://');
   if (bad) {
-    throw new Error(
-      `Endpoints inseguros para ${APP_ENV}: HTTP=${SERVER_HTTP} WS=${SERVER_WS}. Usa https:// y wss:// públicos.`,
+    // No tumbar el proceso en store builds: el check de build (app.config) ya bloquea URLs malas.
+    console.warn(
+      `[ElCoro] Endpoints inseguros para ${APP_ENV}: HTTP=${SERVER_HTTP} WS=${SERVER_WS}`,
     );
   }
 }
-
-assertStoreSafeEndpoints();

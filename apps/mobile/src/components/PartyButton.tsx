@@ -52,6 +52,12 @@ export function PartyButton({
       <Pressable
         disabled={disabled}
         onPress={handle}
+      accessibilityRole="button"
+      accessibilityLabel={subtitle ? `${label}. ${subtitle}` : label}
+      accessibilityState={{ disabled: !!disabled }}
+        accessibilityRole="button"
+        accessibilityLabel={subtitle ? `${label}. ${subtitle}` : label}
+        accessibilityState={{ disabled: !!disabled }}
         style={({ pressed }) => [
           styles.base,
           styles.ghost,

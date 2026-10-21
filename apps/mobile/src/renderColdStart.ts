@@ -34,7 +34,11 @@ export async function withRenderColdStartRetry<T>(
   for (let attempt = 0; attempt < delays.length; attempt++) {
     if (delays[attempt] > 0) await sleep(delays[attempt]);
     if (attempt > 0) {
-      onProgress?.('Despertando servidor…');
+      onProgress?.(
+        attempt < 3
+          ? 'Conectando… un momento'
+          : 'Casi listo, esto puede tardar un poco…',
+      );
     }
     try {
       return await fn();
@@ -44,6 +48,6 @@ export async function withRenderColdStartRetry<T>(
     }
   }
   throw new RenderWakeError(
-    `No se pudo ${label} tras esperar al servidor. Prueba de nuevo en un momento.`,
+    'No pudimos conectar ahora. Revisa tu internet e inténtalo de nuevo.',
   );
 }

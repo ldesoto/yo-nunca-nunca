@@ -3,13 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const KEY = 'ynn.settings.v1';
 
 export type AppSettings = {
-  music: boolean;
   sfx: boolean;
   haptics: boolean;
 };
 
 const DEFAULT: AppSettings = {
-  music: true,
   sfx: true,
   haptics: true,
 };
@@ -27,7 +25,6 @@ export async function loadSettings(): Promise<AppSettings> {
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<AppSettings>;
       cached = {
-        music: typeof parsed.music === 'boolean' ? parsed.music : DEFAULT.music,
         sfx: typeof parsed.sfx === 'boolean' ? parsed.sfx : DEFAULT.sfx,
         haptics: typeof parsed.haptics === 'boolean' ? parsed.haptics : DEFAULT.haptics,
       };

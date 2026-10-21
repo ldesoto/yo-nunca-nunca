@@ -35,6 +35,8 @@
         "APP_ENV": "production",
         "EXPO_PUBLIC_SERVER_URL": "https://yo-nunca-nunca.onrender.com",
         "EXPO_PUBLIC_WS_URL": "wss://yo-nunca-nunca.onrender.com",
+        "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID": "ca-app-pub-2711054885577403~36202611289",
+        "EXPO_PUBLIC_ADMOB_INTERSTITIAL_ANDROID": "ca-app-pub-2711054885577403/7785727845",
         "GRADLE_OPTS": "-Dorg.gradle.jvmargs=\"-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError\""
       }
     }

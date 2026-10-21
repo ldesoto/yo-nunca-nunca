@@ -11,7 +11,6 @@ import { useRoomState } from '../useRoomState';
 import { useRoomConnection, markIntentionalLeave } from '../useRoomConnection';
 import { track } from '../analytics';
 import { feedback } from '../feedback';
-import { stopBed } from '../audio';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
 
@@ -52,9 +51,6 @@ export function PlayScreen({ navigation }: Props) {
   const lastPhaseFx = useRef('');
   const [reported, setReported] = useState(false);
 
-  useEffect(() => {
-    void stopBed();
-  }, []);
 
   useEffect(() => {
     if (!snap) return;

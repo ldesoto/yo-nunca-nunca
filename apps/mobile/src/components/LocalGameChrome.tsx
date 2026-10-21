@@ -25,8 +25,11 @@ export function LocalGameChrome({
           onPress={onBack}
           style={({ pressed }) => [styles.back, pressed && { opacity: 0.7 }]}
           hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Salir"
         >
-          <Text style={styles.backText}>←</Text>
+          <Text style={styles.backIcon}>✕</Text>
+          <Text style={styles.backLabel}>Salir</Text>
         </Pressable>
         <View style={styles.titles}>
           <Text style={[styles.kicker, { color: accent }]}>{kicker}</Text>
@@ -47,22 +50,30 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   back: {
-    width: 40,
+    minWidth: 72,
     height: 40,
+    paddingHorizontal: 12,
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.07)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
+    borderColor: 'rgba(255,255,255,0.28)',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 5,
   },
-  backText: {
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '700',
+  backIcon: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '900',
   },
-  backSpacer: { width: 40 },
-  titles: { flex: 1, alignItems: 'center' },
+  backLabel: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  backSpacer: { minWidth: 72 },
+  titles: { flex: 1, alignItems: 'center', paddingHorizontal: 6 },
   kicker: {
     fontFamily: fonts.display,
     fontSize: 11,

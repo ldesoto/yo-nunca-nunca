@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, Image, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { GameProvider } from './src/GameContext';
@@ -18,14 +18,16 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { MostLikelyScreen } from './src/screens/MostLikelyScreen';
 import { TwoTruthsScreen } from './src/screens/TwoTruthsScreen';
 import { TruthOrDrinkScreen } from './src/screens/TruthOrDrinkScreen';
-import { NeverHaveIEverScreen } from './src/screens/NeverHaveIEverScreen';
-import { colors, assertStoreSafeEndpoints } from './src/theme';
+import { CharadesScreen } from './src/screens/CharadesScreen';
+import { BombScreen } from './src/screens/BombScreen';
+import { colors } from './src/theme';
 import { loadRuntimeServerOverride } from './src/serverEndpoints';
-import { loadPremium } from './src/premium';
 import { loadSettings } from './src/settingsStore';
 import { initAudio } from './src/audio';
-
-assertStoreSafeEndpoints();
+import { initAds } from './src/ads';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AgeGate } from './src/components/AgeGate';
+import { AGE_KEY } from './src/legal';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -43,31 +45,51 @@ const navTheme = {
 
 export default function App() {
   const [ready, setReady] = useState(false);
+  const [ageOk, setAgeOk] = useState<boolean | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    const minSplash = new Promise((r) => setTimeout(r, 900));
     void Promise.all([
-      loadRuntimeServerOverride(),
-      loadPremium(),
+      minSplash,
+      loadRuntimeServerOverride().catch(() => {}),
+      AsyncStorage.getItem(AGE_KEY).then((v) => setAgeOk(!!v)).catch(() => setAgeOk(false)),
       loadSettings()
         .then(() => initAudio())
         .catch(() => {
-          // audio nativo ausente / Expo Go sin módulo → app sigue
+          // settings corruptos → app sigue
         }),
     ]).finally(() => {
-      if (!cancelled) setReady(true);
+      if (cancelled) return;
+      setReady(true);
     });
     return () => {
       cancelled = true;
     };
   }, []);
 
+  // AdMob (con consentimiento UMP) solo tras pasar la puerta de edad y pintar la UI.
+  useEffect(() => {
+    if (!ready || !ageOk) return;
+    const t = setTimeout(() => void initAds().catch(() => {}), 1500);
+    return () => clearTimeout(t);
+  }, [ready, ageOk]);
+
   if (!ready) {
     return (
-      <View style={[styles.fill, { backgroundColor: colors.bg0, justifyContent: 'center' }]}>
-        <ActivityIndicator color={colors.neonPink} />
+      <View style={styles.splash}>
+        <Image
+          source={require('./assets/icon.png')}
+          style={styles.splashLogo}
+          resizeMode="contain"
+        />
+        <Text style={styles.splashBrand}>EL CORO</Text>
       </View>
     );
+  }
+
+  if (!ageOk) {
+    return <AgeGate onOk={() => setAgeOk(true)} />;
   }
 
   return (
@@ -87,7 +109,8 @@ export default function App() {
               <Stack.Screen name="MostLikely" component={MostLikelyScreen} />
               <Stack.Screen name="TwoTruths" component={TwoTruthsScreen} />
               <Stack.Screen name="TruthOrDrink" component={TruthOrDrinkScreen} />
-              <Stack.Screen name="NeverHaveIEver" component={NeverHaveIEverScreen} />
+              <Stack.Screen name="Charades" component={CharadesScreen} />
+              <Stack.Screen name="Bomb" component={BombScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </GameProvider>
@@ -98,4 +121,22 @@ export default function App() {
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
+  splash: {
+    flex: 1,
+    backgroundColor: '#0B0614',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 18,
+  },
+  splashLogo: {
+    width: 128,
+    height: 128,
+    borderRadius: 32,
+  },
+  splashBrand: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
 });
