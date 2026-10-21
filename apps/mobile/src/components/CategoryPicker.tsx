@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CATEGORY_META, colors, fonts, type CategoryId } from '../theme';
 import { track } from '../analytics';
+import { t } from '../i18n';
 
 export function CategoryPicker({
   selected,
@@ -47,7 +48,7 @@ export function CategoryPicker({
           >
             <Text style={styles.emoji}>{cat.emoji}</Text>
             <Text style={[styles.text, active && { color: colors.text }]}>
-              {cat.label}
+              {t(`category.${cat.id}`)}
             </Text>
           </Pressable>
         );

@@ -5,6 +5,7 @@ import {
   isRetryableHttpStatus,
   withRenderColdStartRetry,
 } from './renderColdStart';
+import { t } from './i18n';
 
 export type GameRoom = Room;
 
@@ -55,17 +56,17 @@ async function fetchJsonWithRetry<T>(
       const res = await fetch(`${getServerHttp()}${path}`, init);
       if (!res.ok) {
         if (res.status === 404) {
-          throw new Error('Sala no encontrada');
+          throw new Error(t('api.roomNotFound'));
         }
         if (res.status >= 400 && res.status < 500 && !isRetryableHttpStatus(res.status)) {
           throw new Error(
-            init?.method === 'POST' ? 'No se pudo crear la sala' : 'Sala no encontrada',
+            init?.method === 'POST' ? t('api.createFailed') : t('api.roomNotFound'),
           );
         }
         if (isRetryableHttpStatus(res.status)) {
           throw new Error(`HTTP ${res.status}`);
         }
-        throw new Error('No se pudo contactar al servidor');
+        throw new Error(t('api.serverUnreachable'));
       }
       return (await res.json()) as T;
     },

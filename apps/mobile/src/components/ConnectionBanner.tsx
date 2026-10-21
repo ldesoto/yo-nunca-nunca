@@ -1,28 +1,30 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { PartyButton } from './PartyButton';
 import { fonts } from '../theme';
+import { t } from '../i18n';
 import type { ConnectionStatus } from '../useRoomConnection';
 
-const COPY: Record<
-  Exclude<ConnectionStatus, 'online'>,
-  { title: string; sub: string; tint: string }
-> = {
-  connecting: {
-    title: 'Preparando la partida…',
-    sub: 'Un momento, estamos conectando a tus amigos.',
-    tint: 'rgba(45,226,230,0.92)',
-  },
-  reconnecting: {
-    title: 'Reconectando…',
-    sub: 'Volviendo a la partida. Un momento…',
-    tint: 'rgba(255,138,61,0.92)',
-  },
-  lost: {
-    title: 'Sin conexión',
-    sub: 'No pudimos volver a la partida. Intenta de nuevo.',
+function copyFor(status: Exclude<ConnectionStatus, 'online'>) {
+  if (status === 'connecting') {
+    return {
+      title: t('conn.connectingTitle'),
+      sub: t('conn.connectingSub'),
+      tint: 'rgba(45,226,230,0.92)',
+    };
+  }
+  if (status === 'reconnecting') {
+    return {
+      title: t('conn.reconnectingTitle'),
+      sub: t('conn.reconnectingSub'),
+      tint: 'rgba(255,138,61,0.92)',
+    };
+  }
+  return {
+    title: t('conn.lostTitle'),
+    sub: t('conn.lostSub'),
     tint: 'rgba(255,45,149,0.92)',
-  },
-};
+  };
+}
 
 export function ConnectionBanner({
   status,
@@ -36,7 +38,7 @@ export function ConnectionBanner({
 }) {
   if (status === 'online') return null;
 
-  const copy = COPY[status];
+  const copy = copyFor(status);
   const busy = status === 'connecting' || status === 'reconnecting';
   return (
     <View
@@ -52,7 +54,7 @@ export function ConnectionBanner({
         </View>
       </View>
       {status === 'lost' && onGoHome ? (
-        <PartyButton label="Volver al inicio" variant="ghost" onPress={onGoHome} />
+        <PartyButton label={t('conn.backHome')} variant="ghost" onPress={onGoHome} />
       ) : null}
     </View>
   );

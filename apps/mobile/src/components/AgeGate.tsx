@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BackHandler, Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AGE_KEY, MIN_AGE, legalUrl } from '../legal';
+import { t } from '../i18n';
 
 /** Puerta de edad obligatoria 18+ (contenido para adultos; IARC madura, no Families). */
 export function AgeGate({ onOk }: { onOk: () => void }) {
@@ -13,11 +14,16 @@ export function AgeGate({ onOk }: { onOk: () => void }) {
   if (minor) {
     return (
       <View style={s.wrap}>
-        <Text accessibilityRole="header" style={s.title}>Lo sentimos</Text>
-        <Text style={s.body}>Este juego es solo para mayores de {MIN_AGE} años.</Text>
+        <Text accessibilityRole="header" style={s.title}>{t('age.sorry')}</Text>
+        <Text style={s.body}>{t('age.onlyMinorsMsg', { age: MIN_AGE })}</Text>
         {Platform.OS === 'android' ? (
-          <Pressable style={[s.btn, s.ghost]} accessibilityRole="button" accessibilityLabel="Salir" onPress={() => BackHandler.exitApp()}>
-            <Text style={s.btnTxt}>Salir</Text>
+          <Pressable
+            style={[s.btn, s.ghost]}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.exit')}
+            onPress={() => BackHandler.exitApp()}
+          >
+            <Text style={s.btnTxt}>{t('common.exit')}</Text>
           </Pressable>
         ) : null}
       </View>
@@ -25,19 +31,42 @@ export function AgeGate({ onOk }: { onOk: () => void }) {
   }
   return (
     <View style={s.wrap}>
-      <Text accessibilityRole="header" style={s.title}>Solo mayores de {MIN_AGE}</Text>
-      <Text style={s.body}>Incluye contenido para adultos y referencias al alcohol. Juega con responsabilidad.</Text>
+      <Text accessibilityRole="header" style={s.title}>{t('age.title', { age: MIN_AGE })}</Text>
+      <Text style={s.body}>{t('age.body')}</Text>
       <Text style={s.small}>
-        Al continuar aceptas los{' '}
-        <Text style={s.link} accessibilityRole="link" onPress={() => Linking.openURL(legalUrl('terminos')).catch(() => {})}>Términos</Text>
-        {' '}y la{' '}
-        <Text style={s.link} accessibilityRole="link" onPress={() => Linking.openURL(legalUrl('privacidad')).catch(() => {})}>Política de privacidad</Text>.
+        {t('age.acceptPrefix')}
+        <Text
+          style={s.link}
+          accessibilityRole="link"
+          onPress={() => Linking.openURL(legalUrl('terminos')).catch(() => {})}
+        >
+          {t('age.terms')}
+        </Text>
+        {t('age.acceptMid')}
+        <Text
+          style={s.link}
+          accessibilityRole="link"
+          onPress={() => Linking.openURL(legalUrl('privacidad')).catch(() => {})}
+        >
+          {t('age.privacy')}
+        </Text>
+        {t('age.acceptSuffix')}
       </Text>
-      <Pressable style={s.btn} accessibilityRole="button" accessibilityLabel={`Tengo ${MIN_AGE} años o más`} onPress={accept}>
-        <Text style={s.btnTxt}>Tengo {MIN_AGE} años o más</Text>
+      <Pressable
+        style={s.btn}
+        accessibilityRole="button"
+        accessibilityLabel={t('age.amOldEnough', { age: MIN_AGE })}
+        onPress={accept}
+      >
+        <Text style={s.btnTxt}>{t('age.amOldEnough', { age: MIN_AGE })}</Text>
       </Pressable>
-      <Pressable style={[s.btn, s.ghost]} accessibilityRole="button" accessibilityLabel="Soy menor de edad" onPress={() => setMinor(true)}>
-        <Text style={s.btnTxt}>Soy menor de edad</Text>
+      <Pressable
+        style={[s.btn, s.ghost]}
+        accessibilityRole="button"
+        accessibilityLabel={t('age.amMinor')}
+        onPress={() => setMinor(true)}
+      >
+        <Text style={s.btnTxt}>{t('age.amMinor')}</Text>
       </Pressable>
     </View>
   );

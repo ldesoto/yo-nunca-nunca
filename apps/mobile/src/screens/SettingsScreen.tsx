@@ -19,6 +19,7 @@ import {
   type AppSettings,
 } from '../settingsStore';
 import { playSfx } from '../audio';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -40,30 +41,46 @@ export function SettingsScreen({ navigation }: Props) {
 
   return (
     <Screen scroll>
-      <Text style={styles.title}>Configuración</Text>
+      <Text style={styles.title}>{t('settings.title')}</Text>
       <GlassCard glow="cyan" style={{ marginTop: 8 }}>
-        <Row label="Efectos de sonido" value={settings.sfx} onChange={(v) => patch({ sfx: v })} />
+        <Row label={t('settings.sfx')} value={settings.sfx} onChange={(v) => patch({ sfx: v })} />
         <Row
-          label="Vibración / haptics"
+          label={t('settings.haptics')}
           value={settings.haptics}
           onChange={(v) => patch({ haptics: v })}
         />
       </GlassCard>
 
-      <Text style={[styles.title, { marginTop: 20 }]}>Legal y privacidad</Text>
+      <Text style={[styles.title, { marginTop: 20 }]}>{t('settings.legalTitle')}</Text>
       <GlassCard glow="cyan" style={{ marginTop: 8 }}>
-        <LinkRow label="Política de privacidad" onPress={() => Linking.openURL(legalUrl('privacidad')).catch(() => {})} />
-        <LinkRow label="Términos y condiciones" onPress={() => Linking.openURL(legalUrl('terminos')).catch(() => {})} />
-        <LinkRow label="Política de cookies" onPress={() => Linking.openURL(legalUrl('cookies')).catch(() => {})} />
-        <LinkRow label="Privacidad de anuncios" onPress={() => void showAdPrivacyOptions()} />
-        <LinkRow label="Borrar mis datos" danger onPress={() => Alert.alert('Borrar mis datos', 'Se borrarán tu perfil, ajustes y preguntas guardadas en este teléfono.', [
-          { text: 'Cancelar', style: 'cancel' },
-          { text: 'Borrar', style: 'destructive', onPress: () => void AsyncStorage.clear().then(() => Alert.alert('Listo', 'Tus datos locales se borraron.')).catch(() => {}) },
-        ])} />
-        <LinkRow label={`Contacto: ${CONTACT_EMAIL}`} onPress={() => Linking.openURL(`mailto:${CONTACT_EMAIL}`).catch(() => {})} />
+        <LinkRow label={t('settings.privacy')} onPress={() => Linking.openURL(legalUrl('privacidad')).catch(() => {})} />
+        <LinkRow label={t('settings.terms')} onPress={() => Linking.openURL(legalUrl('terminos')).catch(() => {})} />
+        <LinkRow label={t('settings.cookies')} onPress={() => Linking.openURL(legalUrl('cookies')).catch(() => {})} />
+        <LinkRow label={t('settings.adPrivacy')} onPress={() => void showAdPrivacyOptions()} />
+        <LinkRow
+          label={t('settings.deleteData')}
+          danger
+          onPress={() =>
+            Alert.alert(t('settings.deleteTitle'), t('settings.deleteBody'), [
+              { text: t('common.cancel'), style: 'cancel' },
+              {
+                text: t('settings.deleteConfirm'),
+                style: 'destructive',
+                onPress: () =>
+                  void AsyncStorage.clear()
+                    .then(() => Alert.alert(t('settings.deleteDoneTitle'), t('settings.deleteDoneBody')))
+                    .catch(() => {}),
+              },
+            ])
+          }
+        />
+        <LinkRow
+          label={t('common.contact', { email: CONTACT_EMAIL })}
+          onPress={() => Linking.openURL(`mailto:${CONTACT_EMAIL}`).catch(() => {})}
+        />
       </GlassCard>
 
-      <PartyButton label="Volver" variant="ghost" onPress={() => navigation.goBack()} />
+      <PartyButton label={t('settings.back')} variant="ghost" onPress={() => navigation.goBack()} />
     </Screen>
   );
 }

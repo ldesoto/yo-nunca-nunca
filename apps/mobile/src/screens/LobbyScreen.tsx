@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
-import {
-  CUSTOM_QUESTION_REASON_LABEL,
-  sanitizeCustomQuestion,
-} from '@ynn/shared';
+import { sanitizeCustomQuestion } from '@ynn/shared';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
 import { PartyButton } from '../components/PartyButton';
@@ -17,6 +14,14 @@ import { track } from '../analytics';
 import { feedback } from '../feedback';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
+
+const CUSTOM_REASON_KEYS: Record<string, string> = {
+  too_short: 'lobby.customTooShort',
+  too_long: 'lobby.customTooLong',
+  offensive: 'lobby.customOffensive',
+  blocked: 'lobby.customBlocked',
+};
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
 
@@ -58,8 +63,8 @@ export function LobbyScreen({ navigation }: Props) {
     if (snap.customCount > lastCustomCount.current) {
       setCustomHint(
         snap.customCount === 1
-          ? '1 pregunta personalizada lista para la partida'
-          : `${snap.customCount} preguntas personalizadas listas`,
+          ? t('lobby.customReadyOne')
+          : t('lobby.customReadyMany', { n: snap.customCount }),
       );
       setCustomError(false);
       lastCustomCount.current = snap.customCount;
@@ -78,22 +83,22 @@ export function LobbyScreen({ navigation }: Props) {
             typeof msg.count === 'number' ? msg.count : lastCustomCount.current + 1;
           setCustomHint(
             n === 1
-              ? '1 pregunta personalizada lista para la partida'
-              : `${n} preguntas personalizadas listas`,
+              ? t('lobby.customReadyOne')
+              : t('lobby.customReadyMany', { n }),
           );
           setCustomError(false);
           return;
         }
         const reason = msg?.reason;
         const map: Record<string, string> = {
-          too_short: CUSTOM_QUESTION_REASON_LABEL.too_short,
-          too_long: CUSTOM_QUESTION_REASON_LABEL.too_long,
-          offensive: CUSTOM_QUESTION_REASON_LABEL.offensive,
-          blocked: CUSTOM_QUESTION_REASON_LABEL.blocked,
-          limit: 'Máximo 20 preguntas personalizadas por partida',
-          not_lobby: 'Solo se pueden añadir en el lobby',
+          too_short: t('lobby.customTooShort'),
+          too_long: t('lobby.customTooLong'),
+          offensive: t('lobby.customOffensive'),
+          blocked: t('lobby.customBlocked'),
+          limit: t('lobby.customLimit'),
+          not_lobby: t('lobby.customNotLobby'),
         };
-        setCustomHint(map[reason || ''] || 'No se pudo añadir. Intenta de nuevo.');
+        setCustomHint(map[reason || ''] || t('lobby.customFail'));
         setCustomError(true);
       },
     );
@@ -107,14 +112,14 @@ export function LobbyScreen({ navigation }: Props) {
       <Screen>
         <ConnectionBanner
           status={conn === 'online' ? 'connecting' : conn}
-          detail="Entrando a la sala…"
+          detail={t('lobby.entering')}
           onGoHome={() => {
             markIntentionalLeave();
             setRoom(null);
             navigation.popToTop();
           }}
         />
-        <Text style={typography.title}>Conectando…</Text>
+        <Text style={typography.title}>{t('lobby.connecting')}</Text>
       </Screen>
     );
   }
@@ -127,24 +132,24 @@ export function LobbyScreen({ navigation }: Props) {
     setCustomError(false);
     const result = sanitizeCustomQuestion(custom);
     if (!result.ok) {
-      setCustomHint(CUSTOM_QUESTION_REASON_LABEL[result.reason]);
+      setCustomHint(t(CUSTOM_REASON_KEYS[result.reason] ?? 'lobby.customFail'));
       setCustomError(true);
       return;
     }
     if (snap.customCount >= 20) {
-      setCustomHint('Máximo 20 preguntas personalizadas por partida');
+      setCustomHint(t('lobby.customLimit'));
       setCustomError(true);
       return;
     }
     try {
       room.send('addCustomQuestion', { text: result.text });
       setCustom('');
-      setCustomHint('Enviando…');
+      setCustomHint(t('lobby.customSending'));
       setCustomError(false);
       track('custom_question_created', { len: result.text.length });
       void feedback({ sfx: 'tap', haptic: 'success' });
     } catch {
-      setCustomHint('No se pudo añadir. Intenta de nuevo.');
+      setCustomHint(t('lobby.customFail'));
       setCustomError(true);
     }
   };
@@ -168,22 +173,22 @@ export function LobbyScreen({ navigation }: Props) {
     <Screen scroll>
       <ConnectionBanner status={conn} onGoHome={goHome} />
       <Animated.View entering={FadeIn}>
-        <Text style={styles.kicker}>COMPARTE ESTE CÓDIGO</Text>
+        <Text style={styles.kicker}>{t('lobby.shareCode')}</Text>
         <Pressable onPress={pulseCode}>
           <GlassCard glow="pink" style={styles.codeCard}>
             <Text style={styles.code} selectable>
               {code}
             </Text>
             <Text style={styles.meta}>
-              {snap.players.length} jugadores · {snap.totalRounds} rondas
-              {snap.mode === 'parejas' ? ' · parejas' : ' · fiesta'}
+              {t('lobby.meta', { players: snap.players.length, rounds: snap.totalRounds })}
+              {snap.mode === 'parejas' ? t('lobby.metaParejas') : t('lobby.metaFiesta')}
             </Text>
           </GlassCard>
         </Pressable>
       </Animated.View>
 
       <Animated.View entering={FadeInDown.delay(60)}>
-        <Text style={styles.section}>Jugadores</Text>
+        <Text style={styles.section}>{t('lobby.players')}</Text>
         <FlatList
           data={snap.players}
           keyExtractor={(p) => p.sessionId}
@@ -195,25 +200,23 @@ export function LobbyScreen({ navigation }: Props) {
               </View>
               <Text style={styles.name}>
                 {item.name}
-                {item.isHost ? ' · host' : ''}
-                {!item.connected ? ' · offline' : ''}
+                {item.isHost ? t('lobby.hostSuffix') : ''}
+                {!item.connected ? t('lobby.offlineSuffix') : ''}
               </Text>
               <Text style={[styles.ready, !item.ready && { color: colors.muted }]}>
-                {item.ready ? 'LISTO' : '…'}
+                {item.ready ? t('common.ready') : '…'}
               </Text>
             </View>
           )}
         />
 
         <GlassCard style={{ marginTop: 12 }}>
-          <SectionLabel>Pregunta personalizada</SectionLabel>
-          <Text style={styles.customHelp}>
-            Escribe algo de la noche. Se mezclará solo en esta partida.
-          </Text>
+          <SectionLabel>{t('lobby.customTitle')}</SectionLabel>
+          <Text style={styles.customHelp}>{t('lobby.customHelp')}</Text>
           <Field
             value={custom}
             onChangeText={setCustom}
-            placeholder="Ej. he fingido no ver un mensaje"
+            placeholder={t('lobby.customPlaceholder')}
             maxLength={140}
           />
           {customHint ? (
@@ -221,25 +224,25 @@ export function LobbyScreen({ navigation }: Props) {
           ) : null}
           {snap.customCount > 0 ? (
             <Text style={styles.customCount}>
-              {snap.customCount} en el mazo de esta partida
+              {t('lobby.customInDeck', { n: snap.customCount })}
             </Text>
           ) : null}
-          <PartyButton label="AÑADIR A LA PARTIDA" variant="orange" onPress={addCustom} />
+          <PartyButton label={t('lobby.addCustom')} variant="orange" onPress={addCustom} />
         </GlassCard>
       </Animated.View>
 
       <View style={{ marginTop: 12, marginBottom: 24 }}>
         <PartyButton
-          label={me?.ready ? 'NO ESTOY LISTO' : 'ESTOY LISTO'}
+          label={me?.ready ? t('lobby.notReady') : t('lobby.imReady')}
           variant="ghost"
           onPress={() => room.send('setReady', { ready: !me?.ready })}
         />
         {isHost ? (
-          <PartyButton label="INICIAR PARTIDA" onPress={() => room.send('startGame')} />
+          <PartyButton label={t('lobby.start')} onPress={() => room.send('startGame')} />
         ) : (
-          <Text style={styles.wait}>Esperando al host…</Text>
+          <Text style={styles.wait}>{t('lobby.waitHost')}</Text>
         )}
-        <PartyButton label="Salir de la sala" variant="ghost" onPress={goHome} />
+        <PartyButton label={t('lobby.leave')} variant="ghost" onPress={goHome} />
       </View>
     </Screen>
   );

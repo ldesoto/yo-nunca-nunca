@@ -16,6 +16,7 @@ import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TruthOrDrink'>;
 
@@ -67,26 +68,26 @@ export function TruthOrDrinkScreen({ navigation }: Props) {
     <LocalGameChrome
       onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#F472B6"
-      kicker="Responde o bebe"
-      title="Verdad o Bebida"
+      kicker={t('tod.kicker')}
+      title={t('tod.title')}
       footer={
         isFinished ? (
-          <PartyButton label="BARAJAR DE NUEVO" onPress={restart} />
+          <PartyButton label={t('tod.reshuffle')} onPress={restart} />
         ) : flipped ? (
           <>
-            <PartyButton label="DIJE LA VERDAD 😎" variant="orange" onPress={handleNext} />
-            <PartyButton label="ME TOCÓ BEBER 🍻" variant="ghost" onPress={handleNext} />
+            <PartyButton label={t('tod.toldTruth')} variant="orange" onPress={handleNext} />
+            <PartyButton label={t('tod.hadToDrink')} variant="ghost" onPress={handleNext} />
           </>
         ) : (
-          <PartyButton label="REVELAR CARTA" onPress={flipCard} />
+          <PartyButton label={t('tod.reveal')} onPress={flipCard} />
         )
       }
     >
       {isFinished ? (
         <Animated.View entering={FadeIn} style={styles.center}>
           <Text style={styles.doneEmoji}>🍹</Text>
-          <Text style={styles.doneTitle}>Baraja vacía</Text>
-          <Text style={styles.doneSub}>¿Otra ronda de verdades?</Text>
+          <Text style={styles.doneTitle}>{t('tod.emptyTitle')}</Text>
+          <Text style={styles.doneSub}>{t('tod.emptySub')}</Text>
         </Animated.View>
       ) : (
         <View style={styles.center}>
@@ -100,13 +101,13 @@ export function TruthOrDrinkScreen({ navigation }: Props) {
                   style={styles.cardFill}
                 >
                   <Text style={styles.qm}>?</Text>
-                  <Text style={styles.tapHint}>Toca para revelar</Text>
+                  <Text style={styles.tapHint}>{t('tod.tapReveal')}</Text>
                 </LinearGradient>
               </Animated.View>
 
               <Animated.View style={[styles.cardFace, frontStyle]}>
                 <View style={[styles.cardFill, styles.cardFront]}>
-                  <Text style={styles.frontKicker}>VERDAD</Text>
+                  <Text style={styles.frontKicker}>{t('tod.truth')}</Text>
                   <Text style={styles.question}>{currentItem}</Text>
                 </View>
               </Animated.View>

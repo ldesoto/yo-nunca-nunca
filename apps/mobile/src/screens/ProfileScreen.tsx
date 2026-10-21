@@ -13,6 +13,7 @@ import {
   saveProfile,
   type PlayerProfile,
 } from '../profileStats';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -30,7 +31,7 @@ export function ProfileScreen({ navigation }: Props) {
     await saveProfile(next);
   };
 
-  const displayName = profile.name.trim() || 'Jugador';
+  const displayName = profile.name.trim() || t('common.player');
 
   return (
     <Screen scroll style={styles.pad}>
@@ -40,7 +41,7 @@ export function ProfileScreen({ navigation }: Props) {
         hitSlop={10}
       >
         <Text style={styles.backIcon}>✕</Text>
-        <Text style={styles.backLabel}>Salir</Text>
+        <Text style={styles.backLabel}>{t('profile.exit')}</Text>
       </Pressable>
 
       <Animated.View entering={FadeInUp.duration(420)} style={styles.heroWrap}>
@@ -56,21 +57,21 @@ export function ProfileScreen({ navigation }: Props) {
             </View>
           </View>
           <Text style={styles.name}>{displayName}</Text>
-          <Text style={styles.tagline}>Así te ven en la fiesta</Text>
+          <Text style={styles.tagline}>{t('profile.tagline')}</Text>
         </LinearGradient>
       </Animated.View>
 
-      <Text style={styles.section}>Tu nombre</Text>
+      <Text style={styles.section}>{t('profile.yourName')}</Text>
       <View style={styles.fieldWrap}>
         <Field
           value={profile.name}
           onChangeText={(name) => void save({ ...profile, name })}
-          placeholder="¿Cómo te llaman en la fiesta?"
+          placeholder={t('profile.namePlaceholder')}
           maxLength={20}
         />
       </View>
 
-      <Text style={styles.section}>Avatar</Text>
+      <Text style={styles.section}>{t('profile.avatar')}</Text>
       <View style={styles.avatars}>
         {AVATARS.map((a) => {
           const active = profile.avatar === a;

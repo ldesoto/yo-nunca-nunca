@@ -4,6 +4,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { MostLikelyScreen } from '../screens/MostLikelyScreen';
 import { TwoTruthsScreen } from '../screens/TwoTruthsScreen';
 import { TruthOrDrinkScreen } from '../screens/TruthOrDrinkScreen';
+import { t } from '../i18n';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -29,17 +30,17 @@ export const AppNavigator = () => {
       <Stack.Screen
         name="MostLikely"
         component={MostLikelyScreen}
-        options={{ title: '¿Quién es más probable?' }}
+        options={{ title: t('nav.mostLikely') }}
       />
       <Stack.Screen
         name="TwoTruths"
         component={TwoTruthsScreen}
-        options={{ title: '2 Verdades y 1 Mentira' }}
+        options={{ title: t('nav.twoTruths') }}
       />
       <Stack.Screen
         name="TruthOrDrink"
         component={TruthOrDrinkScreen}
-        options={{ title: 'Verdad o Bebida' }}
+        options={{ title: t('nav.truthOrDrink') }}
       />
     </Stack.Navigator>
   );

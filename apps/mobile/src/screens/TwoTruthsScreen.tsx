@@ -9,13 +9,14 @@ import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TwoTruths'>;
 
 export function TwoTruthsScreen({ navigation }: Props) {
   const [round, setRound] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
-  const { currentItem, drawNext, isFinished, resetGame, ready } = useGameLogic('twoTruthsIdeas', gamesData.twoTruthsIdeas);
+  const { currentItem, drawNext, isFinished, resetGame } = useGameLogic('twoTruthsIdeas', gamesData.twoTruthsIdeas);
 
   const handleIdea = () => {
     const show = () => {
@@ -33,42 +34,40 @@ export function TwoTruthsScreen({ navigation }: Props) {
     <LocalGameChrome
       onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#818CF8"
-      kicker="Adivina la mentira"
-      title="2 verdades, 1 mentira"
+      kicker={t('truths.kicker')}
+      title={t('truths.title')}
       footer={
         <>
           <PartyButton
-            label="SIGUIENTE JUGADOR"
+            label={t('truths.nextPlayer')}
             variant="never"
             onPress={() => setRound((n) => n + 1)}
           />
-          <PartyButton label="¡DAME UNA IDEA!" variant="cyan" onPress={handleIdea} />
+          <PartyButton label={t('truths.idea')} variant="cyan" onPress={handleIdea} />
         </>
       }
     >
       <Animated.View entering={FadeIn} style={styles.center}>
         <View style={styles.pill}>
-          <Text style={styles.pillText}>Jugador {round}</Text>
+          <Text style={styles.pillText}>{t('truths.player', { n: round })}</Text>
         </View>
-        <Text style={styles.instruction}>
-          Cuenta dos verdades y una mentira. El grupo vota cuál es falsa.
-        </Text>
+        <Text style={styles.instruction}>{t('truths.instruction')}</Text>
         <View style={styles.tips}>
-          <Text style={styles.tip}>① Habla con cara de poker</Text>
-          <Text style={styles.tip}>② Mezcla algo creíble con algo loco</Text>
-          <Text style={styles.tip}>③ Si te trabas… bebida</Text>
+          <Text style={styles.tip}>{t('truths.tip1')}</Text>
+          <Text style={styles.tip}>{t('truths.tip2')}</Text>
+          <Text style={styles.tip}>{t('truths.tip3')}</Text>
         </View>
       </Animated.View>
 
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.overlay}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalKicker}>SUGERENCIA</Text>
+            <Text style={styles.modalKicker}>{t('truths.suggestion')}</Text>
             <Text style={styles.modalIdea}>
-              {currentItem || '¡Piensa en tu infancia!'}
+              {currentItem || t('truths.fallbackIdea')}
             </Text>
             <PartyButton
-              label="CERRAR"
+              label={t('truths.close')}
               variant="never"
               onPress={() => setModalVisible(false)}
             />

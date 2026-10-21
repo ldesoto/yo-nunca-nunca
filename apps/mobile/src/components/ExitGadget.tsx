@@ -1,10 +1,11 @@
 import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { t } from '../i18n';
 
 /** Chip compacto para salir sin depender del gesto swipe. */
 export function ExitGadget({
   onPress,
-  label = 'Salir',
+  label,
   style,
   light,
   corner = 'top-left',
@@ -17,6 +18,7 @@ export function ExitGadget({
   corner?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }) {
   const insets = useSafeAreaInsets();
+  const resolvedLabel = label ?? t('common.exit');
   const pad = {
     top: Math.max(10, insets.top + 4),
     bottom: Math.max(14, insets.bottom + 8),
@@ -37,7 +39,7 @@ export function ExitGadget({
       onPress={onPress}
       hitSlop={10}
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={resolvedLabel}
       style={({ pressed }) => [
         styles.chip,
         pos,
@@ -47,7 +49,7 @@ export function ExitGadget({
       ]}
     >
       <Text style={[styles.icon, light && styles.textDark]}>✕</Text>
-      <Text style={[styles.label, light && styles.textDark]}>{label}</Text>
+      <Text style={[styles.label, light && styles.textDark]}>{resolvedLabel}</Text>
     </Pressable>
   );
 }

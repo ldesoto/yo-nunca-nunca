@@ -14,6 +14,7 @@ import { feedback } from '../feedback';
 import { recordGameResult } from '../profileStats';
 import { colors, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameOver'>;
 
@@ -59,21 +60,21 @@ export function GameOverScreen({ navigation }: Props) {
     <Screen scroll>
       <ConnectionBanner status={conn} onGoHome={leave} />
       <Animated.Text entering={ZoomIn} style={typography.kicker}>
-        GANADOR
+        {t('gameOver.winner')}
       </Animated.Text>
       <GlassCard glow="pink" style={{ marginTop: 12, alignItems: 'center' }}>
         <Text style={styles.trophy}>🏆</Text>
         <Text style={styles.winner}>{snap?.winnerName || '—'}</Text>
         <Text style={styles.meta}>
-          {snap?.totalRounds ?? 0} rondas · tu score {me?.score ?? 0}
+          {t('gameOver.meta', { rounds: snap?.totalRounds ?? 0, score: me?.score ?? 0 })}
         </Text>
       </GlassCard>
 
       <GlassCard style={{ marginTop: 14 }}>
-        <Text style={styles.stat}>Veces “Sí”: {me?.yesCount ?? 0}</Text>
-        <Text style={styles.stat}>Veces mayoría: {me?.majorityCount ?? 0}</Text>
-        <Text style={styles.stat}>Veces minoría: {me?.minorityCount ?? 0}</Text>
-        <Text style={styles.stat}>Tu score: {me?.score ?? 0}</Text>
+        <Text style={styles.stat}>{t('gameOver.yes', { n: me?.yesCount ?? 0 })}</Text>
+        <Text style={styles.stat}>{t('gameOver.majority', { n: me?.majorityCount ?? 0 })}</Text>
+        <Text style={styles.stat}>{t('gameOver.minority', { n: me?.minorityCount ?? 0 })}</Text>
+        <Text style={styles.stat}>{t('gameOver.score', { n: me?.score ?? 0 })}</Text>
       </GlassCard>
 
       <View style={{ marginTop: 12 }}>
@@ -91,7 +92,7 @@ export function GameOverScreen({ navigation }: Props) {
         ))}
       </View>
 
-      <PartyButton label="VOLVER AL INICIO" onPress={leave} />
+      <PartyButton label={t('gameOver.home')} onPress={leave} />
     </Screen>
   );
 }

@@ -9,6 +9,7 @@ import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MostLikely'>;
 
@@ -27,30 +28,30 @@ export function MostLikelyScreen({ navigation }: Props) {
     <LocalGameChrome
       onBack={() => exitWithOptionalAd(() => navigation.goBack())}
       accent="#FB923C"
-      kicker="Señala al culpable"
-      title="¿Quién es más probable?"
+      kicker={t('most.kicker')}
+      title={t('most.title')}
       footer={
         isFinished ? (
-          <PartyButton label="OTRA RONDA" variant="orange" onPress={restart} />
+          <PartyButton label={t('most.nextRound')} variant="orange" onPress={restart} />
         ) : (
-          <PartyButton label="SIGUIENTE" variant="orange" onPress={drawNext} />
+          <PartyButton label={t('most.next')} variant="orange" onPress={drawNext} />
         )
       }
     >
       {isFinished ? (
         <Animated.View entering={FadeIn} style={styles.center}>
           <Text style={styles.doneEmoji}>🎯</Text>
-          <Text style={styles.doneTitle}>Ronda terminada</Text>
-          <Text style={styles.doneSub}>¿Otra tanda de señalamientos?</Text>
+          <Text style={styles.doneTitle}>{t('most.doneTitle')}</Text>
+          <Text style={styles.doneSub}>{t('most.doneSub')}</Text>
         </Animated.View>
       ) : (
         <Pressable onPress={drawNext} style={styles.center}>
           <Animated.View entering={FadeInDown.duration(350)} key={currentItem ?? 'x'}>
-            <Text style={styles.prompt}>¿Quién es más probable que…</Text>
+            <Text style={styles.prompt}>{t('most.prompt')}</Text>
             <View style={styles.card}>
               <Text style={styles.question}>{currentItem}</Text>
             </View>
-            <Text style={styles.hint}>Toca para la siguiente</Text>
+            <Text style={styles.hint}>{t('most.hint')}</Text>
           </Animated.View>
         </Pressable>
       )}

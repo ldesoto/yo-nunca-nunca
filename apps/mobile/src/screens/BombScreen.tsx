@@ -16,6 +16,7 @@ import { ExitGadget } from '../components/ExitGadget';
 import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Bomb'>;
 
@@ -89,15 +90,13 @@ export function BombScreen({ navigation }: Props) {
     return (
       <View style={[styles.container, { backgroundColor: '#FF2D95' }]}>
         <ExitGadget onPress={exit} light />
-        <Text style={styles.explosionText}>¡BOOM!</Text>
-        <Text style={styles.punishmentText}>
-          Te explotó la bomba en las manos. ¡Te toca beber! 🍻
-        </Text>
+        <Text style={styles.explosionText}>{t('bomb.boom')}</Text>
+        <Text style={styles.punishmentText}>{t('bomb.punishment')}</Text>
         <TouchableOpacity style={styles.passBtn} onPress={startRound}>
-          <Text style={styles.passBtnText}>Jugar Otra Vez</Text>
+          <Text style={styles.passBtnText}>{t('common.playAgain')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.exitBtn} onPress={exit}>
-          <Text style={styles.exitBtnText}>Salir al inicio</Text>
+          <Text style={styles.exitBtnText}>{t('common.exitHome')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -107,13 +106,10 @@ export function BombScreen({ navigation }: Props) {
     return (
       <View style={styles.container}>
         <ExitGadget onPress={exit} />
-        <Text style={styles.title}>La Bomba</Text>
-        <Text style={styles.desc}>
-          Dí un elemento de la categoría y pásala rápido antes de que explote. ¡El
-          tiempo corre!
-        </Text>
+        <Text style={styles.title}>{t('bomb.title')}</Text>
+        <Text style={styles.desc}>{t('bomb.desc')}</Text>
         <TouchableOpacity style={styles.passBtn} onPress={startRound}>
-          <Text style={styles.passBtnText}>¡INICIAR BOMBA!</Text>
+          <Text style={styles.passBtnText}>{t('bomb.start')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -126,13 +122,13 @@ export function BombScreen({ navigation }: Props) {
         00:{timeLeft.toString().padStart(2, '0')}
       </Text>
 
-      <Text style={styles.categoryTitle}>Categoría:</Text>
+      <Text style={styles.categoryTitle}>{t('bomb.category')}</Text>
       <Text style={styles.categoryItem}>{currentItem}</Text>
 
       <Animated.Text style={[styles.bombEmoji, animatedStyle]}>💣</Animated.Text>
 
       <TouchableOpacity style={styles.massiveBtn} onPress={handlePass}>
-        <Text style={styles.massiveBtnText}>¡PÁSALA!</Text>
+        <Text style={styles.massiveBtnText}>{t('bomb.pass')}</Text>
       </TouchableOpacity>
     </View>
   );

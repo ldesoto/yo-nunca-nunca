@@ -8,6 +8,7 @@ import { ExitGadget } from '../components/ExitGadget';
 import { exitWithOptionalAd } from '../ads';
 import gamesData from '../data/gamesData.json';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Charades'>;
 
@@ -76,12 +77,12 @@ export function CharadesScreen({ navigation }: Props) {
     return (
       <View style={styles.container}>
         <ExitGadget onPress={exit} />
-        <Text style={styles.title}>Charadas</Text>
-        <Text style={styles.instruction}>Ponte el teléfono en la frente.</Text>
-        <Text style={styles.instruction}>Inclina hacia ABAJO para Acierto.</Text>
-        <Text style={styles.instruction}>Inclina hacia ARRIBA para Pasar.</Text>
+        <Text style={styles.title}>{t('charades.title')}</Text>
+        <Text style={styles.instruction}>{t('charades.inst1')}</Text>
+        <Text style={styles.instruction}>{t('charades.inst2')}</Text>
+        <Text style={styles.instruction}>{t('charades.inst3')}</Text>
         <TouchableOpacity style={styles.btn} onPress={startGame}>
-          <Text style={styles.btnText}>¡EMPEZAR (60s)!</Text>
+          <Text style={styles.btnText}>{t('charades.start')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -91,13 +92,13 @@ export function CharadesScreen({ navigation }: Props) {
     return (
       <View style={styles.container}>
         <ExitGadget onPress={exit} />
-        <Text style={styles.title}>¡Tiempo Terminado!</Text>
-        <Text style={styles.scoreText}>Puntuación: {score}</Text>
+        <Text style={styles.title}>{t('charades.timeUp')}</Text>
+        <Text style={styles.scoreText}>{t('charades.score', { n: score })}</Text>
         <TouchableOpacity style={styles.btn} onPress={startGame}>
-          <Text style={styles.btnText}>Jugar Otra Vez</Text>
+          <Text style={styles.btnText}>{t('common.playAgain')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.exitBtn} onPress={exit}>
-          <Text style={styles.exitBtnText}>Salir al inicio</Text>
+          <Text style={styles.exitBtnText}>{t('common.exitHome')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -108,7 +109,7 @@ export function CharadesScreen({ navigation }: Props) {
       <ExitGadget onPress={exit} corner="bottom-left" />
       <Text style={styles.timer}>{timeLeft}s</Text>
       <Text style={styles.wordText}>{currentItem}</Text>
-      <Text style={styles.scoreFloat}>Puntos: {score}</Text>
+      <Text style={styles.scoreFloat}>{t('charades.points', { n: score })}</Text>
     </View>
   );
 }

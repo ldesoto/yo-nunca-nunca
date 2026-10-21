@@ -11,6 +11,7 @@ import { useGame } from '../GameContext';
 import { track } from '../analytics';
 import { colors, typography, type CategoryId } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Create'>;
 
@@ -40,7 +41,7 @@ export function CreateScreen({ navigation }: Props) {
   const onCreate = async () => {
     setLoading(true);
     setError('');
-    setStatus('Preparando la partida…');
+    setStatus(t('create.preparing'));
     try {
       const { room, roomCode } = await createParty(
         {
@@ -61,7 +62,7 @@ export function CreateScreen({ navigation }: Props) {
       });
       navigation.replace('Lobby');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error');
+      setError(e instanceof Error ? e.message : t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -74,41 +75,41 @@ export function CreateScreen({ navigation }: Props) {
         style={({ pressed }) => [styles.backTop, pressed && { opacity: 0.7 }]}
         hitSlop={10}
       >
-        <Text style={styles.backTopLabel}>← Volver</Text>
+        <Text style={styles.backTopLabel}>{t('common.backArrow')}</Text>
       </Pressable>
 
       {loading ? (
         <ConnectionBanner status="connecting" detail={status || undefined} />
       ) : null}
-      <Text style={styles.kicker}>YO NUNCA NUNCA</Text>
-      <Text style={typography.title}>Crear partida</Text>
+      <Text style={styles.kicker}>{t('create.kicker')}</Text>
+      <Text style={typography.title}>{t('create.title')}</Text>
       <Text style={[typography.body, { marginBottom: 12, marginTop: 4 }]}>
-        Elige el vibe. Los amigos se unen con el código de 5 letras.
+        {t('create.lead')}
       </Text>
 
       <GlassCard glow="cyan">
-        <SectionLabel>Tu nombre</SectionLabel>
-        <Field value={name} onChangeText={setName} placeholder="Ej. Luis" maxLength={20} />
+        <SectionLabel>{t('create.yourName')}</SectionLabel>
+        <Field value={name} onChangeText={setName} placeholder={t('create.namePlaceholder')} maxLength={20} />
 
-        <SectionLabel>Modo</SectionLabel>
+        <SectionLabel>{t('create.mode')}</SectionLabel>
         <View style={styles.modeRow}>
           <Pressable
             onPress={() => pickMode('fiesta')}
             style={[styles.mode, mode === 'fiesta' && styles.modeOn]}
           >
             <Text style={styles.modeEmoji}>🎉</Text>
-            <Text style={styles.modeText}>Fiesta</Text>
+            <Text style={styles.modeText}>{t('create.modeFiesta')}</Text>
           </Pressable>
           <Pressable
             onPress={() => pickMode('parejas')}
             style={[styles.mode, mode === 'parejas' && styles.modeOn]}
           >
             <Text style={styles.modeEmoji}>💘</Text>
-            <Text style={styles.modeText}>Parejas</Text>
+            <Text style={styles.modeText}>{t('create.modeParejas')}</Text>
           </Pressable>
         </View>
 
-        <SectionLabel>Rondas</SectionLabel>
+        <SectionLabel>{t('create.rounds')}</SectionLabel>
         <View style={styles.modeRow}>
           {ROUND_OPTIONS.map((n) => (
             <Pressable
@@ -121,7 +122,7 @@ export function CreateScreen({ navigation }: Props) {
           ))}
         </View>
 
-        <SectionLabel>Categorías</SectionLabel>
+        <SectionLabel>{t('create.categories')}</SectionLabel>
         <CategoryPicker selected={categories} onChange={setCategories} />
       </GlassCard>
 
@@ -131,15 +132,15 @@ export function CreateScreen({ navigation }: Props) {
           <ActivityIndicator color={colors.neonPink} />
           {status ? <Text style={styles.status}>{status}</Text> : null}
           <PartyButton
-            label="Cancelar"
+            label={t('common.cancel')}
             variant="ghost"
             onPress={() => navigation.goBack()}
           />
         </View>
       ) : (
         <View style={{ marginTop: 18 }}>
-          <PartyButton label="CREAR SALA" onPress={() => void onCreate()} />
-          <PartyButton label="Volver" variant="ghost" onPress={() => navigation.goBack()} />
+          <PartyButton label={t('create.createRoom')} onPress={() => void onCreate()} />
+          <PartyButton label={t('common.back')} variant="ghost" onPress={() => navigation.goBack()} />
         </View>
       )}
     </Screen>

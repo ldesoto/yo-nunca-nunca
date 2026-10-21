@@ -13,14 +13,15 @@ import { track } from '../analytics';
 import { feedback } from '../feedback';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Play'>;
 
 const EVENT_COPY: Record<string, { title: string; tint: string }> = {
-  double_score: { title: '🔥 Doble puntuación esta ronda', tint: '#FF8A3D' },
-  mortal: { title: '💀 Pregunta mortal · puntos x2.5', tint: '#FF5A7A' },
-  nobody: { title: '😇 Nadie lo ha hecho', tint: '#C8FF4D' },
-  everyone: { title: '😂 ¡Todos lo han hecho!', tint: '#FF2D95' },
+  double_score: { title: t('play.event.double'), tint: '#FF8A3D' },
+  mortal: { title: t('play.event.mortal'), tint: '#FF5A7A' },
+  nobody: { title: t('play.event.nobody'), tint: '#C8FF4D' },
+  everyone: { title: t('play.event.everyone'), tint: '#FF2D95' },
 };
 
 function useCountdown(deadlineAt: number) {
@@ -114,10 +115,10 @@ export function PlayScreen({ navigation }: Props) {
       <Screen>
         <ConnectionBanner
           status={conn === 'online' ? 'connecting' : conn}
-          detail="Cargando estado de la partida…"
+          detail={t('play.loadingDetail')}
           onGoHome={goHome}
         />
-        <Text style={typography.body}>Cargando partida…</Text>
+        <Text style={typography.body}>{t('play.loading')}</Text>
       </Screen>
     );
   }
@@ -136,15 +137,13 @@ export function PlayScreen({ navigation }: Props) {
       <Screen scroll>
         <ConnectionBanner status={conn} onGoHome={goHome} />
         <Text style={typography.kicker} testID="who-was-kicker">
-          RONDA {snap.currentRound}/{snap.totalRounds}
+          {t('play.round', { current: snap.currentRound, total: snap.totalRounds })}
         </Text>
         <Animated.Text entering={FadeInUp} style={styles.whoTitle}>
-          ¿Quién lo ha hecho?
+          {t('play.whoTitle')}
         </Animated.Text>
         <Text style={styles.whoSub}>
-          {me?.canVoteWhoWas
-            ? 'Tú dijiste NUNCA. Acierta y ganas +60 pts.'
-            : 'Los demás están adivinando… tú ya sabes 😏'}
+          {me?.canVoteWhoWas ? t('play.whoVoter') : t('play.whoTarget')}
         </Text>
         <Text style={styles.timer} testID="who-was-timer">
           {whoWasLeft}s
@@ -153,8 +152,8 @@ export function PlayScreen({ navigation }: Props) {
         {canVote ? (
           candidates.length === 0 ? (
             <GlassCard glow="cyan" style={{ marginTop: 18 }}>
-              <Text style={styles.waiting}>No hay otros jugadores conectados para votar.</Text>
-              <Text style={styles.voteMeta}>Esperando fin de fase…</Text>
+              <Text style={styles.waiting}>{t('play.whoNoCandidates')}</Text>
+              <Text style={styles.voteMeta}>{t('play.whoWaitingPhase')}</Text>
             </GlassCard>
           ) : (
             <View style={{ marginTop: 12, gap: 10 }} testID="who-was-candidates">
@@ -162,7 +161,7 @@ export function PlayScreen({ navigation }: Props) {
                 <Animated.View key={p.sessionId} entering={FadeInDown.delay(i * 50)}>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={`Votar por ${p.name}`}
+                    accessibilityLabel={t('play.voteFor', { name: p.name })}
                     testID={`who-was-vote-${p.sessionId}`}
                     onPress={() =>
                       room.send('voteWhoWas', { targetSessionId: p.sessionId })
@@ -173,7 +172,7 @@ export function PlayScreen({ navigation }: Props) {
                     ]}
                   >
                     <Text style={styles.voteName}>{p.name}</Text>
-                    <Text style={styles.voteCta}>Votar</Text>
+                    <Text style={styles.voteCta}>{t('play.vote')}</Text>
                   </Pressable>
                 </Animated.View>
               ))}
@@ -182,12 +181,12 @@ export function PlayScreen({ navigation }: Props) {
         ) : (
           <GlassCard glow="cyan" style={{ marginTop: 18 }} testID="who-was-waiting">
             <Text style={styles.waiting}>
-              {me?.hasVotedWhoWas
-                ? 'Voto enviado. Esperando al resto…'
-                : 'Esperando votos…'}
+              {me?.hasVotedWhoWas ? t('play.voteSent') : t('play.waitingVotes')}
             </Text>
             <Text style={styles.voteMeta}>
-              {snap.whoWasVotesCast} voto{snap.whoWasVotesCast === 1 ? '' : 's'}
+              {snap.whoWasVotesCast === 1
+                ? t('play.voteCountOne', { n: snap.whoWasVotesCast })
+                : t('play.voteCountMany', { n: snap.whoWasVotesCast })}
             </Text>
           </GlassCard>
         )}
@@ -199,7 +198,7 @@ export function PlayScreen({ navigation }: Props) {
     return (
       <Screen>
         <ConnectionBanner status={conn} onGoHome={goHome} />
-        <Text style={typography.kicker}>RANKING EN VIVO</Text>
+        <Text style={typography.kicker}>{t('play.liveRanking')}</Text>
         <GlassCard glow="cyan" style={{ marginTop: 12 }}>
           {snap.players.map((p, i) => (
             <Animated.View
@@ -223,10 +222,10 @@ export function PlayScreen({ navigation }: Props) {
       <Screen>
         <ConnectionBanner status={conn} onGoHome={goHome} />
         <Text style={typography.kicker}>
-          RONDA {snap.currentRound}/{snap.totalRounds}
+          {t('play.round', { current: snap.currentRound, total: snap.totalRounds })}
         </Text>
         <Animated.Text entering={FadeInUp} style={styles.revealTitle}>
-          {snap.yesCount} de {snap.totalAnswered} lo han hecho
+          {t('play.revealTitle', { yes: snap.yesCount, total: snap.totalAnswered })}
         </Animated.Text>
         {EVENT_COPY[snap.specialEvent] ? (
           <Text style={[styles.special, { color: EVENT_COPY[snap.specialEvent]!.tint }]}>
@@ -235,7 +234,7 @@ export function PlayScreen({ navigation }: Props) {
         ) : null}
         <View style={{ marginTop: 22, gap: 10 }}>
           {snap.revealedYesNames.length === 0 ? (
-            <Text style={styles.waiting}>Revelando…</Text>
+            <Text style={styles.waiting}>{t('play.revealing')}</Text>
           ) : (
             snap.revealedYesNames.map((name, i) => (
               <Animated.View key={`${name}-${i}`} entering={ZoomIn.delay(i * 40)}>
@@ -256,7 +255,7 @@ export function PlayScreen({ navigation }: Props) {
       <View style={styles.top}>
         <View style={styles.topRow}>
           <Text style={typography.kicker}>
-            RONDA {snap.currentRound} / {snap.totalRounds}
+            {t('play.roundSpaced', { current: snap.currentRound, total: snap.totalRounds })}
           </Text>
           {snap.phase === 'WAITING_FOR_ANSWERS' && answerLeft > 0 ? (
             <Text style={styles.timerChip}>{answerLeft}s</Text>
@@ -296,11 +295,11 @@ export function PlayScreen({ navigation }: Props) {
       </GlassCard>
 
       {answered ? (
-        <Text style={styles.waiting}>Esperando al resto…</Text>
+        <Text style={styles.waiting}>{t('play.waitingRest')}</Text>
       ) : (
         <View style={{ marginTop: 18 }}>
           <PartyButton
-            label="NUNCA"
+            label={t('play.never')}
             variant="never"
             onPress={() => {
               track('answer_submitted', { round: snap.currentRound });
@@ -308,7 +307,7 @@ export function PlayScreen({ navigation }: Props) {
             }}
           />
           <PartyButton
-            label="SÍ, LO HE HECHO"
+            label={t('play.yes')}
             variant="yes"
             onPress={() => {
               track('answer_submitted', { round: snap.currentRound });
@@ -321,10 +320,10 @@ export function PlayScreen({ navigation }: Props) {
       <Pressable
         onPress={() => {
           if (reported || !snap.questionId) return;
-          Alert.alert('Reportar pregunta', '¿Marcar esta pregunta como inapropiada?', [
-            { text: 'Cancelar', style: 'cancel' },
+          Alert.alert(t('play.reportTitle'), t('play.reportBody'), [
+            { text: t('common.cancel'), style: 'cancel' },
             {
-              text: 'Reportar',
+              text: t('play.report'),
               style: 'destructive',
               onPress: () => {
                 room.send('reportQuestion', {
@@ -343,7 +342,7 @@ export function PlayScreen({ navigation }: Props) {
         disabled={reported}
       >
         <Text style={styles.reportLabel}>
-          {reported ? 'Reportada' : 'Reportar pregunta'}
+          {reported ? t('play.reported') : t('play.reportLink')}
         </Text>
       </Pressable>
     </Screen>

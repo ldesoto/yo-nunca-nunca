@@ -14,6 +14,7 @@ import { Screen } from '../components/Screen';
 import { wakeServer } from '../api';
 import { fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -34,12 +35,12 @@ type GameMode = {
   playLabel?: string;
 };
 
-const FILTERS: { id: FilterId; label: string; icon: string }[] = [
-  { id: 'todos', label: 'Todos', icon: '✦' },
-  { id: 'jugadores', label: 'Jugadores', icon: '👥' },
-  { id: 'beber', label: 'Beber', icon: '🥂' },
-  { id: 'rapido', label: 'Rápido', icon: '⚡' },
-  { id: 'picante', label: 'Picante', icon: '🔥' },
+const FILTERS: { id: FilterId; icon: string }[] = [
+  { id: 'todos', icon: '✦' },
+  { id: 'jugadores', icon: '👥' },
+  { id: 'beber', icon: '🥂' },
+  { id: 'rapido', icon: '⚡' },
+  { id: 'picante', icon: '🔥' },
 ];
 
 function haptic() {
@@ -109,7 +110,7 @@ function ModeCard({ mode, index }: { mode: GameMode; index: number }) {
                   end={{ x: 1, y: 1 }}
                   style={styles.playPill}
                 >
-                  <Text style={styles.playLabel}>{mode.playLabel ?? 'JUGAR →'}</Text>
+                  <Text style={styles.playLabel}>{mode.playLabel ?? t('home.cta.play')}</Text>
                 </LinearGradient>
               </Pressable>
             ) : null}
@@ -127,7 +128,7 @@ function ModeCard({ mode, index }: { mode: GameMode; index: number }) {
                   pressed && styles.pressed,
                 ]}
               >
-                <Text style={styles.secondaryLabel}>Unirse</Text>
+                <Text style={styles.secondaryLabel}>{t('home.cta.join')}</Text>
               </Pressable>
               <Pressable
                 onPressIn={() => {
@@ -148,7 +149,7 @@ function ModeCard({ mode, index }: { mode: GameMode; index: number }) {
                   end={{ x: 1, y: 1 }}
                   style={styles.primaryPill}
                 >
-                  <Text style={styles.playLabel}>{mode.playLabel ?? 'Crear →'}</Text>
+                  <Text style={styles.playLabel}>{mode.playLabel ?? t('home.cta.create')}</Text>
                 </LinearGradient>
               </Pressable>
             </View>
@@ -165,15 +166,15 @@ export function HomeScreen({ navigation }: Props) {
     () => [
       {
         id: 'ynn',
-        title: 'Yo Nunca Nunca',
-        description: 'Confiesa tus secretos. Online con amigos.',
+        title: t('home.mode.ynn.title'),
+        description: t('home.mode.ynn.desc'),
         icon: '🤞',
-        players: '3–12 jugadores',
-        badge: 'EL CLÁSICO',
+        players: t('home.mode.ynn.players'),
+        badge: t('home.mode.ynn.badge'),
         filters: ['todos', 'jugadores', 'beber', 'picante'],
         gradient: ['#7C3AED', '#DB2777', '#F472B6'],
         ctaGradient: ['#FDE047', '#FBBF24'],
-        playLabel: 'Crear →',
+        playLabel: t('home.cta.create'),
         onPlay: () => {
           wakeServer();
           navigation.navigate('Create');
@@ -185,10 +186,10 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'tod',
-        title: 'Verdad o Bebida',
-        description: '¿Respondes… o te tomas el trago?',
+        title: t('home.mode.tod.title'),
+        description: t('home.mode.tod.desc'),
         icon: '🥃',
-        players: '3+ jugadores',
+        players: t('home.mode.tod.players'),
         filters: ['todos', 'beber', 'picante'],
         gradient: ['#EA580C', '#DC2626', '#F97316'],
         ctaGradient: ['#FDE68A', '#F59E0B'],
@@ -196,10 +197,10 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'charades',
-        title: 'Charadas',
-        description: 'Teléfono en la frente. Inclina para acertar.',
+        title: t('home.mode.charades.title'),
+        description: t('home.mode.charades.desc'),
         icon: '😎',
-        players: '2+ jugadores',
+        players: t('home.mode.charades.players'),
         filters: ['todos', 'jugadores', 'rapido'],
         gradient: ['#059669', '#10B981', '#34D399'],
         ctaGradient: ['#A7F3D0', '#6EE7B7'],
@@ -207,10 +208,10 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'bomb',
-        title: 'La Bomba',
-        description: 'Cultura chupística. Que no te explote.',
+        title: t('home.mode.bomb.title'),
+        description: t('home.mode.bomb.desc'),
         icon: '💣',
-        players: '3+ jugadores',
+        players: t('home.mode.bomb.players'),
         filters: ['todos', 'beber', 'rapido'],
         gradient: ['#1D4ED8', '#2563EB', '#38BDF8'],
         ctaGradient: ['#BAE6FD', '#7DD3FC'],
@@ -218,10 +219,10 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'most',
-        title: '¿Quién es más probable?',
-        description: 'Señala al culpable de cada situación.',
+        title: t('home.mode.most.title'),
+        description: t('home.mode.most.desc'),
         icon: '🫵',
-        players: '3+ jugadores',
+        players: t('home.mode.most.players'),
         filters: ['todos', 'jugadores', 'picante'],
         gradient: ['#C2410C', '#EA580C', '#FB923C'],
         ctaGradient: ['#FED7AA', '#FDBA74'],
@@ -229,10 +230,10 @@ export function HomeScreen({ navigation }: Props) {
       },
       {
         id: 'truths',
-        title: '2 verdades, 1 mentira',
-        description: 'Adivina quién miente en la mesa.',
+        title: t('home.mode.truths.title'),
+        description: t('home.mode.truths.desc'),
         icon: '🎭',
-        players: '3+ jugadores',
+        players: t('home.mode.truths.players'),
         filters: ['todos', 'jugadores', 'rapido'],
         gradient: ['#4F46E5', '#6366F1', '#818CF8'],
         ctaGradient: ['#C7D2FE', '#A5B4FC'],
@@ -295,7 +296,7 @@ export function HomeScreen({ navigation }: Props) {
                   {f.icon}
                 </Text>
                 <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
-                  {f.label}
+                  {t(`home.filter.${f.id}` as any)}
                 </Text>
               </Pressable>
             );

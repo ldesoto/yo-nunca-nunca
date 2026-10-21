@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Screen } from './Screen';
 import { colors, fonts } from '../theme';
+import { t } from '../i18n';
 
 export function LocalGameChrome({
   onBack,
@@ -26,10 +27,10 @@ export function LocalGameChrome({
           style={({ pressed }) => [styles.back, pressed && { opacity: 0.7 }]}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Salir"
+          accessibilityLabel={t('common.exit')}
         >
           <Text style={styles.backIcon}>✕</Text>
-          <Text style={styles.backLabel}>Salir</Text>
+          <Text style={styles.backLabel}>{t('common.exit')}</Text>
         </Pressable>
         <View style={styles.titles}>
           <Text style={[styles.kicker, { color: accent }]}>{kicker}</Text>

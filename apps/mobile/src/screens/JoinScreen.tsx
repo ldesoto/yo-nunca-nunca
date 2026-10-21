@@ -11,6 +11,7 @@ import { useGame } from '../GameContext';
 import { track } from '../analytics';
 import { colors, fonts, typography } from '../theme';
 import type { RootStackParamList } from '../navigation';
+import { t } from '../i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
 
@@ -29,29 +30,29 @@ export function JoinScreen({ navigation }: Props) {
   const onJoin = async () => {
     const trimmed = code.trim().toUpperCase();
     if (trimmed.length < 4) {
-      setError('El código tiene 5 caracteres');
+      setError(t('join.codeError'));
       return;
     }
     if (!name.trim()) {
-      setError('Pon tu nombre primero');
+      setError(t('join.nameError'));
       return;
     }
     setLoading(true);
     setError('');
-    setStatus('Entrando a la sala…');
+    setStatus(t('join.entering'));
     try {
       const { room, roomCode } = await joinParty(
         trimmed,
-        name.trim() || 'Jugador',
+        name.trim() || t('common.player'),
         (msg) => setStatus(msg),
       );
-      setPlayerName(name.trim() || 'Jugador');
+      setPlayerName(name.trim() || t('common.player'));
       setRoomCode(roomCode);
       setRoom(room);
       track('game_joined', { codeLen: trimmed.length });
       navigation.replace('Lobby');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error');
+      setError(e instanceof Error ? e.message : t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -64,34 +65,34 @@ export function JoinScreen({ navigation }: Props) {
         style={({ pressed }) => [styles.backTop, pressed && { opacity: 0.7 }]}
         hitSlop={10}
       >
-        <Text style={styles.backTopLabel}>← Volver</Text>
+        <Text style={styles.backTopLabel}>{t('common.backArrow')}</Text>
       </Pressable>
 
       {loading ? (
         <ConnectionBanner status="connecting" detail={status || undefined} />
       ) : null}
       <Animated.View entering={FadeInUp.duration(400)}>
-        <Text style={styles.kicker}>MULTIJUGADOR</Text>
-        <Text style={typography.title}>Unirse a una sala</Text>
-        <Text style={[typography.body, styles.lead]}>
-          Nombre arriba, código abajo. No los mezcles 😉
-        </Text>
+        <Text style={styles.kicker}>{t('join.kicker')}</Text>
+        <Text style={typography.title}>{t('join.title')}</Text>
+        <Text style={[typography.body, styles.lead]}>{t('join.lead')}</Text>
       </Animated.View>
 
       <Animated.View entering={FadeInDown.delay(80).duration(400)}>
         <GlassCard glow="cyan" style={{ marginTop: 8 }}>
-          <SectionLabel>1 · Tu nombre</SectionLabel>
+          <SectionLabel>{t('join.stepName')}</SectionLabel>
           <Field
             value={name}
             onChangeText={setName}
-            placeholder="Ej. Ana"
+            placeholder={t('join.namePlaceholder')}
             maxLength={20}
             autoFocus
           />
-          <SectionLabel>2 · Código de sala</SectionLabel>
+          <SectionLabel>{t('join.stepCode')}</SectionLabel>
           <Field
             value={code}
-            onChangeText={(t) => setCode(t.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5))}
+            onChangeText={(value) =>
+              setCode(value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5))
+            }
             placeholder="K7X9P"
             placeholderTextColor="rgba(255,255,255,0.35)"
             autoCapitalize="characters"
@@ -99,7 +100,7 @@ export function JoinScreen({ navigation }: Props) {
             maxLength={5}
             style={styles.codeField}
           />
-          <Text style={styles.codeHint}>{code.length}/5 caracteres</Text>
+          <Text style={styles.codeHint}>{t('join.codeChars', { n: code.length })}</Text>
         </GlassCard>
       </Animated.View>
 
@@ -113,12 +114,12 @@ export function JoinScreen({ navigation }: Props) {
       ) : (
         <View style={{ marginTop: 18 }}>
           <PartyButton
-            label="ENTRAR A LA SALA"
+            label={t('join.enter')}
             variant="cyan"
             onPress={() => void onJoin()}
             disabled={code.trim().length < 4 || !name.trim()}
           />
-          <PartyButton label="Volver" variant="ghost" onPress={() => navigation.goBack()} />
+          <PartyButton label={t('common.back')} variant="ghost" onPress={() => navigation.goBack()} />
         </View>
       )}
     </Screen>
