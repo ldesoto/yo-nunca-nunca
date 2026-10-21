@@ -1,5 +1,7 @@
 export type RootStackParamList = {
   Home: undefined;
+  Menu: undefined;
+  Modes: undefined;
   Create: undefined;
   Join: undefined;
   Lobby: undefined;

@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { GameProvider } from './src/GameContext';
 import type { RootStackParamList } from './src/navigation';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { MenuScreen } from './src/screens/MenuScreen';
+import { ModesScreen } from './src/screens/ModesScreen';
 import { CreateScreen } from './src/screens/CreateScreen';
 import { JoinScreen } from './src/screens/JoinScreen';
 import { LobbyScreen } from './src/screens/LobbyScreen';
@@ -102,6 +104,8 @@ export default function App() {
           <NavigationContainer theme={navTheme}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Menu" component={MenuScreen} />
+              <Stack.Screen name="Modes" component={ModesScreen} />
               <Stack.Screen name="Create" component={CreateScreen} />
               <Stack.Screen name="Join" component={JoinScreen} />
               <Stack.Screen name="Lobby" component={LobbyScreen} />

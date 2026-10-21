@@ -18,6 +18,13 @@ export const colors = {
   neonCyanSoft: 'rgba(45,226,230,0.22)',
   neonLime: '#C8FF4D',
   neonOrange: '#FF8A3D',
+  /** Acento CTA menú (lima del theme). */
+  accent: '#C8FF4D',
+  /** Texto sobre acento — contraste AA. */
+  ink: '#07040F',
+  glass: 'rgba(255,255,255,0.14)',
+  glassBorder: 'rgba(255,255,255,0.28)',
+  dim: 'rgba(251,247,255,0.78)',
   card: 'rgba(255,255,255,0.07)',
   cardStrong: 'rgba(255,255,255,0.12)',
   stroke: 'rgba(255,255,255,0.14)',

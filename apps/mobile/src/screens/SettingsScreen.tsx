@@ -43,6 +43,10 @@ export function SettingsScreen({ navigation }: Props) {
     <Screen scroll>
       <Text style={styles.title}>{t('settings.title')}</Text>
       <GlassCard glow="cyan" style={{ marginTop: 8 }}>
+        <LinkRow
+          label={t('home.tabProfile')}
+          onPress={() => navigation.navigate('Profile')}
+        />
         <Row label={t('settings.sfx')} value={settings.sfx} onChange={(v) => patch({ sfx: v })} />
         <Row
           label={t('settings.haptics')}
