@@ -3,6 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
+import { GrowthBar } from '../components/GrowthBar';
+import { maybeRequestReview } from '../growth';
+import { noteRoundsPlayed, showInterstitialIfNeeded } from '../ads';
 import { PartyButton } from '../components/PartyButton';
 import { GlassCard } from '../components/GlassCard';
 import { ConnectionBanner } from '../components/ConnectionBanner';
@@ -35,6 +38,8 @@ export function GameOverScreen({ navigation }: Props) {
       won: won ? 1 : 0,
     });
     void feedback({ sfx: 'win', haptic: 'success' });
+    noteRoundsPlayed(snap.totalRounds || 1);
+    if (won) setTimeout(() => void maybeRequestReview(), 1500);
     void recordGameResult({
       name: me.name,
       won,
@@ -53,7 +58,7 @@ export function GameOverScreen({ navigation }: Props) {
       // ignore
     }
     setRoom(null);
-    navigation.popToTop();
+    void showInterstitialIfNeeded().finally(() => navigation.popToTop());
   };
 
   return (
@@ -92,6 +97,7 @@ export function GameOverScreen({ navigation }: Props) {
         ))}
       </View>
 
+      <GrowthBar onMoreGames={() => navigation.navigate('MoreGames')} />
       <PartyButton label={t('gameOver.home')} onPress={leave} />
     </Screen>
   );

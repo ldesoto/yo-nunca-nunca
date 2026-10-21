@@ -11,6 +11,7 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../components/Screen';
+import { GrowthBar } from '../components/GrowthBar';
 import { wakeServer } from '../api';
 import { fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
@@ -308,6 +309,8 @@ export function HomeScreen({ navigation }: Props) {
             <ModeCard key={mode.id} mode={mode} index={index} />
           ))}
         </View>
+
+        <GrowthBar onMoreGames={() => navigation.navigate('MoreGames')} />
       </Screen>
 
       <View style={styles.tabBar}>

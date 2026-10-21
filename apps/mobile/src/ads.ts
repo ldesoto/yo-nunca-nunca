@@ -3,7 +3,15 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { NativeModules, Platform, TurboModuleRegistry } from 'react-native';
 
 const COOLDOWN_KEY = 'ynn.ads.lastInterstitial.v1';
-const COOLDOWN_MS = 2.5 * 60 * 1000; // 2.5 min entre intersticiales
+const MIN_GAP_MS = 90 * 1000; // ≥90 s entre anuncios y desde el inicio de la app
+const ROUNDS_PER_AD = 3; // tope: 1 intersticial cada 3 rondas
+const APP_START = Date.now();
+let roundsSinceAd = 0;
+
+/** Registrar rondas/partidas terminadas (pausas naturales). */
+export function noteRoundsPlayed(n = 1): void {
+  if (Number.isFinite(n) && n > 0) roundsSinceAd += n;
+}
 
 function androidUnitId(): string {
   return (
@@ -92,23 +100,26 @@ export async function initAds(): Promise<void> {
 }
 
 async function canShow(): Promise<boolean> {
+  if (roundsSinceAd < ROUNDS_PER_AD) return false;
+  if (Date.now() - APP_START < MIN_GAP_MS) return false;
   try {
     const raw = await AsyncStorage.getItem(COOLDOWN_KEY);
     if (!raw) return true;
     const last = Number(raw);
     if (!Number.isFinite(last)) return true;
-    return Date.now() - last >= COOLDOWN_MS;
+    return Date.now() - last >= MIN_GAP_MS;
   } catch {
     return true;
   }
 }
 
 async function markShown(): Promise<void> {
+  roundsSinceAd = 0;
   await AsyncStorage.setItem(COOLDOWN_KEY, String(Date.now()));
 }
 
 /**
- * Intersticial al salir de un juego local (cooldown).
+ * Intersticial solo en pausas naturales (fin de mano/ronda/partida).
  * Nunca bloquea la navegación si falla el ad.
  */
 export async function showInterstitialIfNeeded(): Promise<void> {
@@ -175,8 +186,9 @@ export async function showInterstitialIfNeeded(): Promise<void> {
   });
 }
 
-/** Navega atrás tras intentar mostrar el ad. */
+/** Salida de un juego local = fin de partida (1 ronda); navega tras el ad. */
 export function exitWithOptionalAd(goBack: () => void): void {
+  noteRoundsPlayed(1);
   void showInterstitialIfNeeded().finally(goBack);
 }
 

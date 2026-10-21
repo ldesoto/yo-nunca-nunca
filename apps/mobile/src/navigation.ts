@@ -12,4 +12,5 @@ export type RootStackParamList = {
   TruthOrDrink: undefined;
   Charades: undefined;
   Bomb: undefined;
+  MoreGames: undefined;
 };

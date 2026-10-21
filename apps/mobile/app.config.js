@@ -30,7 +30,7 @@ loadEnvFile(path.join(__dirname, '../../.env.monetization'));
 loadEnvFile(path.join(__dirname, '.env'));
 
 const APP_VERSION = '0.1.11';
-const BUILD_NUMBER = '12';
+const BUILD_NUMBER = '13';
 
 /** Bake URLs at build time. Default = public Render (multiplayer across devices). */
 const DEFAULT_PUBLIC_HTTP = 'https://yo-nunca-nunca.onrender.com';

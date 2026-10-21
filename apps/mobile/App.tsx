@@ -20,6 +20,8 @@ import { TwoTruthsScreen } from './src/screens/TwoTruthsScreen';
 import { TruthOrDrinkScreen } from './src/screens/TruthOrDrinkScreen';
 import { CharadesScreen } from './src/screens/CharadesScreen';
 import { BombScreen } from './src/screens/BombScreen';
+import { MoreGamesScreen } from './src/screens/MoreGamesScreen';
+import { trackSession } from './src/growth';
 import { colors } from './src/theme';
 import { loadRuntimeServerOverride } from './src/serverEndpoints';
 import { loadSettings } from './src/settingsStore';
@@ -48,6 +50,7 @@ export default function App() {
   const [ageOk, setAgeOk] = useState<boolean | null>(null);
 
   useEffect(() => {
+    void trackSession();
     let cancelled = false;
     const minSplash = new Promise((r) => setTimeout(r, 900));
     void Promise.all([
@@ -111,6 +114,7 @@ export default function App() {
               <Stack.Screen name="TruthOrDrink" component={TruthOrDrinkScreen} />
               <Stack.Screen name="Charades" component={CharadesScreen} />
               <Stack.Screen name="Bomb" component={BombScreen} />
+              <Stack.Screen name="MoreGames" component={MoreGamesScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </GameProvider>
