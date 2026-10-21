@@ -14,3 +14,9 @@ packages/db/data/
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
+
+# Monetization secrets (local)
+.env.monetization
+
+# Generado localmente (graphify)
+graphify-out/
