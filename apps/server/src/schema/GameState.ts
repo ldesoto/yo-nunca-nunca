@@ -13,6 +13,8 @@ export class PlayerState extends Schema {
   @type('number') yesCount: number = 0;
   @type('number') majorityCount: number = 0;
   @type('number') minorityCount: number = 0;
+  /** Player UI locale: en | es | pt (default es for legacy clients). */
+  @type('string') locale: string = 'es';
 }
 
 export class GameState extends Schema {
@@ -23,7 +25,10 @@ export class GameState extends Schema {
   @type('number') totalRounds: number = 12;
   @type('number') answerDeadlineAt: number = 0;
   @type('string') questionId: string = '';
+  /** Spanish (default / legacy clients). */
   @type('string') questionText: string = '';
+  @type('string') questionTextEn: string = '';
+  @type('string') questionTextPt: string = '';
   @type('number') yesCount: number = 0;
   @type('number') totalAnswered: number = 0;
   @type('string') specialEvent: string = 'none';

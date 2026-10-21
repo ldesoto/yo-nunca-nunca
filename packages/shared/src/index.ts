@@ -6,3 +6,4 @@ export * from './phases.js';
 export * from './moderation.js';
 export * from './premium.js';
 export * from './analyticsEvents.js';
+export * from './locale.js';

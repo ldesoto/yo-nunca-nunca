@@ -13,7 +13,7 @@ import { LocalGameChrome } from '../components/LocalGameChrome';
 import { PartyButton } from '../components/PartyButton';
 import { useGameLogic } from '../hooks/useGameLogic';
 import { exitWithOptionalAd } from '../ads';
-import gamesData from '../data/gamesData.json';
+import { gamesData } from '../data/games';
 import { colors, fonts } from '../theme';
 import type { RootStackParamList } from '../navigation';
 import { t } from '../i18n';

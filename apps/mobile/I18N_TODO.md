@@ -6,19 +6,22 @@
 - Diccionario y `t(key, params?)` en `src/i18n.ts`.
 - Pantallas y componentes de UI cableados con `t(...)`.
 
-## Pendiente: packs de preguntas / prompts
+## Hecho: packs locales (`gamesData`)
 
-El contenido jugable sigue **solo en español**. No hay archivo por idioma todavía (volumen alto y acoplado al servidor/seed).
+- `src/data/gamesData.json` — español (fuente original).
+- `src/data/gamesData.en.json` / `gamesData.pt.json` — mismos keys/orden/conteos.
+- Selector: `src/data/games.ts` → `getGamesData()` / `gamesData` según `LANG` (fallback `en`).
+- Pantallas locales importan desde `../data/games` (mostLikely, truthOrDrink, twoTruths, charades, bomb).
+
+## Pendiente: preguntas online
 
 | Fuente | Uso |
 |--------|-----|
-| `apps/mobile/src/data/gamesData.json` | Modos locales: mostLikely, truthOrDrink, charades, bomb, twoTruthsIdeas, etc. |
 | `packages/db/seed/questions.json` | Preguntas online “Yo Nunca” servidas por el backend |
 
 ### Cómo completar (siguiente iteración)
 
-1. Extraer packs a `gamesData.en.json` / `.es.json` / `.pt.json` (o un mapa `{ en, es, pt }` por modo) y seleccionar con `LANG` desde `i18n.ts`.
-2. Para online: columnas o filas por locale en seed + API que filtre por idioma del host/sala (sin mezclar idiomas en la misma partida).
-3. Traducir también categorías de bomba/charadas (strings del JSON, no solo labels de UI).
+1. Para online: columnas o filas por locale en seed + API que filtre por idioma del host/sala (sin mezclar idiomas en la misma partida).
+2. No mezclar idiomas en la misma partida online.
 
-Hasta entonces, jugadores en `en`/`pt` ven la UI traducida y el **contenido de cartas en español**.
+Hasta entonces, jugadores en `en`/`pt` ven UI + **contenido local** en su idioma; el **Yo Nunca online** sigue en español hasta la tarea del servidor/seed.

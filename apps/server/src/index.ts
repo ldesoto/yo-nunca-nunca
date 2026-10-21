@@ -122,6 +122,8 @@ async function main() {
       );
       const solo = Boolean(req.body?.solo);
       const mode = req.body?.mode === 'parejas' ? 'parejas' : 'fiesta';
+      // locale is applied on WebSocket join; accept here for forward-compat.
+      const locale = req.body?.locale;
       const roomCode = generateRoomCode();
       const room = await matchMaker.createRoom('party', {
         roomCode,
@@ -131,6 +133,7 @@ async function main() {
         db,
         solo,
         mode,
+        locale,
       });
       res.json({
         roomId: room.roomId,

@@ -6,7 +6,7 @@ import { useGameLogic } from '../hooks/useGameLogic';
 import { useTiltSensor } from '../hooks/useTiltSensor';
 import { ExitGadget } from '../components/ExitGadget';
 import { exitWithOptionalAd } from '../ads';
-import gamesData from '../data/gamesData.json';
+import { gamesData } from '../data/games';
 import type { RootStackParamList } from '../navigation';
 import { t } from '../i18n';
 

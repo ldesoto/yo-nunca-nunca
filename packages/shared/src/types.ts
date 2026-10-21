@@ -22,6 +22,10 @@ export type AnswerChoice = 'never' | 'did';
 export interface Question {
   id: string;
   text: string;
+  /** English; optional for custom / legacy rows. */
+  textEn?: string;
+  /** Brazilian Portuguese; optional for custom / legacy rows. */
+  textPt?: string;
   category: Exclude<QuestionCategory, 'todas'>;
   adultOnly: boolean;
 }

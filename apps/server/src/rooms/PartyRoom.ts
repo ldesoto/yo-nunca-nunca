@@ -7,6 +7,7 @@ import {
   generateRoomCode,
   isValidPlayerName,
   nextAfterScore,
+  normalizeLocale,
   normalizeRoomCode,
   sanitizeCustomQuestion,
   sanitizePlayerName,
@@ -19,6 +20,7 @@ import {
 } from '@ynn/shared';
 import { GameState, PlayerState } from '../schema/GameState.js';
 import { buildPartyDeck } from '../deck.js';
+import { questionTextsForState } from '../localeQuestions.js';
 import { resolveRoomCategories } from '../premiumGate.js';
 import { pickFallback } from '../questions.js';
 
@@ -30,6 +32,8 @@ export type PartyRoomOptions = {
   db?: YnnDb | null;
   solo?: boolean;
   mode?: 'fiesta' | 'parejas';
+  /** Client UI locale; omitted → es (legacy installs). */
+  locale?: string;
 };
 
 type PrivateAnswer = { choice: AnswerChoice };
@@ -142,6 +146,7 @@ export class PartyRoom extends Room<GameState> {
     if (!isValidPlayerName(player.name)) {
       player.name = 'Jugador';
     }
+    player.locale = normalizeLocale(options.locale);
     player.connected = true;
     player.isHost = this.state.players.size === 0;
     if (player.isHost) {
@@ -240,9 +245,12 @@ export class PartyRoom extends Room<GameState> {
       return;
     }
     const id = `CUSTOM_${Date.now()}_${this.customQuestions.length}`;
+    // Custom prompts stay as authored — all locales show the same text.
     this.customQuestions.push({
       id,
       text: result.text,
+      text_en: result.text,
+      text_pt: result.text,
       category: 'casual',
       adult_only: false,
       active: true,
@@ -349,7 +357,7 @@ export class PartyRoom extends Room<GameState> {
 
     this.usedQuestionIds.add(q.id);
     this.state.questionId = q.id;
-    this.state.questionText = q.text;
+    this.applyQuestionTexts(q);
     this.state.phase = 'QUESTION';
     this.state.answerDeadlineAt =
       Date.now() + DEFAULT_ROOM_SETTINGS.answerTimeoutMs;
@@ -550,6 +558,14 @@ export class PartyRoom extends Room<GameState> {
       if (!best || p.score > best.score) best = p;
     }
     this.state.winnerName = best?.name ?? '';
+  }
+
+  /** Broadcast all locales; clients pick with their LANG (CUSTOM_* identical). */
+  private applyQuestionTexts(q: DbQuestion) {
+    const texts = questionTextsForState(q);
+    this.state.questionText = texts.questionText;
+    this.state.questionTextEn = texts.questionTextEn;
+    this.state.questionTextPt = texts.questionTextPt;
   }
 
   private clearTimers() {

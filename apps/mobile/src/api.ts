@@ -5,7 +5,7 @@ import {
   isRetryableHttpStatus,
   withRenderColdStartRetry,
 } from './renderColdStart';
-import { t } from './i18n';
+import { LANG, t } from './i18n';
 
 export type GameRoom = Room;
 
@@ -76,7 +76,7 @@ async function fetchJsonWithRetry<T>(
 
 async function joinRoomWithRetry(
   roomId: string,
-  options: { playerName: string },
+  options: { playerName: string; locale: typeof LANG },
   onProgress?: (message: string) => void,
 ) {
   return withRenderColdStartRetry(
@@ -104,13 +104,13 @@ export async function createParty(
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
+      body: JSON.stringify({ ...input, locale: LANG }),
     },
     onProgress,
   );
   const room = await joinRoomWithRetry(
     data.roomId,
-    { playerName: input.playerName },
+    { playerName: input.playerName, locale: LANG },
     onProgress,
   );
   return { room, roomCode: data.roomCode };
@@ -129,7 +129,7 @@ export async function joinParty(
   );
   const room = await joinRoomWithRetry(
     data.roomId,
-    { playerName },
+    { playerName, locale: LANG },
     onProgress,
   );
   return { room, roomCode: code };

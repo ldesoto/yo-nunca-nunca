@@ -1,5 +1,23 @@
 import { useEffect, useState } from 'react';
 import type { GameRoom } from './api';
+import { LANG } from './i18n';
+
+function localizedQuestionText(s: {
+  questionText?: string;
+  questionTextEn?: string;
+  questionTextPt?: string;
+}): string {
+  const es = String(s.questionText || '');
+  if (LANG === 'en') {
+    const en = String(s.questionTextEn || '').trim();
+    return en || es;
+  }
+  if (LANG === 'pt') {
+    const pt = String(s.questionTextPt || '').trim();
+    return pt || es;
+  }
+  return es;
+}
 
 export type PublicPlayer = {
   sessionId: string;
@@ -72,7 +90,7 @@ function readState(room: GameRoom): Snapshot {
     currentRound: s.currentRound,
     totalRounds: s.totalRounds,
     questionId: s.questionId || '',
-    questionText: s.questionText,
+    questionText: localizedQuestionText(s),
     yesCount: s.yesCount,
     totalAnswered: s.totalAnswered,
     specialEvent: s.specialEvent || 'none',

@@ -15,6 +15,14 @@ packages/db/data/
 *.sqlite-wal
 *.sqlite-shm
 
+# Seed translation scratch (keep questions.json / questions.en.json / questions.pt.json)
+packages/db/seed/_partial.*
+packages/db/seed/_gen_*.py
+packages/db/seed/_merge_*.py
+packages/db/seed/_sin_spicy_src_extract.json
+packages/db/seed/.cleanup-probe
+packages/db/seed/.agent_write_test
+
 # Monetization secrets (local)
 .env.monetization
 
